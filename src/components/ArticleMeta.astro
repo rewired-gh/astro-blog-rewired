@@ -1,0 +1,27 @@
+---
+interface Props {
+  date: Date;
+  tags: string[];
+}
+
+const { date, tags } = Astro.props;
+---
+
+<div
+  class="flex w-full gap-x-4 justify-between text-stone-500 text-sm font-extralight pb-1"
+>
+  <span>
+    {date.toDateString()}
+  </span>
+  <span>
+    <ul class="flex flex-row gap-x-2 overflow-hidden">
+      {
+        tags.map((tag) => (
+          <a href={"/tag/" + tag}>
+            <li>#{tag}</li>
+          </a>
+        ))
+      }
+    </ul>
+  </span>
+</div>

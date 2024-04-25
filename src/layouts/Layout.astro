@@ -16,8 +16,10 @@ const { title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class="flex flex-col items-center font-sans font-extralight px-8">
-    <header class="flex flex-col gap-y-4 pt-12 pb-14 max-w-screen-md w-full">
+  <body class="flex flex-col items-center font-sans font-light px-8">
+    <header
+      class="flex flex-col gap-y-4 pt-12 pb-14 max-w-screen-md w-full font-extralight"
+    >
       <a href="/">
         <h1 class="text-2xl">Blog Rewired</h1>
       </a>
@@ -29,10 +31,10 @@ const { title } = Astro.props;
         </ul>
       </nav>
     </header>
-    <main>
+    <main class="max-w-screen-md w-full">
       <slot />
     </main>
-    <footer class="text-sm pt-14">
+    <footer class="text-sm py-14 font-extralight text-stone-500">
       <p>rewired (c) 2024</p>
     </footer>
   </body>
