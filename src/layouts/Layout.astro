@@ -1,0 +1,39 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Blog rewired." />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body class="flex flex-col items-center font-sans font-extralight px-8">
+    <header class="flex flex-col gap-y-4 pt-12 pb-14 max-w-screen-md w-full">
+      <a href="/">
+        <h1 class="text-2xl">Blog Rewired</h1>
+      </a>
+      <nav>
+        <ul class="text-lg flex gap-x-6">
+          <li>About</li>
+          <li>RSS</li>
+          <li>Landing Page</li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="text-sm pt-14">
+      <p>rewired (c) 2024</p>
+    </footer>
+  </body>
+</html>
