@@ -56,12 +56,23 @@ export default {
             },
             strong: {
               fontWeight: '400'
-            }
+            },
+            blockquote: {
+              fontWeight: '300',
+              fontStyle: 'normal'
+            },
+            'blockquote p:first-of-type::before': {
+              content: 'none'
+            },
+            'blockquote p:last-of-type::after': {
+              content: 'none'
+            },
           }
         },
         stone: {
           css: {
             '--tw-prose-pre-bg': colors.stone[50],
+            '--tw-prose-quote-borders': colors.cyan[200]
           }
         }
       }
