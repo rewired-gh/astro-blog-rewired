@@ -1,11 +1,13 @@
 import { defineConfig } from 'astro/config';
-
 import tailwind from "@astrojs/tailwind";
 import remarkMath from 'remark-math';
 
+import sitemap from "@astrojs/sitemap";
+
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind()],
+  site: 'https://blog.rewired.moe',
+  integrations: [tailwind(), sitemap()],
   markdown: {
     shikiConfig: {
       themes: {
@@ -13,8 +15,6 @@ export default defineConfig({
         dark: 'github-dark'
       }
     },
-    remarkPlugins: [
-      remarkMath
-    ]
+    remarkPlugins: [remarkMath]
   }
 });

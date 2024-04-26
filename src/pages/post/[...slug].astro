@@ -2,7 +2,8 @@
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import ArticleMeta from "../../components/ArticleMeta.astro";
-import { getPageTitle } from "../../components/getPageTitle";
+import { getPageTitle } from "../../components/pageTitle";
+import { createExcerpt } from "../../components/digest";
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection("post");
@@ -16,9 +17,13 @@ const { entry } = Astro.props;
 const { Content } = await entry.render();
 ---
 
-<Layout title={getPageTitle(entry.data.title)}>
+<Layout
+  title={getPageTitle(entry.data.title)}
+  description={createExcerpt(entry.slug, entry.body)}
+  pageType="article"
+>
   <ArticleMeta date={entry.data.date} tags={entry.data.tags} />
-  <article class="prose prose-stone">
+  <article class="prose prose-stone pt-1">
     <h1>{entry.data.title}</h1>
     <Content />
   </article>

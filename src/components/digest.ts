@@ -2,7 +2,8 @@ import { getCollection } from "astro:content";
 import MarkdownIt from "markdown-it";
 import { convert } from "html-to-text";
 
-interface DigestEntry {
+export interface DigestEntry {
+  path: string,
   title: string,
   date: Date,
   tags: string[],
@@ -15,8 +16,13 @@ interface TagEntry {
 }
 
 const parser = new MarkdownIt();
+const excerptCache = new Map<string, string>()
 
-export const createExcerpt = (body: string, maxLen = 300) => {
+export const createExcerpt = (slug: string, body: string, maxLen = 300) => {
+  const cached = excerptCache.get(slug)
+  if (cached) {
+    return cached
+  }
   const html = parser.render(body);
   const options = {
     wordwrap: null,
@@ -28,19 +34,24 @@ export const createExcerpt = (body: string, maxLen = 300) => {
   };
   const text = convert(html, options);
   const distilled = convert(text, options);
-  return distilled.substring(0, maxLen);
+  const excerpt = distilled.substring(0, maxLen) + "……";
+  excerptCache.set(slug, excerpt)
+  return excerpt
 };
 
-export async function getTagStaticPaths() {
+export const getAllDigestEntries = async () => {
   const blogEntries = await getCollection("post");
-  const digestEntries = blogEntries.map((entry) => {
-    return {
+  return blogEntries.map((entry) => ({
+      path: `/post/${entry.slug}`,
       title: entry.data.title,
       date: entry.data.date,
       tags: entry.data.tags,
-      excerpt: createExcerpt(entry.body),
-    } as DigestEntry
-  })
+      excerpt: createExcerpt(entry.slug, entry.body),
+    } as DigestEntry))
+}
+
+export const getTagStaticPaths = async () => {
+  const digestEntries = await getAllDigestEntries()
   const tagEntryMap = new Map<string, TagEntry>()
   const tags = [
     ...new Set(digestEntries.map((entry) => entry.tags).flat()),

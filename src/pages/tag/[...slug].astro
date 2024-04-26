@@ -1,22 +1,21 @@
 ---
-import ArticleMeta from "../../components/ArticleMeta.astro";
 import Layout from "../../layouts/Layout.astro";
-import { getPageTitle } from "../../components/getPageTitle";
-import { getTagStaticPaths } from "../../components/getTagStaticPaths";
+import { getPageTitle } from "../../components/pageTitle";
+import { getTagStaticPaths } from "../../components/digest";
+import DigestList from "../../components/DigestList.astro";
 
 export const getStaticPaths = getTagStaticPaths;
 
 const { digests, tag } = Astro.props;
 ---
 
-<Layout title={getPageTitle(`Tag: ${tag}`)}>
-  {
-    digests.map((digest) => (
-      <article>
-        <ArticleMeta date={digest.date} tags={digest.tags} />
-        <h2>{digest.title}</h2>
-        <p>{digest.excerpt}</p>
-      </article>
-    ))
-  }
+<Layout
+  title={getPageTitle(`Tag: ${tag}`)}
+  description={`Explore articles related to ${tag}.`}
+  pageType="website"
+>
+  <p class="pb-6 font-extralight text-xl">
+    Articles tagged with <span class="text-cyan-800">#{tag}</span>:
+  </p>
+  <DigestList digests={digests} />
 </Layout>

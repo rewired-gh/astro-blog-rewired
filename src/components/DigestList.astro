@@ -1,0 +1,24 @@
+---
+import ArticleMeta from "./ArticleMeta.astro";
+import { type DigestEntry } from "./digest";
+
+interface Props {
+  digests: DigestEntry[];
+}
+
+const { digests } = Astro.props;
+---
+
+<ol class="flex flex-col gap-y-8">
+  {
+    digests.map((digest) => (
+      <li>
+        <ArticleMeta date={digest.date} tags={digest.tags} />
+        <a href={digest.path}>
+          <h2 class="text-[21px] pb-2">{digest.title}</h2>
+          <p class="leading-6 text-sm">{digest.excerpt}</p>
+        </a>
+      </li>
+    ))
+  }
+</ol>

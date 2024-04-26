@@ -1,0 +1,15 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getPageTitle, mainTitle } from "../components/pageTitle";
+---
+
+<Layout
+  title={getPageTitle("About")}
+  description={`Information about ${mainTitle}.`}
+  pageType="article"
+>
+  <article class="prose prose-stone pt-1">
+    <h1>About Rewired</h1>
+    <a href="https://t.me/about_rewired">About Rewired Telegram Channel</a>
+  </article>
+</Layout>

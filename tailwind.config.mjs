@@ -20,8 +20,7 @@ export default {
               fontSize: '18px'
             },
             'h2, h3, h4': {
-              fontWeight: 400,
-              color: colors.rose[800]
+              fontWeight: 400
             },
             pre: {
               backgroundColor: 'var(--tw-prose-pre-bg) !important'
@@ -45,7 +44,7 @@ export default {
               marginBottom: '0.25em'
             },
             'ul > li::marker': {
-              color: colors.rose[200],
+              color: colors.cyan[200],
             },
             p: {
               marginTop: '0.75em',
@@ -53,7 +52,7 @@ export default {
             },
             a: {
               fontWeight: 'light',
-              color: colors.rose[800]
+              color: colors.cyan[800]
             },
             strong: {
               fontWeight: '400'
