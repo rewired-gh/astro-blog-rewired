@@ -33,9 +33,7 @@ const { title, description, pageType } = Astro.props;
   <body
     class="flex flex-col items-center font-sans font-light px-8 min-h-screen"
   >
-    <header
-      class="flex flex-col gap-y-4 pt-12 pb-14 max-w-screen-md w-full font-extralight"
-    >
+    <header class="flex flex-col gap-y-4 pt-12 pb-14 max-w-screen-md w-full">
       <a href="/">
         <h1 class="text-2xl">{mainTitle}</h1>
       </a>
@@ -51,7 +49,7 @@ const { title, description, pageType } = Astro.props;
       <slot />
     </main>
     <div class="grow shrink"></div>
-    <footer class="text-sm py-14 font-extralight text-stone-500">
+    <footer class="text-sm py-14 text-stone-500">
       <p>Copyright © 2024 Rewired All Right Reserved</p>
     </footer>
   </body>

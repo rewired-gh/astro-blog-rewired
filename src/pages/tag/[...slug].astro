@@ -14,7 +14,7 @@ const { digests, tag } = Astro.props;
   description={`Explore articles related to ${tag}.`}
   pageType="website"
 >
-  <p class="pb-6 font-extralight text-xl">
+  <p class="pb-6 text-xl">
     Articles tagged with <span class="text-cyan-800">#{tag}</span>:
   </p>
   <DigestList digests={digests} />
