@@ -43,16 +43,12 @@ export default {
               marginTop: '0.25em',
               marginBottom: '0.25em'
             },
-            'ul > li::marker': {
-              color: colors.cyan[200],
-            },
             p: {
               marginTop: '0.75em',
               marginBottom: '0.75em'
             },
             a: {
-              fontWeight: 'light',
-              color: colors.cyan[800]
+              fontWeight: 'light'
             },
             strong: {
               fontWeight: '400'
@@ -72,7 +68,10 @@ export default {
         stone: {
           css: {
             '--tw-prose-pre-bg': colors.stone[50],
-            '--tw-prose-quote-borders': colors.cyan[200]
+            '--tw-prose-quote-borders': colors.cyan[300],
+            '--tw-prose-bullets': colors.cyan[500],
+            '--tw-prose-counters': colors.cyan[500],
+            '--tw-prose-links': colors.cyan[700]
           }
         }
       }
