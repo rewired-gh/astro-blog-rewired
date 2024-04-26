@@ -18,7 +18,7 @@ interface TagEntry {
 const parser = new MarkdownIt();
 const excerptCache = new Map<string, string>()
 
-export const createExcerpt = (slug: string, body: string, maxLen = 100) => {
+export const createExcerpt = (slug: string, body: string, maxLen = 150) => {
   const cached = excerptCache.get(slug)
   if (cached) {
     return cached
