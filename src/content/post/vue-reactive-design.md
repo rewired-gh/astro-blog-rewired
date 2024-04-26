@@ -21,7 +21,7 @@ tags: [
 
 需要注意的是，我们不想让 `v_successor` 作为一个函数，因为在更复杂的依赖关系中，函数无法解决这个问题。要解决这个问题，一个显然的思路是：每当 `obj.v` 发生变化时，执行 `v_successor = obj.v + 1`。在 Vue 中等效的代码如下：
 
-```
+```ts
 const obj = reactive({v: 0})
 let v_succesor
 effect(() => {v_successor = obj.v + 1})
@@ -51,7 +51,7 @@ effect(() => {v_successor = obj.v + 1})
 
 ### 实现精简版的 Vue 响应式
 
-```
+```ts
 let activeWatch: (() => void) | null = null
 
 const reactive = <T extends Object>(obj: T) => {
@@ -147,4 +147,4 @@ console.log(follower.value)
 
 ## 更多内容
 
-本文尚未完成，欢迎订阅本博客的 [RSS](/index.xml)，方便在第一时间获悉更新。
+本文尚未完成，欢迎订阅本博客的 [RSS](/rss.xml)，方便在第一时间获悉更新。

@@ -23,7 +23,7 @@ tags: [
 
 首先，在 HTML（此处使用 Pug 语言）中添加一个 `span` 用于表示次级指针：
 
-```
+```pug
 span#click-effect
 ```
 
@@ -31,7 +31,7 @@ span#click-effect
 
 然后，在 CSS（此处使用 SASS 语言）中添加类似如下的样式：
 
-```
+```sass
 #click-effect
   position: fixed // 指针永远在可见区，故不用 absolute
   top: 50% // 锚点居中
@@ -55,13 +55,13 @@ span#click-effect
 
 一开始，可以通过 `querySelector` 获得先前定义的 `span` 的 DOM 对象：
 
-```
+```ts
 const effect = document.querySelector("#click-effect")
 ```
 
 我们先构造进入动画。进入动画包括「指针从上一个位置迅速移动到当前按下的位置」、「指针变大」、「不透明度逐渐增加」。需要注意的是，我们这里会使用边框来「填充」指针，这个特性后续会用到。初步代码如下：
 
-```
+```ts
 const {left: fromX, top: fromY} = effect.getBoundingClientRect()
 const {clientX: toX, clientY: toY} = event
 const sliding = {
@@ -80,7 +80,7 @@ effect.animate(sliding, timing)
 
 为了让指针更具有生命力，我们想让指针「弹一下再收回」。具体改动后的代码如下：
 
-```
+```ts
 const {left: fromX, top: fromY} = effect.getBoundingClientRect()
 const {clientX: toX, clientY: toY} = event
 const sliding = {
@@ -102,7 +102,7 @@ effect.animate(sliding, timing)
 
 然后，将上述代码在 `document` 的 `pointerdown` 事件触发时执行。需要注意的是，「指针事件」相比 `mousedown` 等事件更普适，可以兼容触摸屏、数位板等多种设备。
 
-```
+```ts
 document.addEventListener(
   "pointerdown",
   (event) => {
@@ -115,7 +115,7 @@ document.addEventListener(
 
 退出对应着 `pointerup` 和 `pointercancel` 两个事件。因此，在 `pointerdown` 触发时，我们需要注册这两个事件对应的监听器。与此同时，别忘了在退出时取消已经注册的监听器。
 
-```
+```ts
 document.addEventListener(
   "pointerdown",
   (event) => {
@@ -133,7 +133,7 @@ document.addEventListener(
 
 退出动画包括「指针变大」、「不透明度减少」、「边框变细直到消失」。因为此前使用边框作为「填充」，所以也可以理解为「填充通过变大的圆形蒙版逐渐消失」。具体代码如下：
 
-```
+```ts
 const popping = {
 height: ["16px", "32px"],
 opacity: ["20%", "0"],
@@ -150,7 +150,7 @@ effect.animate(popping, timing)
 
 当用户拖拽指针时，我们想让次级指针跟随拖拽动作。这一效果可以通过监听 `pointermove` 事件实现。一种较为直观的做法如下：
 
-```
+```ts
 const followCursor = (event) => {
   const {clientX: toX, clientY: toY} = event
   effect.style.left = `${clientX}px`
@@ -161,7 +161,7 @@ document.addEventListener("pointermove", followCursor)
 
 同时，别忘了在退出动画结束后注销这个监听器。
 
-```
+```ts
 const playPopEffect = (_) => {
   // 此处省略了先前介绍的代码
   document.removeEventListener("pointermove", followCursor)
@@ -170,7 +170,7 @@ const playPopEffect = (_) => {
 
 然而，这种做法实际上是不奏效的，次级指针并不会跟随拖拽。这是因为进入动画的 `forwards` 时间轴特性，导致元素会一直保持动画所述的样式，即使更改了 inline style。所以，我们只能使用一个无过渡的动画来实现拖拽时跟随。
 
-```
+```ts
 const followCursor = (event) => {
   const {clientX: toX, clientY: toY} = event
   const sliding = {
@@ -191,7 +191,7 @@ const followCursor = (event) => {
 
 前文提到的所有 JavaScript 代码，整合后如下：
 
-```
+```ts
 const effect = document.querySelector("#click-effect")
 
 document.addEventListener(

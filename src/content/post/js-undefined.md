@@ -21,7 +21,7 @@ tags: [
 
 若获取一个存在的对象中不存在的属性（或者可以视作 key），将会得到 `undefined`。
 
-```
+```ts
 > const obj = {}
 undefined
 > obj.name
@@ -34,7 +34,7 @@ undefined
 
 在 JavaScript 中可以通过 `delete` 来删除一个属性；例如：
 
-```
+```ts
 > const obj = { name: "admin" }
 undefined
 > delete obj.name
@@ -45,7 +45,7 @@ true
 
 若将 `name` 设置为 `undefined`，则：
 
-```
+```ts
 > obj.name = undefined
 undefined
 > Object.keys(obj)
@@ -62,14 +62,14 @@ undefined
 
 更糟糕的是，JavaScript 并没有把局部变量和属性在这方面一视同仁。如果获取不存在的变量，将会抛出异常；例如：
 
-```
+```ts
 > console.log(sakana)
 Uncaught ReferenceError: sakana is not defined
 ```
 
 而且变量也不能通过 `delete` 删除；例如：
 
-```
+```ts
 > const sakana = 0
 undefined
 > delete sakana
@@ -80,7 +80,7 @@ false
 
 进一步，全局变量也不可以被 `delete`，即使全局变量本质上是 `window` 或者 `globalThis` 对象的属性；例如：
 
-```
+```ts
 > var obj = 0
 undefined
 > globalThis.obj
@@ -93,7 +93,7 @@ false
 
 但是，如果通过往 `window` 或 `globalThis` 添加属性来声明全局变量，则可以被 `delete` 删除；例如：
 
-```
+```ts
 > globalThis.obj = 0
 0
 > obj
@@ -104,7 +104,7 @@ true
 
 那么，如果我们用 `var` 声明一个 `window` 或 `globalThis` 中已经存在的全局变量呢？如果按照之前发现的规律，这个全局变量应该是不能被删除的。但是，现实真的如此吗？
 
-```
+```ts
 > globalThis.fetch
 [Function: fetch]
 > var fetch = 1
