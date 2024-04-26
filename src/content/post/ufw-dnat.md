@@ -1,8 +1,8 @@
 ---
-date: 2023-01-16
-title: 'Test A'
+date: 2023-12-04
+title: '为 UFW 配置 DNAT 端口双向转发'
 tags: [
-  '测试'
+  '运维'
 ]
 ---
 
@@ -10,7 +10,7 @@ tags: [
 
 某个妙妙服务需要将一些端口双向转发到另一个端口，一般来说可以使用 iptables 来完成路由配置，比如：
 
-```bash
+```
 # IPv4
 iptables -t nat -A PREROUTING -i eth0 -p udp --dport 20000:50000 -j DNAT --to-destination :443
 # IPv6

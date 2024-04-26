@@ -40,7 +40,9 @@ export const createExcerpt = (slug: string, body: string, maxLen = 300) => {
 };
 
 export const getAllDigestEntries = async () => {
-  const blogEntries = await getCollection("post");
+  const blogEntries = (await getCollection("post")).sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime()
+  );
   return blogEntries.map((entry) => ({
       path: `/post/${entry.slug}`,
       title: entry.data.title,
