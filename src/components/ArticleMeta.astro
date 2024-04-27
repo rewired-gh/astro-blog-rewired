@@ -15,11 +15,9 @@ const { date, tags } = Astro.props;
     <ul class="flex flex-row gap-x-2 overflow-hidden">
       {
         tags.map((tag) => (
-          <a href={"/tag/" + tag}>
-            <li class="transition-colors duration-300 hover:text-cyan-700">
-              #{tag}
-            </li>
-          </a>
+          <li class="transition-colors duration-300 hover:text-cyan-700">
+            <a href={"/tag/" + tag}>#{tag}</a>
+          </li>
         ))
       }
     </ul>
