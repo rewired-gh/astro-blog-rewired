@@ -9,6 +9,7 @@ export default {
       typography: {
         DEFAULT: {
           css: {
+            maxWidth: '100%',
             h1: {
               fontWeight: 300,
               fontSize: '26px'
