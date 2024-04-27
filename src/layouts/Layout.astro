@@ -1,4 +1,5 @@
 ---
+import NavButton from "../components/NavButton.astro";
 import { mainDescription, mainTitle } from "../components/pageTitle";
 
 interface Props {
@@ -33,15 +34,22 @@ const { title, description, pageType } = Astro.props;
   <body
     class="flex flex-col items-center font-sans font-light px-8 min-h-screen"
   >
-    <header class="flex flex-col gap-y-4 pt-12 pb-14 max-w-screen-md w-full">
+    <header
+      class="flex flex-col gap-y-4 pt-12 pb-14 max-w-screen-md w-full items-start"
+    >
       <a href="/">
-        <h1 class="text-2xl">{mainTitle}</h1>
+        <h1
+          class="text-2xl transition-all duration-300
+        hover:drop-shadow"
+        >
+          {mainTitle}
+        </h1>
       </a>
       <nav>
         <ul class="text-lg flex gap-x-6">
-          <a href="/about"><li>About</li></a>
-          <a href="/rss.xml"><li>RSS</li></a>
-          <a href="https://rewired.moe"><li>Landing Page</li></a>
+          <NavButton name="About" link="/about" />
+          <NavButton name="RSS" link="/rss.xml" />
+          <NavButton name="Landing Page" link="https://rewired.moe" />
         </ul>
       </nav>
     </header>

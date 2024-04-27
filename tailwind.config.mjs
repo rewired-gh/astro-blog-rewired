@@ -68,7 +68,7 @@ export default {
         stone: {
           css: {
             '--tw-prose-pre-bg': colors.stone[50],
-            '--tw-prose-quote-borders': colors.cyan[300],
+            '--tw-prose-quote-borders': colors.cyan[500],
             '--tw-prose-bullets': colors.cyan[500],
             '--tw-prose-counters': colors.cyan[500],
             '--tw-prose-links': colors.cyan[700]

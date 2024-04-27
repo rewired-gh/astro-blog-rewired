@@ -1,0 +1,17 @@
+---
+interface Props {
+  name: string;
+  link: string;
+}
+
+const { name, link } = Astro.props;
+---
+
+<a
+  href={link}
+  class="relative after:backdrop-invert after:h-0 after:w-[calc(100%+8px)]
+  after:top-0 after:absolute after:z-10 after:-left-[4px]
+  after:transition-all after:duration-300 hover:after:h-full"
+>
+  <li>{name}</li>
+</a>

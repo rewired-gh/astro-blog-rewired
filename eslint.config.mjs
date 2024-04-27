@@ -7,7 +7,7 @@ export default [
   ...tseslint.configs.recommended,
   ...eslintPluginAstro.configs['flat/recommended'],
   {
-    ignores: ['public/'],
+    ignores: ['public/', 'dist/', '.astro/'],
     files: [
       '**/*.ts',
       '**/*.tsx',

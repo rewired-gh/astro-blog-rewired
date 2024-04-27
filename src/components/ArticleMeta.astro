@@ -16,7 +16,9 @@ const { date, tags } = Astro.props;
       {
         tags.map((tag) => (
           <a href={"/tag/" + tag}>
-            <li>#{tag}</li>
+            <li class="transition-colors duration-300 hover:text-cyan-700">
+              #{tag}
+            </li>
           </a>
         ))
       }
