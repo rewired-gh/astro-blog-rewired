@@ -20,13 +20,31 @@ const { page } = Astro.props;
   <div class="flex flex-col gap-y-8">
     <DigestList digests={page.data} />
     <div
-      class="text-sm w-full flex text-stone-700
+      class="text-sm w-full flex items-center text-stone-500
       [&_a]:px-4 [&_a]:py-2 [&_a]:border [&_a]:rounded-full [&_a]:border-stone-300
-      [&_a]:duration-300 hover:[&_a]:border-cyan-700"
+      [&_a]:duration-300 hover:[&_a]:border-cyan-700 hover:[&_a]:text-cyan-700"
     >
-      {page.url.prev && <a href={page.url.prev}>Previous Page</a>}
-      <div class="flex-1"></div>
-      {page.url.next && <a href={page.url.next}>Next Page</a>}
+      <a
+        href={page.url.prev}
+        class:list={[
+          {
+            invisible: !page.url.prev,
+          },
+        ]}
+      >
+        Previous Page
+      </a>
+      <span class="flex-1 text-center"
+        >Page {page.currentPage} of {page.lastPage}</span
+      >
+      <a
+        href={page.url.next}
+        class:list={[
+          {
+            invisible: !page.url.next,
+          },
+        ]}>Next Page</a
+      >
     </div>
   </div>
 </Layout>
