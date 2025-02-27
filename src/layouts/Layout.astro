@@ -32,7 +32,7 @@ const { title, description, pageType } = Astro.props;
     <title>{title}</title>
   </head>
   <body
-    class="flex flex-col m-auto items-stretch font-sans font-light px-8 min-h-screen max-w-[54rem]"
+    class="font-sans flex flex-col m-auto items-stretch px-8 min-h-screen max-w-[54rem]"
   >
     <header class="flex flex-col gap-y-4 pt-12 pb-14 w-full items-start">
       <a href="/">
@@ -41,7 +41,8 @@ const { title, description, pageType } = Astro.props;
         </h1>
       </a>
       <nav>
-        <ul class="text-lg flex gap-x-6">
+        <ul class="text-lg flex gap-x-4">
+          <NavButton name="Home" link="/" />
           <NavButton name="About" link="/about" />
           <NavButton name="RSS" link="/rss.xml" />
           <NavButton name="Landing Page" link="https://rewired.moe" />
@@ -53,7 +54,7 @@ const { title, description, pageType } = Astro.props;
     </main>
     <div class="grow shrink"></div>
     <footer
-      class="border-t border-stone-300 text-xs text-center my-8 py-2 text-stone-300 leading-6"
+      class="border-t border-stone-300 font-light text-xs text-center my-8 py-2 text-stone-300 leading-6"
     >
       <p>
         This website is unapologetically designed from the ground up using

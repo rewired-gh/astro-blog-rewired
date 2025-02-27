@@ -5,13 +5,16 @@ import colors from 'tailwindcss/colors'
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
+    fontFamily: {
+      sans: ["-apple-system", "system-ui", "Segoe UI", "Roboto", "Ubuntu", "Cantarell", "Noto Sans", "sans-serif", "BlinkMacSystemFont", "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Arial"],
+    },
     extend: {
       typography: {
         DEFAULT: {
           css: {
             maxWidth: '100%',
             h1: {
-              fontWeight: 300,
+              fontWeight: 400,
               fontSize: '26px'
             },
             h2: {
@@ -52,10 +55,10 @@ export default {
               fontWeight: 'light'
             },
             strong: {
-              fontWeight: '400'
+              fontWeight: '500'
             },
             blockquote: {
-              fontWeight: '300',
+              fontWeight: '400',
               fontStyle: 'normal'
             },
             'blockquote p:first-of-type::before': {
