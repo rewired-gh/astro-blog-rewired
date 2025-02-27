@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tick } from 'svelte';
   import { apiConfig } from '../lib/config';
   import type { CommentSubmission } from '../types/comments';
   
@@ -7,11 +8,13 @@
     onCommentSubmitted?: () => void;
   }>();
   
-  let senderName = '';
-  let senderEmail = '';
-  let content = '';
-  let message = '';
-  let isSubmitting = false;
+  let senderName = $state('');
+  let senderEmail = $state('');
+  let content = $state('');
+  let message = $state('');
+  let isSubmitting = $state(false);
+
+  let canSubmit = $derived(senderName.trim() && content.trim());
 
   async function submitComment(event: SubmitEvent) {
     event.preventDefault();
@@ -50,11 +53,12 @@
       const data = await response.json();
       
       if (response.ok) {
-        message = 'Comment submitted successfully!';
+        message = 'Last comment submitted successfully!';
         senderName = '';
         senderEmail = '';
         content = '';
         if (onCommentSubmitted) {
+          await tick();
           onCommentSubmitted();
         }
       } else {
@@ -72,9 +76,9 @@
 <div class="comment-form">
   <h3>Leave a comment</h3>
   
-  <form on:submit={submitComment}>
+  <form onsubmit={submitComment}>
     <div>
-      <label for="name">Name*</label>
+      <label for="name">Name (required)</label>
       <input id="name" bind:value={senderName} required />
     </div>
     
@@ -84,7 +88,7 @@
     </div>
     
     <div>
-      <label for="content">Comment*</label>
+      <label for="content">Comment (required)</label>
       <textarea id="content" bind:value={content} required></textarea>
     </div>
     
