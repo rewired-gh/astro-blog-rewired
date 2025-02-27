@@ -98,6 +98,7 @@ async function handlePostComment(
     try {
       data = await request.json();
     } catch (parseError) {
+      console.error('Error parsing request body:', parseError);
       return api.error('Invalid JSON in request body');
     }
     

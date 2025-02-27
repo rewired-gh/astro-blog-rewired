@@ -3,12 +3,12 @@
   import { apiConfig } from '../lib/config';
   import type { Comment, CommentListResponse, PaginationMeta } from '../types/comments';
   
-  export let postId: string;
+  const { postId } = $props<{ postId: string }>();
   
-  let comments: Comment[] = [];
-  let pagination: PaginationMeta | null = null;
-  let loading = true;
-  let error: string | null = null;
+  let comments: Comment[] = $state([]);
+  let pagination: PaginationMeta | null = $state(null);
+  let loading = $state(true);
+  let error: string | null = $state(null);
   let currentPage = 1;
   
   // Expose this function to be called from parent component
@@ -31,7 +31,6 @@
       }
       
       const rawData = await response.json();
-      console.log('API Response:', rawData);
       
       if (rawData && typeof rawData === 'object') {
         // Extract comments from the API response (now consistently in camelCase)
@@ -80,7 +79,7 @@
   });
 </script>
 
-<div class="comment-list">
+<div>
   <h3>Comments</h3>
   
   {#if loading}
@@ -90,24 +89,24 @@
   {:else if comments.length === 0}
     <p>No comments yet. Be the first to comment!</p>
   {:else}
-    <div class="comments">
+    <div>
       {#each comments as comment}
-        <div class="comment">
-          <div class="comment-header">
+        <div>
+          <div>
             <strong>{comment.senderName}</strong>
             {#if comment.senderEmail}
-              <span class="email">({comment.senderEmail})</span>
+              <span>({comment.senderEmail})</span>
             {/if}
             <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
           </div>
-          <div class="comment-content">{comment.content}</div>
+          <div>{comment.content}</div>
         </div>
       {/each}
     </div>
     
     <span>Page {pagination?.currentPage || 1} of {pagination?.totalPages || 1}</span>
     {#if pagination && pagination.totalPages > 1}
-      <div class="pagination">
+      <div>
         <button disabled={!pagination.prevPage} on:click={handlePrevPage}>
           Previous Page
         </button>

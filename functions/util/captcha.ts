@@ -20,11 +20,6 @@ export async function verifyCaptcha(
   ip: string,
   secret: string
 ): Promise<boolean> {
-  // Return early if no secret is provided
-  if (!secret) {
-    console.warn('No Turnstile secret key provided');
-    return false;
-  }
 
   // TODO: Implement actual verification logic
   // This should make a POST request to the Turnstile API endpoint

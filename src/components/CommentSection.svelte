@@ -12,7 +12,7 @@
   }
 </script>
 
-<section class="comments-section">
+<section>
   <CommentList bind:this={commentListRef} {postId} />
   <CommentForm {postId} onCommentSubmitted={handleCommentSubmitted} />
 </section>

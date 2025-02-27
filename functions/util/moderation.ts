@@ -37,6 +37,7 @@ export async function moderateContent(
     }
     return result == '1';
   } catch (error) {
+    console.error('Error moderating content:', error);
     return false;
   }
 }

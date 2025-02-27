@@ -65,8 +65,8 @@
         message = data.error || 'Failed to submit comment.';
       }
     } catch (error) {
-      message = 'An error occurred. Please try again.';
       console.error(error);
+      message = 'An error occurred. Please try again.';
     } finally {
       isSubmitting = false;
     }

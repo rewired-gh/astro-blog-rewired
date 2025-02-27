@@ -28,8 +28,7 @@ const { Content } = await entry.render();
     <h1>{entry.data.title}</h1>
     <Content />
   </article>
-
-  <div class="mt-10 border-t pt-8">
+  <div class="mt-8 border-t border-stone-300 pt-8">
     <CommentSection client:load postId={entry.slug} />
   </div>
 </Layout>
