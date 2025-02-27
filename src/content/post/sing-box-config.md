@@ -91,7 +91,6 @@ sing-box 的[配置文档](https://sing-box.sagernet.org/configuration)虽然已
         "fc00::/7"
       ],
       "auto_route": true,
-      "sniff": true,
       "strict_route": true,
       "type": "tun"
     },
@@ -99,7 +98,6 @@ sing-box 的[配置文档](https://sing-box.sagernet.org/configuration)虽然已
     {
       "listen": "127.0.0.1",
       "listen_port": 2333,
-      "sniff": true,
       "tag": "mixed-in",
       "type": "mixed",
       "users": []
@@ -126,17 +124,10 @@ sing-box 的[配置文档](https://sing-box.sagernet.org/configuration)虽然已
       // ...
     },
     // 以下配置通常可以照抄
-    {
-      "type": "dns",
-      "tag": "dns-out"
-    },
+    // （注意：目前客户端不使用最新核心，更新后需要换写法）
     {
       "type": "direct",
       "tag": "direct"
-    },
-    {
-      "type": "block",
-      "tag": "block"
     }
   ],
   // 分流规则，通常可以照抄
@@ -145,8 +136,11 @@ sing-box 的[配置文档](https://sing-box.sagernet.org/configuration)虽然已
     "rules": [
       // DNS 分流策略
       {
-        "outbound": "dns-out",
-        "protocol": "dns"
+        "action": "sniff"
+      },
+      {
+        "protocol": "dns",
+        "action": "hijack-dns"
       },
       // 直连模式
       {
@@ -171,7 +165,7 @@ sing-box 的[配置文档](https://sing-box.sagernet.org/configuration)虽然已
       // 若不需要广告拦截可删除以下规则
       {
         "rule_set": ["category-ads-all"],
-        "outbound": "block"
+        "action": "reject"
       }
     ],
     // 规则资源集合，通常可以照抄
