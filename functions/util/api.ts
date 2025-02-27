@@ -10,7 +10,7 @@ interface ErrorResponse {
 function getHeaders(additionalHeaders = {}) {
   return { 
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': config.isDev ? '*' : '*.blog-rewired.pages.dev',
+    'Access-Control-Allow-Origin': config.isDev ? '*' : 'https://*.blog-rewired.pages.dev',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Max-Age': '86400', // 24 hours cache for preflight requests
