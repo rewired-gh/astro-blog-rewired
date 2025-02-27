@@ -3,7 +3,7 @@
  */
 
 // Determine the current environment
-const isDev = import.meta.env.DEV;
+export const isDev = true;
 
 // API configuration
 export const apiConfig = {
@@ -23,4 +23,5 @@ export const siteConfig = {
 export default {
   api: apiConfig,
   site: siteConfig,
+  isDev,
 };

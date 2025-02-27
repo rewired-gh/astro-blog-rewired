@@ -1,8 +1,8 @@
+import config from '../../src/lib/config';;
+
 interface ErrorResponse {
   error: string;
 }
-
-const isDev = true;
 
 /**
  * Get appropriate headers based on environment
@@ -14,7 +14,7 @@ function getHeaders(additionalHeaders = {}) {
   };
   
   // Add CORS headers in development for local testing
-  if (isDev) {
+  if (config.isDev) {
     return {
       ...baseHeaders,
       'Access-Control-Allow-Origin': '*',

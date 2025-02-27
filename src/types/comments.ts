@@ -8,6 +8,7 @@ export interface CommentModel {
   post_id: string;
   sender_name: string;
   sender_email: string | null;
+  ip: string | null;
   content: string;
   created_at: string;
 }

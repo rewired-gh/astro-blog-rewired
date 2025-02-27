@@ -1,4 +1,5 @@
-import { config } from '../../../../util/config';
+import { serverConfig } from '../../../../util/config';
+import config from '../../../../../src/lib/config';
 import { api } from '../../../../util/api';
 import { calculatePagination, parsePageParam } from '../../../../util/pagination';
 import { CommentModel, CommentResponse, CommentListResponse } from '../../../../../src/types/comments';
@@ -51,9 +52,9 @@ async function handleGetComments(
     // Calculate pagination values
     const pagination = calculatePagination({
       page,
-      perPage: config.commentsPerPage,
+      perPage: serverConfig.commentsPerPage,
       totalItems,
-      baseUrl: `${requestUrl.origin}/api/posts/${postId}/comments`
+      baseUrl: `${requestUrl.origin}/api/${config.api.endpoints.comments(postId)}`
     });
     
     // Return early if page is out of bounds
