@@ -4,7 +4,7 @@
 
 // Determine the current environment
 export const isDev = true;
-const isLocalhost = false;
+export const isLocalhost = false;
 
 // API configuration
 export const apiConfig = {
@@ -25,4 +25,5 @@ export default {
   api: apiConfig,
   site: siteConfig,
   isDev,
+  isLocalhost
 };
