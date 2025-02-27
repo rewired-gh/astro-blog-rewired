@@ -32,11 +32,9 @@ const { title, description, pageType } = Astro.props;
     <title>{title}</title>
   </head>
   <body
-    class="flex flex-col items-center font-sans font-light px-8 min-h-screen"
+    class="flex flex-col m-auto items-stretch font-sans font-light px-8 min-h-screen max-w-[54rem]"
   >
-    <header
-      class="flex flex-col gap-y-4 pt-12 pb-14 max-w-screen-md w-full items-start"
-    >
+    <header class="flex flex-col gap-y-4 pt-12 pb-14 w-full items-start">
       <a href="/">
         <h1 class="text-2xl">
           {mainTitle}
@@ -50,11 +48,13 @@ const { title, description, pageType } = Astro.props;
         </ul>
       </nav>
     </header>
-    <main class="max-w-screen-md w-full">
+    <main class="w-full">
       <slot />
     </main>
     <div class="grow shrink"></div>
-    <footer class="text-xs text-center py-14 text-stone-500 leading-6">
+    <footer
+      class="border-t border-stone-300 text-xs text-center my-8 py-2 text-stone-300 leading-6"
+    >
       <p>
         This website is unapologetically designed from the ground up using
         Astro.
