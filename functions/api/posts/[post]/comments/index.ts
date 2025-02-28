@@ -210,8 +210,8 @@ function validateComment(data): { valid: boolean; error?: string } {
     return { valid: false, error: 'Please provide your name' };
   }
   
-  if (data.sender_name.length > 63) {
-    return { valid: false, error: 'Name cannot exceed 63 characters' };
+  if (data.sender_name.length > 32) {
+    return { valid: false, error: 'Name cannot exceed 32 characters' };
   }
   
   // Validate email (optional but if provided must be valid)
@@ -227,8 +227,8 @@ function validateComment(data): { valid: boolean; error?: string } {
       }
     }
     
-    if (data.sender_email.length > 127) {
-      return { valid: false, error: 'Email address cannot exceed 127 characters' };
+    if (data.sender_email.length > 64) {
+      return { valid: false, error: 'Email address cannot exceed 64 characters' };
     }
   }
   
@@ -242,9 +242,9 @@ function validateComment(data): { valid: boolean; error?: string } {
   }
   
   // Validate captcha token
-  if (!data.captcha_token || typeof data.captcha_token !== 'string') {
-    return { valid: false, error: 'Security verification failed' };
-  }
+  // if (!data.captcha_token || typeof data.captcha_token !== 'string') {
+  //   return { valid: false, error: 'Security verification failed' };
+  // }
   
   // All validations passed
   return { valid: true };

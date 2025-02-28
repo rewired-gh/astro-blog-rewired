@@ -1,6 +1,6 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import { apiConfig } from '../lib/config';
+  import config from '../lib/config';
   import type { CommentSubmission } from '../types/comments';
   
   let { postId, onCommentSubmitted } = $props<{
@@ -13,8 +13,13 @@
   let content = $state('');
   let message = $state('');
   let isSubmitting = $state(false);
+  let isTurnstileResolved = $state(false);
 
-  let canSubmit = $derived(senderName.trim() && content.trim());
+  let canSubmit = $derived(senderName.trim() && content.trim() && isTurnstileResolved);
+
+  function onTurnstileResolved(event: CustomEvent) {
+    isTurnstileResolved = event.detail === 'resolved';
+  }
 
   async function submitComment(event: SubmitEvent) {
     event.preventDefault();
@@ -31,8 +36,8 @@
       // Mock captcha token for simplicity
       const captchaToken = 'mock-token';
       
-      const commentsEndpoint = apiConfig.endpoints.comments(postId);
-      const url = `${apiConfig.baseUrl}/${commentsEndpoint}`;
+      const commentsEndpoint = config.api.endpoints.comments(postId);
+      const url = `${config.api.baseUrl}/${commentsEndpoint}`;
       
       // Using camelCase property names consistently
       const commentData: CommentSubmission = {
@@ -73,7 +78,7 @@
   }
 </script>
 
-<div class="comment-form">
+<div>
   <h3>Leave a comment</h3>
   
   <form onsubmit={submitComment}>
@@ -91,8 +96,14 @@
       <label for="content">Comment (required)</label>
       <textarea id="content" bind:value={content} required></textarea>
     </div>
+
+    <div
+      class="cf-turnstile"
+      data-sitekey="{config.token.turnstileSiteKey}"
+      data-callback={onTurnstileResolved}
+    ></div>
     
-    <button type="submit" disabled={isSubmitting}>
+    <button type="submit" disabled={isSubmitting || !canSubmit}>
       Submit Comment
     </button>
     

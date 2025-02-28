@@ -25,11 +25,16 @@ const { title, description, pageType } = Astro.props;
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@" />
     <meta name="twitter:creator" content="@" />
+    <title>{title}</title>
     <link rel="cononical" href={Astro.url} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+      async
+      defer
+      is:inline></script>
   </head>
   <body
     class="font-sans flex flex-col m-auto items-stretch px-8 min-h-screen max-w-[54rem]"
