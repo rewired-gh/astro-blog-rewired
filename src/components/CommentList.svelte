@@ -7,6 +7,7 @@
     PaginationMeta,
   } from "../types/comments";
   import moment from "moment";
+  import Pagination from "./Pagination.svelte";
 
   const { postId } = $props<{ postId: string }>();
 
@@ -18,11 +19,13 @@
 
   // Expose this function to be called from parent component
   export function refreshComments() {
-    fetchComments(currentPage);
+    fetchComments(1, true);
   }
 
-  async function fetchComments(page = 1) {
-    loading = true;
+  async function fetchComments(page = 1, uninterrupted = false) {
+    if (!uninterrupted) {
+      loading = true;
+    }
     error = null;
 
     try {
@@ -77,19 +80,11 @@
 
   onMount(() => {
     fetchComments();
-
-    // Listen for refresh event from the comment form
-    const refreshListener = () => fetchComments(currentPage);
-    window.addEventListener("refresh-comments", refreshListener);
-
-    return () => {
-      window.removeEventListener("refresh-comments", refreshListener);
-    };
   });
 </script>
 
-<div>
-  <h2 class="c-section-title mb-4">Comments</h2>
+<div class="flex flex-col gap-y-4">
+  <h2 class="c-section-title">Comments</h2>
 
   {#if loading}
     <p class="text-stone-500 font-light motion-safe:animate-pulse">
@@ -119,19 +114,13 @@
       {/each}
     </div>
 
-    <span
-      >Page {pagination?.currentPage || 1} of {pagination?.totalPages ||
-        1}</span
-    >
-    {#if pagination && pagination.totalPages > 1}
-      <div>
-        <button disabled={!pagination.prevPage} onclick={handlePrevPage}>
-          Previous Page
-        </button>
-        <button disabled={!pagination.nextPage} onclick={handleNextPage}>
-          Next Page
-        </button>
-      </div>
+    {#if pagination}
+      <Pagination
+        currentPage={pagination.currentPage || 1}
+        totalPages={pagination.totalPages || 1}
+        onPrevPage={pagination.prevPage ? handlePrevPage : null}
+        onNextPage={pagination.nextPage ? handleNextPage : null}
+      />
     {/if}
   {/if}
 </div>

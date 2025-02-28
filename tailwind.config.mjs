@@ -4,7 +4,7 @@ import colors from 'tailwindcss/colors'
 
 export default {
   safelist: [
-    'motion-safe:animate-bounce',
+    'motion-safe:animate-pulse',
     'invisible',
     'text-red-500',
   ],

@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPathsOptions } from "astro";
 import DigestList from "../components/DigestList.astro";
+import Pagination from "../components/Pagination.svelte";
 import { getAllDigestEntries } from "../components/digest";
 import { getPageTitle, mainDescription } from "../components/pageTitle";
 import Layout from "../layouts/Layout.astro";
@@ -19,35 +20,11 @@ const { page } = Astro.props;
 >
   <div class="flex flex-col gap-y-8">
     <DigestList digests={page.data} />
-    <div
-      class="text-sm font-light text-stone-500 w-full flex items-center justify-center gap-x-4
-      [&_a]:w-20"
-    >
-      <a
-        href={page.url.prev}
-        class="c-button"
-        class:list={[
-          {
-            invisible: !page.url.prev,
-          },
-        ]}
-      >
-        Previous
-      </a>
-      <span class="text-center">
-        Page {page.currentPage} of {page.lastPage}</span
-      >
-      <a
-        href={page.url.next}
-        class="c-button"
-        class:list={[
-          {
-            invisible: !page.url.next,
-          },
-        ]}
-      >
-        Next
-      </a>
-    </div>
+    <Pagination
+      currentPage={page.currentPage}
+      totalPages={page.lastPage}
+      prevUrl={page.url.prev}
+      nextUrl={page.url.next}
+    />
   </div>
 </Layout>

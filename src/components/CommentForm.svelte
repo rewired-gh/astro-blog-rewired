@@ -94,7 +94,8 @@
         <div
           class:invisible={!message}
           class:text-red-500={isErrorMessage}
-          class:animate-wiggle={isErrorMessage}
+          class:motion-safe:animate-wiggle={isErrorMessage}
+          class:motion-safe:animate-pulse={isSubmitting}
         >
           {message}
         </div>
@@ -108,7 +109,7 @@
       </div>
       <textarea
         class="text-lg focus:outline-none rounded-b-lg border
-        px-3 py-2 placeholder:font-light"
+        px-3 py-2 placeholder:font-light min-h-24 max-h-96"
         placeholder="Share your thoughts here..."
         id="content"
         name="content"
@@ -141,12 +142,17 @@
       />
     </div>
 
-    <div class="relative h-15 min-w-40 text-stone-300 font-light text-sm">
+    <div class="relative h-15 min-w-[300px] text-stone-300 font-light text-sm">
       <div
         class="cf-turnstile"
         data-sitekey={config.token.turnstileSiteKey}
+        data-theme="light"
       ></div>
-      <span class="absolute top-1 left-0.5 -z-50"> CAPTCHA is loading... </span>
+      <span
+        class="absolute top-1/2 left-1/2 -translate-1/2 -z-50 motion-safe:animate-pulse"
+      >
+        CAPTCHA is loading...
+      </span>
     </div>
   </div>
 
