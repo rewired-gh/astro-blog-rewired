@@ -13,7 +13,10 @@ import { verifyCaptcha } from "../../../../util/captcha";
 import { moderateContent } from "../../../../util/moderation";
 import camelcaseKeys from "camelcase-keys";
 import snakecaseKeys from "snakecase-keys";
-import config, { turnstileTestAlwaysPassSecret } from "../../../../../src/lib/config";
+import config, {
+  turnstileTestAlwaysPassSecret,
+} from "../../../../../src/lib/config";
+import { sendNewCommentNotification } from "../../../../util/notification";
 
 interface Env {
   devDB: D1Database;
@@ -22,6 +25,8 @@ interface Env {
   LLM_API_KEY: string;
   LLM_API_ENDPOINT: string;
   LLM_MODEL: string;
+  NOTIFICATION_TELEGRAM_BOT_TOKEN: string;
+  NOTIFICATION_TELEGRAM_CHAT_ID: string;
 }
 
 /**
@@ -122,7 +127,7 @@ async function handlePostComment(
       sender_name,
       sender_email,
       content,
-      captcha_token
+      captcha_token,
     };
 
     // Validate inputs
@@ -132,7 +137,7 @@ async function handlePostComment(
     }
 
     // Get client IP address
-    const clientIp =  request.headers.get("CF-Connecting-IP") ||
+    const clientIp = request.headers.get("CF-Connecting-IP") ||
       request.headers.get("X-Forwarded-For") ||
       request.headers.get("X-Real-IP") ||
       "unknown";
@@ -221,6 +226,19 @@ async function handlePostComment(
 
       // Transform to camelCase response
       const transformedComment = camelcaseKeys(result);
+
+      // Send a notification to the admin
+      await sendNewCommentNotification(
+        {
+          senderName: sender_name,
+          senderEmail: sender_email,
+          content: content,
+          captchaToken: captcha_token,
+        },
+        postId,
+        env.NOTIFICATION_TELEGRAM_BOT_TOKEN,
+        env.NOTIFICATION_TELEGRAM_CHAT_ID,
+      );
 
       // Return success with the newly created comment
       return api.success({

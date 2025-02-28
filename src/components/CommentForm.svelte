@@ -1,7 +1,6 @@
 <script lang="ts">
   import { tick } from "svelte";
   import config from "../lib/config";
-  import type { CommentSubmission } from "../types/comments";
 
   let { postId, onCommentSubmitted } = $props<{
     postId: string;
