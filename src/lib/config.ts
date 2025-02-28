@@ -8,7 +8,12 @@ export const isLocalhost = false;
 
 declare global {
   interface Window {
-    onTurnstileResolved: (token: string) => void;
+    turnstile: {
+      reset: (widgetId?: string) => void;
+      getResponse: (widgetId?: string) => string | undefined;
+      isExpired: (widgetId?: string) => boolean;
+      remove: (widgetId?: string) => void;
+    };
   }
 }
 
