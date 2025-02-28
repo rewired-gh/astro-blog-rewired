@@ -100,13 +100,14 @@
     <div class="flex flex-col gap-y-4 font-light">
       {#each comments as comment}
         <div>
-          <div class="flex text-sm mb-0.5">
+          <div class="flex items-center text-sm mb-0.5">
             <strong class="font-medium truncate">{comment.senderName}</strong>
             {#if comment.senderEmail}
-              <span class="flex-1 truncate">({comment.senderEmail})</span>
+              <span class="shrink truncate ml-1">({comment.senderEmail})</span>
             {/if}
-            <span class="flex-1 truncate text-stone-500 ml-2"
-              >{moment(new Date(comment.createdAt)).fromNow()}</span
+            <span class="m-1">·</span>
+            <span class="truncate text-stone-500">
+              {moment(new Date(comment.createdAt)).fromNow()}</span
             >
           </div>
           <div class="font-normal">{comment.content}</div>

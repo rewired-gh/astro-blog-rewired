@@ -44,7 +44,7 @@
     </button>
   {/if}
 
-  <span class="text-center">
+  <span class="text-center truncate">
     Page {currentPage} of {totalPages}
   </span>
 
