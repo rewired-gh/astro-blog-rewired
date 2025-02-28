@@ -22,3 +22,12 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Cloudflare Pages
+.wrangler/
+tmp/
+wrangler.toml
+.dev.vars
+
+# Mock data
+post-1.md

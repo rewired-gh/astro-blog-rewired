@@ -3,6 +3,11 @@ import typography from '@tailwindcss/typography'
 import colors from 'tailwindcss/colors'
 
 export default {
+  safelist: [
+    'motion-safe:animate-pulse',
+    'invisible',
+    'text-red-500',
+  ],
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     fontFamily: {
@@ -71,6 +76,7 @@ export default {
         },
         stone: {
           css: {
+            '--tw-prose-body': colors.stone[800],
             '--tw-prose-pre-bg': colors.stone[50],
             '--tw-prose-quote-borders': colors.cyan[500],
             '--tw-prose-bullets': colors.cyan[500],
@@ -81,7 +87,4 @@ export default {
       }
     },
   },
-  plugins: [
-    typography
-  ],
 }
