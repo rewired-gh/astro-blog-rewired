@@ -313,7 +313,7 @@ function validateComment(data): { valid: boolean; error?: string } {
 export const onRequest: PagesFunction<Env> = async (context) => {
   const method = context.request.method;
   const postId = context.params.post as string;
-  const db = context.env.devDB;
+  const db = config.isDev ? context.env.devDB : context.env.prodDB;
   const url = new URL(context.request.url);
 
   // Handle CORS preflight requests
