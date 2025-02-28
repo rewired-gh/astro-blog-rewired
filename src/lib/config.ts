@@ -14,6 +14,8 @@ declare global {
 
 const turnstileTestAlwaysPass = '1x00000000000000000000AA'
 const turnstileTestAlwaysBlock = '2x00000000000000000000AB'
+export const turnstileTestAlwaysPassSecret = '1x0000000000000000000000000000000AA'
+export const turnstileTestAlwaysFailSecret = '2x0000000000000000000000000000000AA'
 
 // Token configuration
 export const tokenConfig = {
@@ -25,6 +27,9 @@ export const apiConfig = {
   baseUrl: isLocalhost ? 'http://localhost:8788/api' : '/api',
   endpoints: {
     comments: (postId: string) => `posts/${postId}/comments`,
+  },
+  constraints: {
+    maxCommentLength: 560,
   }
 };
 

@@ -1,0 +1,43 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@config "../../tailwind.config.mjs";
+
+@theme {
+  --animate-wiggle: wiggle 150ms ease-out 2;
+  @keyframes wiggle {
+    0% {}
+    25% {
+      transform: translateX(-1px);
+    }
+    75% {
+      transform: translateX(1px);
+    }
+    100% {}
+  }
+}
+
+@layer components {
+  .c-button {
+    @apply text-stone-500 text-sm font-light text-center py-1.5 border rounded-full border-stone-300 transition-colors duration-300;
+  }
+  
+  .c-button:hover:not(:disabled) {
+    @apply border-cyan-700 text-cyan-700 cursor-pointer;
+  }
+
+  .c-button:disabled {
+    @apply text-stone-300;
+  }
+
+  .c-input {
+    @apply focus:outline-none rounded-lg border border-stone-300 focus:border-cyan-500 px-3 py-1;
+  }
+
+  .c-label {
+    @apply text-stone-500 text-sm font-light
+  }
+
+  .c-section-title {
+    @apply text-lg text-stone-900;
+  }
+}

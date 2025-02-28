@@ -20,10 +20,19 @@ export async function verifyCaptcha(
   ip: string,
   secret: string
 ): Promise<boolean> {
-
-  // TODO: Implement actual verification logic
-  // This should make a POST request to the Turnstile API endpoint
-  // and verify that the token is valid
+  const url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
   
-  return true; // Placeholder return value
+  // Use FormData instead of JSON
+  const formData = new FormData();
+  formData.append("secret", secret);
+  formData.append("response", token);
+  formData.append("remoteip", ip);
+  
+  const result = await fetch(url, {
+    body: formData,
+    method: 'POST',
+  });
+  
+  const outcome = await result.json() as TurnstileVerifyResponse;
+  return outcome?.success || false;
 }

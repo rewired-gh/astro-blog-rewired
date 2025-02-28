@@ -12,8 +12,7 @@
   }
 </script>
 
-<section>
-  <h2 class="text-[22px] mb-[1em] text-stone-900">Comments</h2>
+<section class="flex flex-col gap-y-8">
   <CommentForm {postId} onCommentSubmitted={handleCommentSubmitted} />
   <CommentList bind:this={commentListRef} {postId} />
 </section>

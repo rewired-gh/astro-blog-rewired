@@ -1,10 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 import typography from '@tailwindcss/typography'
 import colors from 'tailwindcss/colors'
-import { borderRadius, padding } from 'tailwindcss/defaultTheme'
-import plugin from 'tailwindcss/plugin'
 
 export default {
+  safelist: [
+    'motion-safe:animate-bounce',
+    'invisible',
+    'text-red-500',
+  ],
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     fontFamily: {
@@ -84,7 +87,4 @@ export default {
       }
     },
   },
-  plugins: [
-    typography
-  ],
 }
