@@ -1,17 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { apiConfig } from "../lib/config";
-  import type {
-    Comment,
-    CommentListResponse,
-    PaginationMeta,
-  } from "../types/comments";
+  import type { CommentResponse, PaginationMeta } from "../types/comments";
   import moment from "moment";
   import Pagination from "./Pagination.svelte";
 
   const { postId } = $props<{ postId: string }>();
 
-  let comments: Comment[] = $state([]);
+  let comments: CommentResponse[] = $state([]);
   let pagination: PaginationMeta | null = $state(null);
   let loading = $state(true);
   let error: string | null = $state(null);
@@ -107,8 +103,8 @@
             {/if}
             <span class="m-1">·</span>
             <span class="truncate text-stone-500">
-              {moment(new Date(comment.createdAt)).fromNow()}</span
-            >
+              {moment.utc(comment.createdAt).local().fromNow()}
+            </span>
           </div>
           <div class="font-normal">{comment.content}</div>
         </div>
