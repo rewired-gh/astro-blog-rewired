@@ -13,22 +13,13 @@ export interface CommentModel {
   created_at: string;
 }
 
-// Frontend comment model (camelCase)
-export interface Comment {
-  id: string;
-  senderName: string;
-  senderEmail: string | null;
-  content: string;
-  createdAt: string;
-}
-
 // API response comment (excludes post_id)
 export interface CommentResponse {
   id: string;
   senderName: string;
   senderEmail: string | null;
   content: string;
-  createdAt: string;
+  createdAt: string;  // UTC
 }
 
 // Pagination metadata
