@@ -6,9 +6,18 @@
 export const isDev = true;
 export const isLocalhost = false;
 
+declare global {
+  interface Window {
+    onTurnstileResolved: (token: string) => void;
+  }
+}
+
+const turnstileTestAlwaysPass = '1x00000000000000000000AA'
+const turnstileTestAlwaysBlock = '2x00000000000000000000AB'
+
 // Token configuration
 export const tokenConfig = {
-  turnstileSiteKey: '0x4AAAAAAA-1N2bI9ZrMgGGX',
+  turnstileSiteKey:  isDev ? turnstileTestAlwaysPass : '0x4AAAAAAA-1N2bI9ZrMgGGX',
 };
 
 // API configuration

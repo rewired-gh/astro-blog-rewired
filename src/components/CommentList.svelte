@@ -107,10 +107,10 @@
     <span>Page {pagination?.currentPage || 1} of {pagination?.totalPages || 1}</span>
     {#if pagination && pagination.totalPages > 1}
       <div>
-        <button disabled={!pagination.prevPage} on:click={handlePrevPage}>
+        <button disabled={!pagination.prevPage} onclick={handlePrevPage}>
           Previous Page
         </button>
-        <button disabled={!pagination.nextPage} on:click={handleNextPage}>
+        <button disabled={!pagination.nextPage} onclick={handleNextPage}>
           Next Page
         </button>
       </div>
