@@ -18,7 +18,7 @@
 
 @layer components {
   .c-button {
-    @apply text-stone-500 text-sm font-light text-center py-1.5 border rounded-full border-stone-300 transition-colors duration-300;
+    @apply truncate text-stone-500 text-sm font-light text-center py-1.5 border rounded-full border-stone-300 transition-colors duration-300;
   }
   
   .c-button:hover:not(:disabled) {
@@ -34,10 +34,10 @@
   }
 
   .c-label {
-    @apply text-stone-500 text-sm font-light
+    @apply truncate text-stone-500 text-sm font-light
   }
 
   .c-section-title {
-    @apply text-lg text-stone-900;
+    @apply truncate text-lg text-stone-900;
   }
 }

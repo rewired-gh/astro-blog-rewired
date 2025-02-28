@@ -92,6 +92,7 @@
         class="flex items-center justify-between text-stone-500 font-light px-3 h-6 text-sm rounded-t-lg border border-b-0"
       >
         <div
+          class="truncate flex-1"
           class:invisible={!message}
           class:text-red-500={isErrorMessage}
           class:motion-safe:animate-wiggle={isErrorMessage}
@@ -101,6 +102,7 @@
         </div>
 
         <span
+          class="truncate"
           class:text-red-500={content.length >
             config.api.constraints.maxCommentLength}
         >
@@ -119,9 +121,10 @@
     </div>
   </div>
 
-  <div class="flex flex-wrap gap-x-3 gap-y-4 items-start">
-    <div class="flex flex-1 flex-col">
+  <div class="flex flex-wrap gap-x-3 gap-y-4 items-start *:w-full sm:*:w-fit">
+    <div class="flex flex-1 flex-col gap-y-1">
       <label class="c-label" for="name">Name (required)</label>
+      <!-- max-w is a dirty workaround due to bugs in the old Chrome -->
       <input
         class="c-input"
         id="name"
@@ -131,7 +134,7 @@
       />
     </div>
 
-    <div class="flex flex-1 flex-col">
+    <div class="flex flex-1 flex-col gap-y-1">
       <label class="c-label" for="email">Email (optional)</label>
       <input
         class="c-input"

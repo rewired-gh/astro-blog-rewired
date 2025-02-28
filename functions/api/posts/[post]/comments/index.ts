@@ -164,7 +164,7 @@ async function handlePostComment(
     );
 
     if (!moderationPass) {
-      return api.error("Your comment could not be accepted.");
+      return api.error("Your comment was rejected.");
     }
 
     // Begin database operations
