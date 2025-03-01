@@ -175,7 +175,7 @@
       />
     </div>
 
-    <div class="relative h-15 min-w-[300px] text-stone-300 font-light text-sm">
+    <div class="relative h-15 min-w-[300px] text-stone-400 font-light text-sm">
       <div
         class="cf-turnstile"
         data-sitekey={config.token.turnstileSiteKey}

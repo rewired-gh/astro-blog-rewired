@@ -26,7 +26,7 @@
   }
 
   .c-button:disabled {
-    @apply text-stone-300;
+    @apply text-stone-400;
   }
 
   .c-input {
