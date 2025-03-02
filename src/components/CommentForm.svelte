@@ -117,10 +117,10 @@
       class="flex flex-col *:w-full *:border-stone-300 focus-within:*:border-cyan-500"
     >
       <div
-        class="flex items-center justify-between text-stone-500 font-light px-3 h-6 text-sm rounded-t-lg border border-b-0"
+        class="flex items-center justify-between text-stone-500 font-light px-3 h-6 text-sm rounded-t-lg border border-b-0 truncate"
       >
         <div
-          class="truncate flex-1"
+          class="flex-1"
           class:invisible={!message}
           class:text-red-500={isErrorMessage}
           class:motion-safe:animate-wiggle={isErrorMessage}
@@ -130,7 +130,6 @@
         </div>
 
         <span
-          class="truncate"
           class:text-red-500={content.length >
             config.api.constraints.maxCommentLength}
         >

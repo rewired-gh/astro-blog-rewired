@@ -96,13 +96,13 @@
     <div class="flex flex-col gap-y-4 font-light">
       {#each comments as comment}
         <div>
-          <div class="flex items-center text-sm mb-0.5">
-            <strong class="font-medium truncate">{comment.senderName}</strong>
+          <div class="flex items-center text-sm mb-0.5 truncate">
+            <strong class="font-medium">{comment.senderName}</strong>
             {#if comment.senderEmail}
-              <span class="shrink truncate ml-1">({comment.senderEmail})</span>
+              <span class="shrink ml-1">({comment.senderEmail})</span>
             {/if}
             <span class="m-1">·</span>
-            <span class="truncate text-stone-500">
+            <span class="text-stone-500">
               {moment.utc(comment.createdAt).local().fromNow()}
             </span>
           </div>
