@@ -30,16 +30,11 @@
     customClass}
 >
   {#if prevUrl}
-    <a href={prevUrl} class="c-button" class:invisible={!hasPrev}>
+    <a href={prevUrl} class="c-button" aria-disabled={!hasPrev}>
       {prevLabel}
     </a>
   {:else}
-    <button
-      onclick={onPrevPage}
-      class="c-button"
-      class:invisible={!hasPrev}
-      disabled={!hasPrev}
-    >
+    <button onclick={onPrevPage} class="c-button" disabled={!hasPrev}>
       {prevLabel}
     </button>
   {/if}
@@ -49,16 +44,11 @@
   </span>
 
   {#if nextUrl}
-    <a href={nextUrl} class="c-button" class:invisible={!hasNext}>
+    <a href={nextUrl} class="c-button" aria-disabled={!hasNext}>
       {nextLabel}
     </a>
   {:else}
-    <button
-      onclick={onNextPage}
-      class="c-button"
-      class:invisible={!hasNext}
-      disabled={!hasNext}
-    >
+    <button onclick={onNextPage} class="c-button" disabled={!hasNext}>
       {nextLabel}
     </button>
   {/if}

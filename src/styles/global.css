@@ -29,7 +29,7 @@
   }
 
   .c-button:disabled {
-    @apply text-stone-400;
+    @apply text-stone-400 border-dashed;
   }
 
   .c-input {
