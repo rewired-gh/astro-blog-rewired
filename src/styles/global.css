@@ -25,7 +25,7 @@
   }
   
   .c-button:hover:not(:disabled), .c-button:focus:not(:disabled) {
-    @apply border-cyan-500 text-cyan-700 cursor-pointer;
+    @apply border-cyan-500 text-cyan-700 cursor-pointer outline-0;
   }
 
   .c-button:disabled {

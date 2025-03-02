@@ -30,7 +30,7 @@
     customClass}
 >
   {#if prevUrl}
-    <a href={prevUrl} class="c-button" aria-disabled={!hasPrev}>
+    <a tabindex="0" href={prevUrl} class="c-button" aria-disabled={!hasPrev}>
       {prevLabel}
     </a>
   {:else}
@@ -44,7 +44,7 @@
   </span>
 
   {#if nextUrl}
-    <a href={nextUrl} class="c-button" aria-disabled={!hasNext}>
+    <a tabindex="0" href={nextUrl} class="c-button" aria-disabled={!hasNext}>
       {nextLabel}
     </a>
   {:else}

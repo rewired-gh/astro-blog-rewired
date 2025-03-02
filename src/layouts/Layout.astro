@@ -33,7 +33,7 @@ const { title, description, pageType } = Astro.props;
     <meta name="generator" content={Astro.generator} />
   </head>
   <body
-    class="font-sans text-stone-800 flex flex-col m-auto items-stretch px-8 min-h-screen max-w-[54rem]"
+    class="font-sans text-stone-800 underline-offset-4 flex flex-col m-auto items-stretch px-8 min-h-screen max-w-[54rem]"
   >
     <header
       class="text-stone-900 font-light flex flex-col gap-y-4 pt-12 pb-14 w-full items-start whitespace-nowrap text-ellipsis"
@@ -62,7 +62,11 @@ const { title, description, pageType } = Astro.props;
       <p>This website is built from scratch without templates.</p>
       <p class="flex flex-wrap justify-center items-center gap-x-2">
         <span>Copyright © MMXXV Rewired All Rights Reserved.</span>
-        <a href="https://icp.gov.moe/?keyword=20250143" target="_blank">
+        <a
+          tabindex="0"
+          href="https://icp.gov.moe/?keyword=20250143"
+          target="_blank"
+        >
           萌ICP备20250143号
         </a>
       </p>

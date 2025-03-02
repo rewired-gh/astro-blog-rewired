@@ -16,7 +16,7 @@ const { digests } = Astro.props;
         <ArticleMeta date={digest.date} tags={digest.tags} />
         <a
           tabindex="0"
-          class="block outline-0
+          class="block focus:outline-0
           hocus:[&_h2]:before:blur-none hocus:[&_h2]:before:w-1 hocus:[&_h2]:before:h-full hocus:[&_h2]:before:bg-cyan-500"
           href={digest.path}
         >
