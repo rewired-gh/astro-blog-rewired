@@ -10,7 +10,7 @@ async function corsMiddleware(context) {
   if (context.request.method === 'OPTIONS') {
     return api.handleCors();
   }
-  
+
   // Continue processing the request
   return context.next();
 }

@@ -18,12 +18,12 @@ interface PaginationResult {
  */
 export function parsePageParam(pageParam: string | null): number | null {
   if (!pageParam) return 1;
-  
+
   const page = parseInt(pageParam, 10);
   if (isNaN(page) || page < 1) {
     return null;
   }
-  
+
   return page;
 }
 
@@ -32,33 +32,29 @@ export function parsePageParam(pageParam: string | null): number | null {
  */
 export function calculatePagination(params: PaginationParams): PaginationResult {
   const { page, perPage, totalItems, baseUrl } = params;
-  
+
   const totalPages = Math.max(1, Math.ceil(totalItems / perPage));
   const currentPage = Math.min(page, totalPages);
   const limit = perPage;
   const offset = (currentPage - 1) * perPage;
-  
+
   // Generate next/prev page URLs
-  const nextPage = currentPage < totalPages 
-    ? `${baseUrl}?page=${currentPage + 1}` 
-    : null;
-    
-  const prevPage = currentPage > 1 
-    ? `${baseUrl}?page=${currentPage - 1}` 
-    : null;
-  
+  const nextPage = currentPage < totalPages ? `${baseUrl}?page=${currentPage + 1}` : null;
+
+  const prevPage = currentPage > 1 ? `${baseUrl}?page=${currentPage - 1}` : null;
+
   // Create pagination metadata using camelCase
   const meta: PaginationMeta = {
     currentPage,
     totalItems,
     totalPages,
     nextPage,
-    prevPage
+    prevPage,
   };
-  
+
   return {
     limit,
     offset,
-    meta
+    meta,
   };
 }

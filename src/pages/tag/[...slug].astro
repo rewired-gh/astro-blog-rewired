@@ -1,8 +1,8 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import { getPageTitle } from "../../components/pageTitle";
-import { getTagStaticPaths } from "../../components/digest";
-import DigestList from "../../components/DigestList.astro";
+import Layout from '../../layouts/Layout.astro';
+import { getTagStaticPaths } from '../../components/digest';
+import DigestList from '../../components/DigestList.astro';
+import config from '../../lib/config';
 
 export const getStaticPaths = getTagStaticPaths;
 
@@ -10,7 +10,7 @@ const { digests, tag } = Astro.props;
 ---
 
 <Layout
-  title={getPageTitle(`Tag: ${tag}`)}
+  title={config.site.pageTitle(`Tag: ${tag}`)}
   description={`Explore articles related to ${tag}.`}
   pageType="website"
 >

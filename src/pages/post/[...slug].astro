@@ -1,13 +1,13 @@
 ---
-import { getCollection } from "astro:content";
-import Layout from "../../layouts/Layout.astro";
-import ArticleMeta from "../../components/ArticleMeta.astro";
-import { getPageTitle } from "../../components/pageTitle";
-import { createExcerpt } from "../../components/digest";
-import CommentSection from "../../components/CommentSection.svelte";
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import ArticleMeta from '../../components/ArticleMeta.astro';
+import { createExcerpt } from '../../components/digest';
+import CommentSection from '../../components/CommentSection.svelte';
+import config from '../../lib/config';
 
 export async function getStaticPaths() {
-  const blogEntries = await getCollection("post");
+  const blogEntries = await getCollection('post');
   return blogEntries.map((entry) => ({
     params: { slug: entry.slug },
     props: { entry },
@@ -19,7 +19,7 @@ const { Content } = await entry.render();
 ---
 
 <Layout
-  title={getPageTitle(entry.data.title)}
+  title={config.site.pageTitle(entry.data.title)}
   description={createExcerpt(entry.slug, entry.body)}
   pageType="article"
 >

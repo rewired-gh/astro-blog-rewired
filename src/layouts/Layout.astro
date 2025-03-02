@@ -1,12 +1,12 @@
 ---
-import NavButton from "../components/NavButton.astro";
-import { mainTitle } from "../components/pageTitle";
-import "../styles/global.css";
+import NavButton from '../components/NavButton.astro';
+import config from '../lib/config';
+import '../styles/global.css';
 
 interface Props {
   title: string;
   description: string;
-  pageType: "website" | "article";
+  pageType: 'website' | 'article';
 }
 
 const { title, description, pageType } = Astro.props;
@@ -21,7 +21,7 @@ const { title, description, pageType } = Astro.props;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={Astro.url} />
-    <meta property="og:site_name" content={mainTitle} />
+    <meta property="og:site_name" content={config.site.name} />
     <meta property="og:type" content={pageType} />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@" />
@@ -33,18 +33,18 @@ const { title, description, pageType } = Astro.props;
     <meta name="generator" content={Astro.generator} />
   </head>
   <body
-    class="font-sans text-stone-800 underline-offset-4 flex flex-col m-auto items-stretch px-8 min-h-screen max-w-[54rem]"
+    class="m-auto flex min-h-screen max-w-[54rem] flex-col items-stretch px-8 font-sans text-stone-800 underline-offset-4"
   >
     <header
-      class="text-stone-900 font-light flex flex-col gap-y-4 pt-12 pb-14 w-full items-start whitespace-nowrap text-ellipsis"
+      class="flex w-full flex-col items-start gap-y-4 pt-12 pb-14 font-light text-ellipsis whitespace-nowrap text-stone-900"
     >
       <a href="/">
         <h1 class="text-2xl">
-          {mainTitle}
+          {config.site.name}
         </h1>
       </a>
       <nav>
-        <ul class="text-lg flex gap-x-4">
+        <ul class="flex gap-x-4 text-lg">
           <NavButton name="Home" link="/" />
           <NavButton name="About" link="/about" />
           <NavButton name="RSS" link="/rss.xml" />
@@ -55,26 +55,19 @@ const { title, description, pageType } = Astro.props;
     <main class="w-full">
       <slot />
     </main>
-    <div class="grow shrink"></div>
-    <footer
-      class="font-light text-xs text-center my-8 py-8 text-stone-400 leading-6"
-    >
+    <div class="shrink grow"></div>
+    <footer class="my-8 py-8 text-center text-xs leading-6 font-light text-stone-400">
       <p>This website is built from scratch without templates.</p>
-      <p class="flex flex-wrap justify-center items-center gap-x-2">
+      <p class="flex flex-wrap items-center justify-center gap-x-2">
         <span>Copyright © MMXXV Rewired All Rights Reserved.</span>
-        <a
-          tabindex="0"
-          href="https://icp.gov.moe/?keyword=20250143"
-          target="_blank"
-        >
+        <a tabindex="0" href="https://icp.gov.moe/?keyword=20250143" target="_blank">
           萌ICP备20250143号
         </a>
       </p>
       <p class="mt-4">
-        By browsing, you consent to third-party data collection for
-        functionality, security, and analytics, including but not limited to
-        Cloudflare Pages, Cloudflare D1, Cloudflare Turnstile, and ByteDance
-        Volcano Ark.
+        By browsing, you consent to third-party data collection for functionality, security, and
+        analytics, including but not limited to Cloudflare Pages, Cloudflare D1, Cloudflare
+        Turnstile, and ByteDance Volcano Ark.
       </p>
     </footer>
   </body>

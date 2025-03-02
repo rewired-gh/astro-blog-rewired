@@ -1,23 +1,18 @@
-import { serverConfig } from "../../../../util/config";
-import { api } from "../../../../util/api";
-import {
-  calculatePagination,
-  parsePageParam,
-} from "../../../../util/pagination";
+import { serverConfig } from '../../../../util/config';
+import { api } from '../../../../util/api';
+import { calculatePagination, parsePageParam } from '../../../../util/pagination';
 import {
   CommentListResponse,
   CommentModel,
   CommentResponse,
   CommentSubmission,
-} from "../../../../../src/types/comments";
-import { verifyCaptcha } from "../../../../util/captcha";
-import { moderateContent } from "../../../../util/moderation";
-import camelcaseKeys from "camelcase-keys";
-import snakecaseKeys from "snakecase-keys";
-import config, {
-  turnstileTestAlwaysPassSecret,
-} from "../../../../../src/lib/config";
-import { sendNewCommentNotification } from "../../../../util/notification";
+} from '../../../../../src/types/comments';
+import { verifyCaptcha } from '../../../../util/captcha';
+import { moderateContent } from '../../../../util/moderation';
+import camelcaseKeys from 'camelcase-keys';
+import snakecaseKeys from 'snakecase-keys';
+import config, { turnstileTestAlwaysPassSecret } from '../../../../../src/lib/config';
+import { sendNewCommentNotification } from '../../../../util/notification';
 
 interface Env {
   devDB: D1Database;
@@ -36,8 +31,8 @@ interface Env {
  * Converts snake_case to camelCase and removes post_id
  */
 function transformComments(comments: CommentModel[]): CommentResponse[] {
-  return comments.map(({ post_id, ip, ...rest }) =>
-    camelcaseKeys(rest) as unknown as CommentResponse
+  return comments.map(
+    ({ post_id, ip, ...rest }) => camelcaseKeys(rest) as unknown as CommentResponse
   );
 }
 
@@ -47,19 +42,20 @@ function transformComments(comments: CommentModel[]): CommentResponse[] {
 async function handleGetComments(
   db: D1Database,
   postId: string,
-  requestUrl: URL,
+  requestUrl: URL
 ): Promise<Response> {
   try {
     // Parse and validate page parameter
-    const page = parsePageParam(requestUrl.searchParams.get("page"));
+    const page = parsePageParam(requestUrl.searchParams.get('page'));
     if (page === null) {
-      return api.error("Invalid page parameter");
+      return api.error('Invalid page parameter');
     }
 
     // Get total count of comments for this post
-    const countResult = await db.prepare(
-      "SELECT COUNT(*) as total FROM comments WHERE post_id = ?",
-    ).bind(postId).first<{ total: number }>();
+    const countResult = await db
+      .prepare('SELECT COUNT(*) as total FROM comments WHERE post_id = ?')
+      .bind(postId)
+      .first<{ total: number }>();
 
     const totalItems = countResult?.total || 0;
 
@@ -68,20 +64,19 @@ async function handleGetComments(
       page,
       perPage: serverConfig.commentsPerPage,
       totalItems,
-      baseUrl: `${requestUrl.origin}/api/${
-        config.api.endpoints.comments(postId)
-      }`,
+      baseUrl: `${requestUrl.origin}/api/${config.api.endpoints.comments(postId)}`,
     });
 
     // Return early if page is out of bounds
     if (page > pagination.meta.totalPages && totalItems > 0) {
-      return api.error("Page number exceeds available pages");
+      return api.error('Page number exceeds available pages');
     }
 
     // Fetch comments with pagination
-    const comments = await db.prepare(
-      "SELECT * FROM comments WHERE post_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?",
-    ).bind(postId, pagination.limit, pagination.offset).all<CommentModel>();
+    const comments = await db
+      .prepare('SELECT * FROM comments WHERE post_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?')
+      .bind(postId, pagination.limit, pagination.offset)
+      .all<CommentModel>();
 
     // Transform comments from snake_case DB model to camelCase response model
     const transformedComments = transformComments(comments.results);
@@ -94,8 +89,8 @@ async function handleGetComments(
 
     return api.success(response);
   } catch (error) {
-    console.error("Error retrieving comments:", error);
-    return api.serverError("Failed to retrieve comments");
+    console.error('Error retrieving comments:', error);
+    return api.serverError('Failed to retrieve comments');
   }
 }
 
@@ -106,7 +101,7 @@ async function handlePostComment(
   db: D1Database,
   postId: string,
   request: Request,
-  env: Env,
+  env: Env
 ): Promise<Response> {
   try {
     // Parse request body as FormData instead of JSON
@@ -114,42 +109,42 @@ async function handlePostComment(
     try {
       formData = await request.formData();
     } catch (parseError) {
-      console.error("Error parsing form data:", parseError);
-      return api.error("Invalid form data in request");
+      console.error('Error parsing form data:', parseError);
+      return api.error('Invalid form data in request');
     }
 
     // Create data object for validation
     const data: CommentSubmission = {
-      senderName: (formData.get("senderName") as string).trim(),
-      senderEmail: (formData.get("senderEmail") as string || null)?.trim(),
-      content: formData.get("content") as string,
-      captchaToken: formData.get("cf-turnstile-response") as string,
+      senderName: (formData.get('senderName') as string).trim(),
+      senderEmail: ((formData.get('senderEmail') as string) || null)?.trim(),
+      content: formData.get('content') as string,
+      captchaToken: formData.get('cf-turnstile-response') as string,
     };
 
     // Validate inputs
     const validation = validateComment(data);
     if (!validation.valid) {
-      return api.error(validation.error || "Invalid comment data");
+      return api.error(validation.error || 'Invalid comment data');
     }
 
     // Get client IP address
-    const clientIp = request.headers.get("CF-Connecting-IP") ||
-      request.headers.get("X-Forwarded-For") ||
-      request.headers.get("X-Real-IP") ||
-      "unknown";
-    console.info("Client IP:", clientIp);
-    console.info("Captch token:", data.captchaToken);
-    console.info("Form data:", formData);
+    const clientIp =
+      request.headers.get('CF-Connecting-IP') ||
+      request.headers.get('X-Forwarded-For') ||
+      request.headers.get('X-Real-IP') ||
+      'unknown';
+    console.info('Client IP:', clientIp);
+    console.info('Captch token:', data.captchaToken);
+    console.info('Form data:', formData);
 
     // Verify captcha token
     const captchaPass = await verifyCaptcha(
       data.captchaToken,
       clientIp,
-      (config.isDev ? turnstileTestAlwaysPassSecret : env.TURNSTILE_SECRET) ||
-        "",
+      (config.isDev ? turnstileTestAlwaysPassSecret : env.TURNSTILE_SECRET) || ''
     );
     if (!captchaPass) {
-      return api.error("Security verification failed");
+      return api.error('Security verification failed');
     }
 
     // Moderate content with OpenAI
@@ -160,19 +155,20 @@ async function handlePostComment(
       env.LLM_API_ENDPOINT,
       env.LLM_API_KEY,
       env.LLM_MODEL,
-      env.LLM_DATA_TAG,
+      env.LLM_DATA_TAG
     );
 
     if (!moderationPass) {
-      return api.error("Your comment was rejected.");
+      return api.error('Your comment was rejected.');
     }
 
     // Begin database operations
     try {
       // Check comment count
-      const countResult = await db.prepare(
-        "SELECT COUNT(*) as total FROM comments WHERE post_id = ?",
-      ).bind(postId).first<{ total: number }>();
+      const countResult = await db
+        .prepare('SELECT COUNT(*) as total FROM comments WHERE post_id = ?')
+        .bind(postId)
+        .first<{ total: number }>();
 
       const totalComments = countResult?.total || 0;
 
@@ -182,41 +178,36 @@ async function handlePostComment(
         // Using batch for multiple operations that need to be atomic
         const batchResult = await db.batch([
           // Delete the oldest comment if we've reached the limit
-          db.prepare(
-            "DELETE FROM comments WHERE id = (SELECT id FROM comments WHERE post_id = ? ORDER BY created_at ASC LIMIT 1)",
-          ).bind(postId),
+          db
+            .prepare(
+              'DELETE FROM comments WHERE id = (SELECT id FROM comments WHERE post_id = ? ORDER BY created_at ASC LIMIT 1)'
+            )
+            .bind(postId),
 
           // Insert the new comment with IP
-          db.prepare(
-            "INSERT INTO comments (post_id, sender_name, sender_email, content, ip) VALUES (?, ?, ?, ?, ?) RETURNING id, sender_name, sender_email, content, created_at",
-          ).bind(
-            postId,
-            data.senderName,
-            data.senderEmail || null,
-            data.content,
-            clientIp,
-          ),
+          db
+            .prepare(
+              'INSERT INTO comments (post_id, sender_name, sender_email, content, ip) VALUES (?, ?, ?, ?, ?) RETURNING id, sender_name, sender_email, content, created_at'
+            )
+            .bind(postId, data.senderName, data.senderEmail || null, data.content, clientIp),
         ]);
 
         // Get the result from the second statement (the INSERT)
         result = batchResult[1].results[0] as CommentModel;
       } else {
         // Just insert the new comment if we're under the limit
-        const insertResult = await db.prepare(
-          "INSERT INTO comments (post_id, sender_name, sender_email, content, ip) VALUES (?, ?, ?, ?, ?) RETURNING id, sender_name, sender_email, content, created_at",
-        ).bind(
-          postId,
-          data.senderName,
-          data.senderEmail || null,
-          data.content,
-          clientIp,
-        ).first<CommentModel>();
+        const insertResult = await db
+          .prepare(
+            'INSERT INTO comments (post_id, sender_name, sender_email, content, ip) VALUES (?, ?, ?, ?, ?) RETURNING id, sender_name, sender_email, content, created_at'
+          )
+          .bind(postId, data.senderName, data.senderEmail || null, data.content, clientIp)
+          .first<CommentModel>();
 
         result = insertResult;
       }
 
       if (!result) {
-        throw new Error("Failed to insert comment");
+        throw new Error('Failed to insert comment');
       }
 
       // Transform to camelCase response
@@ -227,7 +218,7 @@ async function handlePostComment(
         data,
         postId,
         env.NOTIFICATION_TELEGRAM_BOT_TOKEN,
-        env.NOTIFICATION_TELEGRAM_CHAT_ID,
+        env.NOTIFICATION_TELEGRAM_CHAT_ID
       );
 
       // Return success with the newly created comment
@@ -235,76 +226,69 @@ async function handlePostComment(
         commentId: transformedComment.id,
       });
     } catch (dbError) {
-      console.error("Database operation failed:", dbError);
-      return api.serverError(
-        "We encountered an issue saving your comment.",
-      );
+      console.error('Database operation failed:', dbError);
+      return api.serverError('We encountered an issue saving your comment.');
     }
   } catch (error) {
-    console.error("Error processing comment submission:", error);
-    return api.serverError(
-      "An unexpected error occurred.",
-    );
+    console.error('Error processing comment submission:', error);
+    return api.serverError('An unexpected error occurred.');
   }
 }
 
 /**
  * Validate the comment submission data
  */
-function validateComment(
-  data: CommentSubmission,
-): { valid: boolean; error?: string } {
+function validateComment(data: CommentSubmission): { valid: boolean; error?: string } {
   // Check if data is an object
-  if (!data || typeof data !== "object") {
-    return { valid: false, error: "Invalid request format" };
+  if (!data || typeof data !== 'object') {
+    return { valid: false, error: 'Invalid request format' };
   }
 
   // Validate name
-  if (!data.senderName || typeof data.senderName !== "string") {
-    return { valid: false, error: "Please provide your name" };
+  if (!data.senderName || typeof data.senderName !== 'string') {
+    return { valid: false, error: 'Please provide your name' };
   }
 
   if (data.senderName.length > 32) {
-    return { valid: false, error: "Name cannot exceed 32 characters" };
+    return { valid: false, error: 'Name cannot exceed 32 characters' };
   }
 
   // Validate email (optional but if provided must be valid)
   if (data.senderEmail !== null && data.senderEmail !== undefined) {
-    if (typeof data.senderEmail !== "string") {
-      return { valid: false, error: "Email must be a string" };
+    if (typeof data.senderEmail !== 'string') {
+      return { valid: false, error: 'Email must be a string' };
     }
 
     if (data.senderEmail) {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailPattern.test(data.senderEmail)) {
-        return { valid: false, error: "Please provide a valid email address" };
+        return { valid: false, error: 'Please provide a valid email address' };
       }
     }
 
     if (data.senderEmail.length > 64) {
       return {
         valid: false,
-        error: "Email address cannot exceed 64 characters",
+        error: 'Email address cannot exceed 64 characters',
       };
     }
   }
 
   // Validate content
-  if (!data.content || typeof data.content !== "string") {
-    return { valid: false, error: "Comment content cannot be empty" };
+  if (!data.content || typeof data.content !== 'string') {
+    return { valid: false, error: 'Comment content cannot be empty' };
   }
 
   if (data.content.length > config.api.constraints.maxCommentLength) {
     return {
       valid: false,
-      error:
-        `Comment cannot exceed ${config.api.constraints.maxCommentLength} characters`,
+      error: `Comment cannot exceed ${config.api.constraints.maxCommentLength} characters`,
     };
   }
 
   // Validate captcha token
-  if (!data.captchaToken || typeof data.captchaToken !== "string") {
-    return { valid: false, error: "Security verification failed" };
+  if (!data.captchaToken || typeof data.captchaToken !== 'string') {
+    return { valid: false, error: 'Security verification failed' };
   }
 
   // All validations passed
@@ -321,21 +305,16 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   const url = new URL(context.request.url);
 
   // Handle CORS preflight requests
-  if (method === "OPTIONS") {
+  if (method === 'OPTIONS') {
     return api.handleCors();
   }
 
   switch (method) {
-    case "GET":
+    case 'GET':
       return handleGetComments(db, postId, url);
 
-    case "POST":
-      return handlePostComment(
-        db,
-        postId,
-        context.request as unknown as Request,
-        context.env,
-      );
+    case 'POST':
+      return handlePostComment(db, postId, context.request as unknown as Request, context.env);
 
     default:
       return api.methodNotAllowed();

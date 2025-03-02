@@ -1,11 +1,40 @@
 {
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
   "eslint.validate": [
     "javascript",
     "javascriptreact",
-    "astro",
     "typescript",
-    "typescriptreact"
+    "typescriptreact",
+    "astro",
+    "svelte",
+    "markdown"
   ],
-  "editor.formatOnSave": true,
-  "editor.tabSize": 2
+  "prettier.documentSelectors": [
+    "**/*.astro",
+    "**/*.svelte"
+  ],
+  "[javascript]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "[astro]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "[svelte]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "files.associations": {
+    "*.css": "postcss"
+  }
 }

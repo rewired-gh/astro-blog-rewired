@@ -1,10 +1,10 @@
 ---
-import type { GetStaticPathsOptions } from "astro";
-import DigestList from "../components/DigestList.astro";
-import Pagination from "../components/Pagination.svelte";
-import { getAllDigestEntries } from "../components/digest";
-import { getPageTitle, mainDescription } from "../components/pageTitle";
-import Layout from "../layouts/Layout.astro";
+import type { GetStaticPathsOptions } from 'astro';
+import DigestList from '../components/DigestList.astro';
+import Pagination from '../components/Pagination.svelte';
+import { getAllDigestEntries } from '../components/digest';
+import Layout from '../layouts/Layout.astro';
+import config from '../lib/config';
 
 export const getStaticPaths = async ({ paginate }: GetStaticPathsOptions) => {
   return paginate(await getAllDigestEntries(), { pageSize: 6 });
@@ -14,8 +14,8 @@ const { page } = Astro.props;
 ---
 
 <Layout
-  title={getPageTitle("Articles")}
-  description={mainDescription}
+  title={config.site.pageTitle('Articles')}
+  description={config.site.description}
   pageType="website"
 >
   <div class="flex flex-col gap-y-8">

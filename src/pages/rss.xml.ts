@@ -1,11 +1,11 @@
 import rss from '@astrojs/rss';
-import { mainDescription, mainTitle } from '../components/pageTitle';
 import { getAllDigestEntries } from '../components/digest';
+import config from '../lib/config';
 
-export const GET = async (context: {site: string | URL}) => {
+export const GET = async (context: { site: string | URL }) => {
   return rss({
-    title: mainTitle,
-    description: mainDescription,
+    title: config.site.name,
+    description: config.site.description,
     site: context.site,
     items: (await getAllDigestEntries()).map((entry) => ({
       title: entry.title,
@@ -14,4 +14,4 @@ export const GET = async (context: {site: string | URL}) => {
       link: entry.path,
     })),
   });
-}
+};

@@ -7,9 +7,7 @@ interface Props {
 const { date, tags } = Astro.props;
 ---
 
-<div
-  class="flex w-full gap-x-4 justify-between text-stone-500 text-sm truncate"
->
+<div class="flex w-full justify-between gap-x-4 truncate text-sm text-stone-500">
   <span>
     {date.toDateString()}
   </span>
@@ -19,9 +17,8 @@ const { date, tags } = Astro.props;
         <li>
           <a
             tabindex="0"
-            href={"/tag/" + tag}
-            class="focus:outline-0 focus:underline decoration-2
-            transition-colors duration-300 hocus:text-cyan-700"
+            href={'/tag/' + tag}
+            class="hocus:text-cyan-700 decoration-2 transition-colors duration-300 focus:underline focus:outline-0"
           >
             #{tag}
           </a>

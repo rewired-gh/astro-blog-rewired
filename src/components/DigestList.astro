@@ -1,6 +1,6 @@
 ---
-import ArticleMeta from "./ArticleMeta.astro";
-import { type DigestEntry } from "./digest";
+import ArticleMeta from './ArticleMeta.astro';
+import { type DigestEntry } from './digest';
 
 interface Props {
   digests: DigestEntry[];
@@ -16,19 +16,13 @@ const { digests } = Astro.props;
         <ArticleMeta date={digest.date} tags={digest.tags} />
         <a
           tabindex="0"
-          class="block focus:outline-0
-          hocus:[&_h2]:before:blur-none hocus:[&_h2]:before:w-1 hocus:[&_h2]:before:h-full hocus:[&_h2]:before:bg-cyan-500"
+          class="hocus:[&_h2]:before:blur-none hocus:[&_h2]:before:w-1 hocus:[&_h2]:before:h-full hocus:[&_h2]:before:bg-cyan-500 block focus:outline-0"
           href={digest.path}
         >
-          <h2
-            class="relative
-            text-[21px] mb-2 gap-x-2 text-stone-900 before:w-0 before:h-0
-            before:transition-all before:duration-300 before:bg-cyan-50
-            before:absolute before:-left-4 before:top-0 before:blur-xs before:inline-block"
-          >
+          <h2 class="relative mb-2 gap-x-2 text-[21px] text-stone-900 before:absolute before:top-0 before:-left-4 before:inline-block before:h-0 before:w-0 before:bg-cyan-50 before:blur-xs before:transition-all before:duration-300">
             {digest.title}
           </h2>
-          <p class="leading-6 text-sm md:text-base">{digest.excerpt}</p>
+          <p class="text-sm leading-6 md:text-base">{digest.excerpt}</p>
         </a>
       </li>
     ))

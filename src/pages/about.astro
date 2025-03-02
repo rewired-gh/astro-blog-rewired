@@ -1,15 +1,17 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import { getPageTitle, mainTitle } from "../components/pageTitle";
+import Layout from '../layouts/Layout.astro';
+import config from '../lib/config';
 ---
 
 <Layout
-  title={getPageTitle("About")}
-  description={`Information about ${mainTitle}.`}
+  title={config.site.pageTitle('About')}
+  description={`Information about ${config.site.name}.`}
   pageType="article"
 >
   <article class="prose prose-stone pt-1">
     <h1>About Rewired</h1>
-    <a href="https://t.me/about_rewired">About Rewired Telegram Channel</a>
+    <a tabindex="0" target="_blank" href="https://t.me/about_rewired">
+      About Rewired Telegram Channel
+    </a>
   </article>
 </Layout>

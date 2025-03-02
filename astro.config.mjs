@@ -1,10 +1,9 @@
 import { defineConfig } from 'astro/config';
-import tailwindcss from "@tailwindcss/vite";
+import tailwindcss from '@tailwindcss/vite';
 import remarkMath from 'remark-math';
-
-import sitemap from "@astrojs/sitemap";
-
+import sitemap from '@astrojs/sitemap';
 import svelte from '@astrojs/svelte';
+import rehypeExternalLinks from 'rehype-external-links';
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,9 +16,19 @@ export default defineConfig({
     shikiConfig: {
       themes: {
         light: 'github-light',
-        dark: 'github-dark'
-      }
+        dark: 'github-dark',
+      },
     },
-    remarkPlugins: [remarkMath]
-  }
+    remarkPlugins: [
+      remarkMath,
+      [
+        rehypeExternalLinks,
+        {
+          target: '_blank',
+          rel: ['noreferrer'],
+          tabindex: '0',
+        },
+      ],
+    ],
+  },
 });

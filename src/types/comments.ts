@@ -19,7 +19,7 @@ export interface CommentResponse {
   senderName: string;
   senderEmail: string | null;
   content: string;
-  createdAt: string;  // UTC
+  createdAt: string; // UTC
 }
 
 // Pagination metadata
