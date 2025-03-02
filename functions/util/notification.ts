@@ -55,8 +55,6 @@ Content:
         response.statusText,
         errorText,
       );
-    } else {
-      console.log("Telegram notification sent successfully");
     }
   } catch (error) {
     console.error("Exception when sending Telegram notification:", error);

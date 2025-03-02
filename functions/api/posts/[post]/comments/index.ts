@@ -8,6 +8,7 @@ import {
   CommentListResponse,
   CommentModel,
   CommentResponse,
+  CommentSubmission,
 } from "../../../../../src/types/comments";
 import { verifyCaptcha } from "../../../../util/captcha";
 import { moderateContent } from "../../../../util/moderation";
@@ -25,6 +26,7 @@ interface Env {
   LLM_API_KEY: string;
   LLM_API_ENDPOINT: string;
   LLM_MODEL: string;
+  LLM_DATA_TAG: string;
   NOTIFICATION_TELEGRAM_BOT_TOKEN: string;
   NOTIFICATION_TELEGRAM_CHAT_ID: string;
 }
@@ -116,18 +118,12 @@ async function handlePostComment(
       return api.error("Invalid form data in request");
     }
 
-    // Extract data from form
-    const sender_name = formData.get("senderName") as string;
-    const sender_email = formData.get("senderEmail") as string || null;
-    const content = formData.get("content") as string;
-    const captcha_token = formData.get("cf-turnstile-response") as string;
-
     // Create data object for validation
-    const data = {
-      sender_name,
-      sender_email,
-      content,
-      captcha_token,
+    const data: CommentSubmission = {
+      senderName: (formData.get("senderName") as string).trim(),
+      senderEmail: (formData.get("senderEmail") as string || null)?.trim(),
+      content: formData.get("content") as string,
+      captchaToken: formData.get("cf-turnstile-response") as string,
     };
 
     // Validate inputs
@@ -142,30 +138,29 @@ async function handlePostComment(
       request.headers.get("X-Real-IP") ||
       "unknown";
     console.info("Client IP:", clientIp);
-    console.info("Captch token:", captcha_token);
+    console.info("Captch token:", data.captchaToken);
     console.info("Form data:", formData);
 
     // Verify captcha token
     const captchaPass = await verifyCaptcha(
-      captcha_token,
+      data.captchaToken,
       clientIp,
-      config.isDev ? turnstileTestAlwaysPassSecret : env.TURNSTILE_SECRET || "",
+      (config.isDev ? turnstileTestAlwaysPassSecret : env.TURNSTILE_SECRET) ||
+        "",
     );
     if (!captchaPass) {
       return api.error("Security verification failed");
     }
 
-    // Trim content
-    const trimmedContent = content.trim();
-
     // Moderate content with OpenAI
     const moderationPass = await moderateContent(
-      sender_name,
-      sender_email,
-      trimmedContent,
+      data.senderName,
+      data.senderEmail,
+      data.content,
       env.LLM_API_ENDPOINT,
       env.LLM_API_KEY,
       env.LLM_MODEL,
+      env.LLM_DATA_TAG,
     );
 
     if (!moderationPass) {
@@ -196,9 +191,9 @@ async function handlePostComment(
             "INSERT INTO comments (post_id, sender_name, sender_email, content, ip) VALUES (?, ?, ?, ?, ?) RETURNING id, sender_name, sender_email, content, created_at",
           ).bind(
             postId,
-            sender_name,
-            sender_email || null,
-            trimmedContent,
+            data.senderName,
+            data.senderEmail || null,
+            data.content,
             clientIp,
           ),
         ]);
@@ -211,9 +206,9 @@ async function handlePostComment(
           "INSERT INTO comments (post_id, sender_name, sender_email, content, ip) VALUES (?, ?, ?, ?, ?) RETURNING id, sender_name, sender_email, content, created_at",
         ).bind(
           postId,
-          sender_name,
-          sender_email || null,
-          trimmedContent,
+          data.senderName,
+          data.senderEmail || null,
+          data.content,
           clientIp,
         ).first<CommentModel>();
 
@@ -229,12 +224,7 @@ async function handlePostComment(
 
       // Send a notification to the admin
       await sendNewCommentNotification(
-        {
-          senderName: sender_name,
-          senderEmail: sender_email,
-          content: content,
-          captchaToken: captcha_token,
-        },
+        data,
         postId,
         env.NOTIFICATION_TELEGRAM_BOT_TOKEN,
         env.NOTIFICATION_TELEGRAM_CHAT_ID,
@@ -247,13 +237,13 @@ async function handlePostComment(
     } catch (dbError) {
       console.error("Database operation failed:", dbError);
       return api.serverError(
-        "We encountered an issue saving your comment. Please try again later.",
+        "We encountered an issue saving your comment.",
       );
     }
   } catch (error) {
     console.error("Error processing comment submission:", error);
     return api.serverError(
-      "An unexpected error occurred. Please try again later.",
+      "An unexpected error occurred.",
     );
   }
 }
@@ -261,38 +251,37 @@ async function handlePostComment(
 /**
  * Validate the comment submission data
  */
-function validateComment(data): { valid: boolean; error?: string } {
+function validateComment(
+  data: CommentSubmission,
+): { valid: boolean; error?: string } {
   // Check if data is an object
   if (!data || typeof data !== "object") {
     return { valid: false, error: "Invalid request format" };
   }
 
   // Validate name
-  if (
-    !data.sender_name || typeof data.sender_name !== "string" ||
-    data.sender_name.trim().length === 0
-  ) {
+  if (!data.senderName || typeof data.senderName !== "string") {
     return { valid: false, error: "Please provide your name" };
   }
 
-  if (data.sender_name.length > 32) {
+  if (data.senderName.length > 32) {
     return { valid: false, error: "Name cannot exceed 32 characters" };
   }
 
   // Validate email (optional but if provided must be valid)
-  if (data.sender_email !== null && data.sender_email !== undefined) {
-    if (typeof data.sender_email !== "string") {
+  if (data.senderEmail !== null && data.senderEmail !== undefined) {
+    if (typeof data.senderEmail !== "string") {
       return { valid: false, error: "Email must be a string" };
     }
 
-    if (data.sender_email.trim() !== "") {
+    if (data.senderEmail) {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailPattern.test(data.sender_email)) {
+      if (!emailPattern.test(data.senderEmail)) {
         return { valid: false, error: "Please provide a valid email address" };
       }
     }
 
-    if (data.sender_email.length > 64) {
+    if (data.senderEmail.length > 64) {
       return {
         valid: false,
         error: "Email address cannot exceed 64 characters",
@@ -301,10 +290,7 @@ function validateComment(data): { valid: boolean; error?: string } {
   }
 
   // Validate content
-  if (
-    !data.content || typeof data.content !== "string" ||
-    data.content.trim().length === 0
-  ) {
+  if (!data.content || typeof data.content !== "string") {
     return { valid: false, error: "Comment content cannot be empty" };
   }
 
@@ -317,7 +303,7 @@ function validateComment(data): { valid: boolean; error?: string } {
   }
 
   // Validate captcha token
-  if (!data.captcha_token || typeof data.captcha_token !== "string") {
+  if (!data.captchaToken || typeof data.captchaToken !== "string") {
     return { valid: false, error: "Security verification failed" };
   }
 
