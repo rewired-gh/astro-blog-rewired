@@ -19,14 +19,13 @@ export default defineConfig({
         dark: 'github-dark',
       },
     },
-    remarkPlugins: [
-      remarkMath,
+    remarkPlugins: [remarkMath],
+    rehypePlugins: [
       [
         rehypeExternalLinks,
         {
           target: '_blank',
           rel: ['noreferrer'],
-          tabindex: '0',
         },
       ],
     ],

@@ -35,6 +35,13 @@ const { title, description, pageType } = Astro.props;
   <body
     class="m-auto flex min-h-screen max-w-[54rem] flex-col items-stretch px-8 font-sans text-stone-800 underline-offset-4"
   >
+    <a
+      tabindex="0"
+      href="#main-content"
+      class="absolute top-0 left-0 z-50 -translate-y-full transform px-4 py-2 text-cyan-700 transition duration-300 focus:translate-y-0"
+    >
+      Skip to main content
+    </a>
     <header
       class="flex w-full flex-col items-start gap-y-4 pt-12 pb-14 font-light text-ellipsis whitespace-nowrap text-stone-900"
     >
@@ -52,7 +59,7 @@ const { title, description, pageType } = Astro.props;
         </ul>
       </nav>
     </header>
-    <main class="w-full">
+    <main id="main-content" class="w-full">
       <slot />
     </main>
     <div class="shrink grow"></div>
