@@ -9,13 +9,23 @@ interface Props {
 const { digests } = Astro.props;
 ---
 
-<ol class="flex flex-col gap-y-8">
+<ul class="flex flex-col gap-y-8">
   {
     digests.map((digest) => (
-      <li class="relative before:transition-all before:duration-300 before:bg-cyan-50 before:absolute before:-left-5 before:top-0 before:blur-xs hover:before:blur-none before:w-0 hover:before:w-1 before:h-0 hover:before:h-14 hover:before:bg-cyan-500 before:inline-block">
+      <li>
         <ArticleMeta date={digest.date} tags={digest.tags} />
-        <a href={digest.path}>
-          <h2 class="text-[21px] pb-2 gap-x-2 text-stone-900">
+        <a
+          tabindex="0"
+          class="block outline-0
+          hocus:[&_h2]:before:blur-none hocus:[&_h2]:before:w-1 hocus:[&_h2]:before:h-full hocus:[&_h2]:before:bg-cyan-500"
+          href={digest.path}
+        >
+          <h2
+            class="relative
+            text-[21px] mb-2 gap-x-2 text-stone-900 before:w-0 before:h-0
+            before:transition-all before:duration-300 before:bg-cyan-50
+            before:absolute before:-left-4 before:top-0 before:blur-xs before:inline-block"
+          >
             {digest.title}
           </h2>
           <p class="leading-6 text-sm md:text-base">{digest.excerpt}</p>
@@ -23,4 +33,4 @@ const { digests } = Astro.props;
       </li>
     ))
   }
-</ol>
+</ul>

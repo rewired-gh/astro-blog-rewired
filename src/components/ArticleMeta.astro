@@ -11,15 +11,20 @@ const { date, tags } = Astro.props;
   <span>
     {date.toDateString()}
   </span>
-  <span>
-    <ul class="flex flex-row gap-x-2 overflow-hidden">
-      {
-        tags.map((tag) => (
-          <li class="transition-colors duration-300 hover:text-cyan-700">
-            <a href={"/tag/" + tag}>#{tag}</a>
-          </li>
-        ))
-      }
-    </ul>
-  </span>
+  <ul class="flex flex-row gap-x-2 overflow-hidden">
+    {
+      tags.map((tag) => (
+        <li>
+          <a
+            tabindex="0"
+            href={"/tag/" + tag}
+            class="focus:outline-0 focus:underline decoration-2 underline-offset-4
+            transition-colors duration-300 hocus:text-cyan-700"
+          >
+            #{tag}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
 </div>

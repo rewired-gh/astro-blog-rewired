@@ -7,12 +7,14 @@ interface Props {
 const { name, link } = Astro.props;
 ---
 
-<li
-  class="relative after:backdrop-invert after:h-0 after:w-[calc(100%+8px)]
-  after:top-0 after:absolute after:z-10 after:-left-[4px]
-  after:transition-all after:duration-300 hover:after:h-full after:pointer-events-none"
->
-  <a href={link}>
+<li>
+  <a
+    tabindex="0"
+    href={link}
+    class="focus:outline-0 relative after:backdrop-invert after:h-0 after:w-[calc(100%+0.6rem)]
+    after:-top-[0.2rem] after:absolute after:z-10 after:-left-[0.3rem]
+    after:transition-all after:duration-300 hocus:after:h-[calc(100%+0.4rem)] after:pointer-events-none"
+  >
     {name}
   </a>
 </li>

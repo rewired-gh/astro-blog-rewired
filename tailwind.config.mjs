@@ -44,11 +44,12 @@ export default {
               content: 'none'
             },
             'ol, ul': {
+              paddingInlineStart: '1rem',
               marginTop: '0.25em',
-              marginBottom: '0.25em',
-              paddingInlineStart: '0.25em'
+              marginBottom: '0.25em'
             },
-            li: {
+            'ol > li, ul > li': {
+              paddingInlineStart: '0',
               marginTop: '0.25em',
               marginBottom: '0.25em'
             },
@@ -63,6 +64,7 @@ export default {
               fontWeight: '500'
             },
             blockquote: {
+              paddingInlineStart: '0.75rem',
               fontWeight: '400',
               fontStyle: 'normal'
             },

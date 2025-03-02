@@ -2,6 +2,9 @@
 @plugin "@tailwindcss/typography";
 @config "../../tailwind.config.mjs";
 
+@custom-variant hocus (&:hover, &:focus);
+@custom-variant in-hocus (:where(*:hover) &, :where(*:focus) &);
+
 @theme {
   --animate-wiggle: wiggle 150ms ease-out 2;
   @keyframes wiggle {
@@ -21,8 +24,8 @@
     @apply truncate text-stone-500 text-sm font-light text-center py-1.5 border rounded-full border-stone-300 transition-colors duration-300;
   }
   
-  .c-button:hover:not(:disabled) {
-    @apply border-cyan-700 text-cyan-700 cursor-pointer;
+  .c-button:hover:not(:disabled), .c-button:focus:not(:disabled) {
+    @apply border-cyan-500 text-cyan-700 cursor-pointer;
   }
 
   .c-button:disabled {
