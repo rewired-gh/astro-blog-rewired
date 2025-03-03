@@ -133,13 +133,13 @@ document.addEventListener(
 
 ```ts
 const popping = {
-height: ["16px", "32px"],
-opacity: ["20%", "0"],
-borderWidth: ["8px", "0"],
+  height: ["16px", "32px"],
+  opacity: ["20%", "0"],
+  borderWidth: ["8px", "0"],
 }
 const timing = {
-duration: 400,
-fill: "forwards",
+  duration: 400,
+  fill: "forwards",
 }
 effect.animate(popping, timing)
 ```
