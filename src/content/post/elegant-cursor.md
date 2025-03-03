@@ -47,9 +47,7 @@ span#click-effect
   pointer-events: none // 令指针事件穿透
 ```
 
-### 动画
-
-#### 进入动画
+### 进入动画
 
 动画部分采用 DOM 操作实现，使用了在 Baseline 2022 中的 Animation API。若要兼容旧浏览器，请考虑增加额外的判断语句，或者基于旧特性 polyfill。
 
@@ -111,7 +109,7 @@ document.addEventListener(
 )
 ```
 
-#### 退出动画
+### 退出动画
 
 退出对应着 `pointerup` 和 `pointercancel` 两个事件。因此，在 `pointerdown` 触发时，我们需要注册这两个事件对应的监听器。与此同时，别忘了在退出时取消已经注册的监听器。
 
@@ -146,7 +144,7 @@ fill: "forwards",
 effect.animate(popping, timing)
 ```
 
-#### 拖拽时跟随
+### 拖拽时跟随
 
 当用户拖拽指针时，我们想让次级指针跟随拖拽动作。这一效果可以通过监听 `pointermove` 事件实现。一种较为直观的做法如下：
 
@@ -187,7 +185,7 @@ const followCursor = (event) => {
 
 到此为止，我们实现了完整的次级指针特效。
 
-#### 完整代码
+### 完整代码
 
 前文提到的所有 JavaScript 代码，整合后如下：
 
