@@ -34,6 +34,6 @@ tags: [
 
 总结：需要死记硬背的有 t、u、i、o、p、g、h、j、k、l、x、v。其中 u、i、g、h、j 非常常用，无需额外背诵。因此，需要背诵的有 t、o、k、l、x（对于 ua）、v。其中，t、v、x 可以分组记忆其 ue、ui、ua 编码。
 
-推荐的双拼练习网站：<https://blog.simplenaive.cn/shuangpin>
+推荐的双拼练习网站（已更新链接）：<https://shuangpin.simplenaive.cn/#/>
 
 番外：「袄」可以通过「ac」输入，展开即「aao」。不同的输入法不一定是一样的，请结合实际尝试。
