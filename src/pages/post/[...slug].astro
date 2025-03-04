@@ -7,6 +7,7 @@ import CommentSection from '../../components/CommentSection.svelte';
 import TableOfContents from '../../components/TableOfContents.svelte';
 import config from '../../lib/config';
 import { buildToc } from '../../lib/tableOfContent';
+import type { MarkdownHeading } from 'astro';
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection('post');
@@ -20,6 +21,10 @@ const { entry } = Astro.props;
 const { Content, headings } = await entry.render();
 
 const toc = buildToc(headings);
+const headingMap = headings.reduce((acc: Record<string, string>, heading: MarkdownHeading) => {
+  acc[heading.slug] = heading.text;
+  return acc;
+}, {});
 ---
 
 <Layout
@@ -30,7 +35,7 @@ const toc = buildToc(headings);
   <ArticleMeta date={entry.data.date} tags={entry.data.tags} />
   <article class="prose prose-stone pt-1">
     <h1>{entry.data.title}</h1>
-    <TableOfContents client:only={true} toc={toc} />
+    <TableOfContents client:only={true} toc={toc} headingMap={headingMap} />
     <Content />
   </article>
   <div class="mt-8 border-t border-stone-300 pt-8">

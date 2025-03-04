@@ -3,14 +3,10 @@
   import { type ExtendedHeading } from '../lib/tableOfContent';
   import TableOfContentsHeading from './TableOfContentsHeading.svelte';
 
-  const { toc } = $props<{
+  const { toc, headingMap } = $props<{
     toc: ExtendedHeading[];
+    headingMap: Record<string, string>;
   }>();
-
-  const headingMap = toc.reduce((acc: Record<string, string>, heading: ExtendedHeading) => {
-    acc[heading.slug] = heading.text;
-    return acc;
-  }, {});
 
   let activeHeadingIds = $state([] as string[]);
   let lastActiveHeading = $derived(
@@ -57,20 +53,20 @@
     });
   }
 
-  function handleClickOutside(event: MouseEvent) {
-    if (detailsElem && !detailsElem.contains(event.target as Node) && detailsElem.open) {
+  function handleClickPage(event: MouseEvent) {
+    if (detailsElem && detailsElem.open) {
       detailsElem.open = false;
     }
   }
 
   onMount(() => {
     addIntersectionObserver();
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('click', handleClickPage);
   });
 
   onDestroy(() => {
     removeIntersectionObserver();
-    document.removeEventListener('click', handleClickOutside);
+    document.removeEventListener('click', handleClickPage);
   });
 </script>
 
