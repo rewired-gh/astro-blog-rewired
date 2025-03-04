@@ -45,3 +45,9 @@
     @apply truncate text-lg text-stone-900;
   }
 }
+
+@layer base {
+  details summary::-webkit-details-marker {
+    display:none;
+  }
+}
