@@ -4,10 +4,9 @@ import Layout from '../../layouts/Layout.astro';
 import ArticleMeta from '../../components/ArticleMeta.astro';
 import { createExcerpt } from '../../lib/digest';
 import CommentSection from '../../components/CommentSection.svelte';
-import TableOfContents from '../../components/TableOfContents.svelte';
 import config from '../../lib/config';
 import { buildToc } from '../../lib/tableOfContent';
-import type { MarkdownHeading } from 'astro';
+import TableOfContents from '../../components/TableOfContents.astro';
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection('post');
@@ -21,10 +20,6 @@ const { entry } = Astro.props;
 const { Content, headings } = await entry.render();
 
 const toc = buildToc(headings);
-const headingMap = headings.reduce((acc: Record<string, string>, heading: MarkdownHeading) => {
-  acc[heading.slug] = heading.text;
-  return acc;
-}, {});
 ---
 
 <Layout
@@ -35,10 +30,10 @@ const headingMap = headings.reduce((acc: Record<string, string>, heading: Markdo
   <ArticleMeta date={entry.data.date} tags={entry.data.tags} />
   <article class="prose prose-stone pt-1">
     <h1>{entry.data.title}</h1>
-    <TableOfContents client:only={true} toc={toc} />
+    <TableOfContents toc={toc} />
     <Content />
   </article>
   <div class="mt-8 border-t border-stone-300 pt-8">
-    <CommentSection client:only={true} postId={entry.slug} />
+    <CommentSection client:load postId={entry.slug} />
   </div>
 </Layout>
