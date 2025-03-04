@@ -47,6 +47,11 @@
 }
 
 @layer base {
+  details > summary {
+    list-style: none;
+  }
+
+  details > summary::marker,
   details summary::-webkit-details-marker {
     display:none;
   }
