@@ -7,8 +7,19 @@
     toc: ExtendedHeading[];
   }>();
 
+  const headingMap = toc.reduce((acc: Record<string, string>, heading: ExtendedHeading) => {
+    acc[heading.slug] = heading.text;
+    return acc;
+  }, {});
+
   let activeHeadingIds = $state([] as string[]);
-  let detailsElem: HTMLDetailsElement;
+  let lastActiveHeading = $derived(
+    activeHeadingIds[activeHeadingIds.length - 1]
+      ? headingMap[activeHeadingIds[activeHeadingIds.length - 1]] || ''
+      : ''
+  );
+
+  let detailsElem: HTMLDetailsElement | null = null;
   let observer: IntersectionObserver | null = null;
 
   function addIntersectionObserver() {
@@ -69,9 +80,7 @@
       class="shadow-glow flex items-center gap-x-3 rounded-b-lg bg-white py-2 hover:cursor-pointer"
     >
       <span class="c-button shadow-glow bg-white px-3">On this page</span>
-      <span class="truncate text-sm text-stone-500">
-        {activeHeadingIds ? activeHeadingIds[activeHeadingIds.length - 1] : ''}
-      </span>
+      <span class="truncate text-sm text-stone-500">{lastActiveHeading}</span>
     </summary>
 
     <div class="pt-2">
