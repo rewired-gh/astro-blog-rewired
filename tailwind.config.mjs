@@ -2,7 +2,7 @@
 import colors from 'tailwindcss/colors';
 
 export default {
-  safelist: ['motion-safe:animate-pulse', 'invisible', 'text-red-500'],
+  safelist: ['motion-safe:animate-pulse', 'invisible', 'text-red-500', 'hidden'],
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     fontFamily: {
@@ -59,7 +59,7 @@ export default {
               marginBottom: '0.25em',
             },
             'ol > li, ul > li': {
-              paddingInlineStart: '0',
+              paddingInlineStart: '0.25rem',
               marginTop: '0.25em',
               marginBottom: '0.25em',
             },

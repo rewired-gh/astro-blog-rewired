@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { apiConfig } from "../lib/config";
-  import type { CommentResponse, PaginationMeta } from "../types/comments";
-  import moment from "moment";
-  import Pagination from "./Pagination.svelte";
+  import { onMount } from 'svelte';
+  import { apiConfig } from '../lib/config';
+  import type { CommentResponse, PaginationMeta } from '../types/comments';
+  import moment from 'moment';
+  import Pagination from './Pagination.svelte';
 
   const { postId } = $props<{ postId: string }>();
 
@@ -31,30 +31,26 @@
       const response = await fetch(url);
 
       if (!response.ok) {
-        throw new Error(
-          `Failed to fetch comments: ${response.status} ${response.statusText}`
-        );
+        throw new Error(`Failed to fetch comments: ${response.status} ${response.statusText}`);
       }
 
       const rawData = await response.json();
 
-      if (rawData && typeof rawData === "object") {
+      if (rawData && typeof rawData === 'object') {
         // Extract comments from the API response (now consistently in camelCase)
         if (Array.isArray(rawData.comments)) {
           comments = rawData.comments;
           pagination = rawData.pagination || null;
           currentPage = pagination?.currentPage || 1;
         } else {
-          throw new Error(
-            "Unexpected API response format: missing comments array"
-          );
+          throw new Error('Unexpected API response format: missing comments array');
         }
       } else {
-        throw new Error("Unexpected API response format: not an object");
+        throw new Error('Unexpected API response format: not an object');
       }
     } catch (err) {
-      console.error("Comment fetch error:", err);
-      error = `Error loading comments: ${err instanceof Error ? err.message : "Unknown error"}`;
+      console.error('Comment fetch error:', err);
+      error = `Error loading comments: ${err instanceof Error ? err.message : 'Unknown error'}`;
     } finally {
       loading = false;
     }
@@ -83,23 +79,19 @@
   <h2 class="c-section-title">Comments</h2>
 
   {#if loading}
-    <p class="text-stone-500 font-light motion-safe:animate-pulse">
-      Loading comments...
-    </p>
+    <p class="font-light text-stone-500 motion-safe:animate-pulse">Loading comments...</p>
   {:else if error}
-    <p class="text-stone-500 font-light">{error}</p>
+    <p class="font-light text-stone-500">{error}</p>
   {:else if comments.length === 0}
-    <p class="text-stone-500 font-light">
-      No comments yet. Be the first to comment!
-    </p>
+    <p class="font-light text-stone-500">No comments yet. Be the first to comment!</p>
   {:else}
     <div class="flex flex-col gap-y-4 font-light">
       {#each comments as comment}
         <div>
-          <div class="flex items-center text-sm mb-0.5 truncate">
+          <div class="mb-0.5 flex items-center truncate text-sm">
             <strong class="font-medium">{comment.senderName}</strong>
             {#if comment.senderEmail}
-              <span class="shrink ml-1">({comment.senderEmail})</span>
+              <span class="ml-1 shrink">({comment.senderEmail})</span>
             {/if}
             <span class="m-1">·</span>
             <span class="text-stone-500">

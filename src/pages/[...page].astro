@@ -2,13 +2,13 @@
 import type { GetStaticPathsOptions } from 'astro';
 import DigestList from '../components/DigestList.astro';
 import Pagination from '../components/Pagination.svelte';
-import { getAllDigestEntries } from '../components/digest';
+import { getAllDigestEntries } from '../lib/digest';
 import Layout from '../layouts/Layout.astro';
 import config from '../lib/config';
 
-export const getStaticPaths = async ({ paginate }: GetStaticPathsOptions) => {
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   return paginate(await getAllDigestEntries(), { pageSize: 6 });
-};
+}
 
 const { page } = Astro.props;
 ---

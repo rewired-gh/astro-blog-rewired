@@ -2,9 +2,11 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import ArticleMeta from '../../components/ArticleMeta.astro';
-import { createExcerpt } from '../../components/digest';
+import { createExcerpt } from '../../lib/digest';
 import CommentSection from '../../components/CommentSection.svelte';
+import TableOfContents from '../../components/TableOfContents.svelte';
 import config from '../../lib/config';
+import { buildToc } from '../../lib/tableOfContent';
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection('post');
@@ -15,7 +17,9 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content, headings } = await entry.render();
+
+const toc = buildToc(headings);
 ---
 
 <Layout
@@ -26,9 +30,10 @@ const { Content } = await entry.render();
   <ArticleMeta date={entry.data.date} tags={entry.data.tags} />
   <article class="prose prose-stone pt-1">
     <h1>{entry.data.title}</h1>
+    <TableOfContents client:only={true} toc={toc} />
     <Content />
   </article>
   <div class="mt-8 border-t border-stone-300 pt-8">
-    <CommentSection is:client client:load postId={entry.slug} />
+    <CommentSection client:only={true} postId={entry.slug} />
   </div>
 </Layout>

@@ -18,7 +18,7 @@ interface TagEntry {
 const parser = new MarkdownIt();
 const excerptCache = new Map<string, string>();
 
-export const createExcerpt = (slug: string, body: string, maxLen = 150) => {
+export function createExcerpt(slug: string, body: string, maxLen = 150) {
   const cached = excerptCache.get(slug);
   if (cached) {
     return cached;
@@ -37,9 +37,9 @@ export const createExcerpt = (slug: string, body: string, maxLen = 150) => {
   const excerpt = distilled.substring(0, maxLen) + '……';
   excerptCache.set(slug, excerpt);
   return excerpt;
-};
+}
 
-export const getAllDigestEntries = async () => {
+export async function getAllDigestEntries() {
   const blogEntries = (await getCollection('post')).sort(
     (a, b) => b.data.date.getTime() - a.data.date.getTime()
   );
@@ -53,9 +53,9 @@ export const getAllDigestEntries = async () => {
         excerpt: createExcerpt(entry.slug, entry.body),
       }) as DigestEntry
   );
-};
+}
 
-export const getTagStaticPaths = async () => {
+export async function getTagStaticPaths() {
   const digestEntries = await getAllDigestEntries();
   const tagEntryMap = new Map<string, TagEntry>();
   const tags = [...new Set(digestEntries.map((entry) => entry.tags).flat())].map((tag) => {
@@ -72,4 +72,4 @@ export const getTagStaticPaths = async () => {
     params: { slug: tag.slug },
     props: { digests: tag.digests, tag: tag.slug },
   }));
-};
+}

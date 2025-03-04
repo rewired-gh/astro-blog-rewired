@@ -1,6 +1,6 @@
 <script lang="ts">
-  import CommentForm from "./CommentForm.svelte";
-  import CommentList from "./CommentList.svelte";
+  import CommentForm from './CommentForm.svelte';
+  import CommentList from './CommentList.svelte';
 
   export let postId: string;
   let commentListRef: any;

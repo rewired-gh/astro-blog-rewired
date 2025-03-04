@@ -2,13 +2,13 @@
   const {
     currentPage = 1,
     totalPages = 1,
-    prevUrl = "",
-    nextUrl = "",
+    prevUrl = '',
+    nextUrl = '',
     onPrevPage = null,
     onNextPage = null,
-    prevLabel = "Previous",
-    nextLabel = "Next",
-    customClass = "",
+    prevLabel = 'Previous',
+    nextLabel = 'Next',
+    customClass = '',
   } = $props<{
     currentPage?: number;
     totalPages?: number;
@@ -26,7 +26,7 @@
 </script>
 
 <div
-  class={"text-sm font-light text-stone-500 w-full flex items-center justify-center gap-x-4 [&_a]:w-20 [&_button]:w-20 " +
+  class={'flex w-full items-center justify-center gap-x-3 text-sm font-light text-stone-500 [&_a]:w-20 [&_button]:w-20 ' +
     customClass}
 >
   {#if prevUrl}
@@ -39,7 +39,7 @@
     </button>
   {/if}
 
-  <span class="text-center truncate">
+  <span class="truncate text-center">
     Page {currentPage} of {totalPages}
   </span>
 

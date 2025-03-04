@@ -4,6 +4,7 @@ import remarkMath from 'remark-math';
 import sitemap from '@astrojs/sitemap';
 import svelte from '@astrojs/svelte';
 import rehypeExternalLinks from 'rehype-external-links';
+import rehypeSectionHeadings from './src/lib/rehypeHeadingSection';
 
 // https://astro.build/config
 export default defineConfig({
@@ -28,6 +29,7 @@ export default defineConfig({
           rel: ['noreferrer'],
         },
       ],
+      rehypeSectionHeadings,
     ],
   },
 });

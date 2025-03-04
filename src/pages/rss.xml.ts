@@ -1,5 +1,5 @@
 import rss from '@astrojs/rss';
-import { getAllDigestEntries } from '../components/digest';
+import { getAllDigestEntries } from '../lib/digest';
 import config from '../lib/config';
 
 export const GET = async (context: { site: string | URL }) => {
