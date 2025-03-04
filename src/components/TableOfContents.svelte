@@ -3,17 +3,32 @@
   import { type ExtendedHeading } from '../lib/tableOfContent';
   import TableOfContentsHeading from './TableOfContentsHeading.svelte';
 
-  const { toc, headingMap } = $props<{
+  const { toc } = $props<{
     toc: ExtendedHeading[];
-    headingMap: Record<string, string>;
   }>();
 
-  let activeHeadingIds = $state([] as string[]);
-  let lastActiveHeading = $derived(
-    activeHeadingIds[activeHeadingIds.length - 1]
-      ? headingMap[activeHeadingIds[activeHeadingIds.length - 1]] || ''
-      : ''
-  );
+  interface HeadingState {
+    slug: string;
+    text: string;
+    active: boolean;
+  }
+  const headingStates = $state([] as HeadingState[]);
+  const addStateFromHeadings = (headings: ExtendedHeading[]) => {
+    headings.forEach((heading) => {
+      headingStates.push({
+        slug: heading.slug,
+        text: heading.text,
+        active: false,
+      });
+      if (heading.children) {
+        addStateFromHeadings(heading.children);
+      }
+    });
+  };
+  addStateFromHeadings(toc);
+  console.log(headingStates);
+
+  let firstActiveHeading = $derived(headingStates.find((s) => s.active)?.text || '');
 
   let detailsElem: HTMLDetailsElement | null = null;
   let observer: IntersectionObserver | null = null;
@@ -33,11 +48,15 @@
         if (!link) {
           return;
         }
+        const state = headingStates.find((h) => h.slug === id);
+        if (!state) {
+          return;
+        }
         if (section.intersectionRatio > 0) {
-          activeHeadingIds.push(id);
+          state.active = true;
           link.classList.add('active');
         } else {
-          activeHeadingIds = activeHeadingIds.filter((activeId) => activeId !== id);
+          state.active = false;
           link.classList.remove('active');
         }
       });
@@ -76,7 +95,7 @@
       class="shadow-glow flex items-center gap-x-3 rounded-b-lg bg-white py-2 hover:cursor-pointer"
     >
       <span class="c-button shadow-glow bg-white px-3">On this page</span>
-      <span class="truncate text-sm text-stone-500">{lastActiveHeading}</span>
+      <span class="truncate text-sm text-stone-500">{firstActiveHeading}</span>
     </summary>
 
     <div class="pt-2">

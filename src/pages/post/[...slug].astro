@@ -35,7 +35,7 @@ const headingMap = headings.reduce((acc: Record<string, string>, heading: Markdo
   <ArticleMeta date={entry.data.date} tags={entry.data.tags} />
   <article class="prose prose-stone pt-1">
     <h1>{entry.data.title}</h1>
-    <TableOfContents client:only={true} toc={toc} headingMap={headingMap} />
+    <TableOfContents client:only={true} toc={toc} />
     <Content />
   </article>
   <div class="mt-8 border-t border-stone-300 pt-8">
