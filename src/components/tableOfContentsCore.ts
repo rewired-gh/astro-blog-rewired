@@ -5,11 +5,12 @@ const detailsElem: HTMLDetailsElement | null = document.querySelector('details#t
 const currentSpanElem: HTMLSpanElement | null = document.querySelector('span#toc-current');
 const tocString: string = tocUlElem?.dataset?.toc || '[]';
 const toc: ExtendedHeading[] = (JSON.parse(tocString) as { list: ExtendedHeading[] }).list;
+import { TotalOrderedSet } from '../lib/orderedSet';
 
-const headingDequeue: {
+const headingDequeue: TotalOrderedSet<{
   slug: string;
   text: string;
-}[] = [];
+}> = new TotalOrderedSet();
 
 const headingOrderMap: Record<string, number> = {};
 let currentOrder = 0;
@@ -40,20 +41,27 @@ function addIntersectionObserver() {
         return;
       }
       if (section.intersectionRatio > 0) {
-        const i =
-          headingDequeue.findLastIndex((h) => headingOrderMap[h.slug] < headingOrderMap[id]) + 1;
-        headingDequeue.splice(i, 0, { slug: id, text: heading.textContent || '' });
-        if (i === 0 && currentSpanElem) {
-          currentSpanElem.textContent = heading.textContent;
+        const i = headingDequeue.insert(
+          { slug: id, text: heading.textContent || '' },
+          headingOrderMap[id]
+        );
+        if (i === 0) {
+          link.classList.add('active');
+          if (currentSpanElem) {
+            currentSpanElem.textContent = heading.textContent;
+          }
         }
-        link.classList.add('active');
-      } else if (headingDequeue.length > 0) {
-        const i = headingDequeue.findIndex((h) => h.slug === id);
-        headingDequeue.splice(i, 1);
-        if (headingDequeue.length > 0 && i === 0 && currentSpanElem) {
-          currentSpanElem.textContent = headingDequeue[0].text;
+      } else {
+        const i = headingDequeue.remove(
+          { slug: id, text: heading.textContent || '' },
+          headingOrderMap[id]
+        );
+        if (i === 0) {
+          link.classList.remove('active');
+          if (currentSpanElem) {
+            currentSpanElem.textContent = headingDequeue.get(0)?.text || '';
+          }
         }
-        link.classList.remove('active');
       }
     });
   });
