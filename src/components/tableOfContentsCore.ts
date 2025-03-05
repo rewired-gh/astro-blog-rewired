@@ -4,7 +4,6 @@ const tocUlElem: HTMLUListElement | null = document.querySelector('ul#toc');
 const detailsElem: HTMLDetailsElement | null = document.querySelector('details#toc-toggle');
 const currentSpanElem: HTMLSpanElement | null = document.querySelector('span#toc-current');
 const tocString: string = tocUlElem?.dataset?.toc || '[]';
-console.log(tocString);
 const toc: ExtendedHeading[] = (JSON.parse(tocString) as { list: ExtendedHeading[] }).list;
 
 const headingDequeue: {
@@ -65,8 +64,10 @@ function addIntersectionObserver() {
 addIntersectionObserver();
 
 function handleClickPage(event: MouseEvent) {
-  // if event.target is not a child of the details element, close the details element
-  if (detailsElem && !detailsElem.contains(event.target as Node) && detailsElem.open) {
+  if (
+    detailsElem?.open &&
+    (!detailsElem?.contains(event.target as Node) || tocUlElem?.contains(event.target as Node))
+  ) {
     detailsElem.open = false;
   }
 }
