@@ -45,23 +45,19 @@ function addIntersectionObserver() {
           { slug: id, text: heading.textContent || '' },
           headingOrderMap[id]
         );
-        if (i === 0) {
-          link.classList.add('active');
-          if (currentSpanElem) {
-            currentSpanElem.textContent = heading.textContent;
-          }
+        if (i === 0 && currentSpanElem) {
+          currentSpanElem.textContent = heading.textContent;
         }
+        link.classList.add('active');
       } else {
         const i = headingDequeue.remove(
           { slug: id, text: heading.textContent || '' },
           headingOrderMap[id]
         );
-        if (i === 0) {
-          link.classList.remove('active');
-          if (currentSpanElem) {
-            currentSpanElem.textContent = headingDequeue.get(0)?.text || '';
-          }
+        if (i === 0 && currentSpanElem) {
+          currentSpanElem.textContent = headingDequeue.get(0)?.text || '';
         }
+        link.classList.remove('active');
       }
     });
   });
