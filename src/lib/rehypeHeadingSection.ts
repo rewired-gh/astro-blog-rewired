@@ -7,10 +7,7 @@ export default function rehypeSectionHeadings() {
       const sectionedChildren = [];
       let currentSection = null;
       for (const child of rootNode.children) {
-        if (
-          child.type === 'element' &&
-          ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(child.tagName)
-        ) {
+        if (child.type === 'element' && ['h2', 'h3', 'h4', 'h5'].includes(child.tagName)) {
           if (currentSection) {
             sectionedChildren.push(currentSection);
           }
