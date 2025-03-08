@@ -17,7 +17,7 @@
     }
     100% {}
   }
-  --shadow-glow: 0 0 1.5rem #fff, 0 0 1.5rem #fff, 0 0 1.5rem #fff;
+  --shadow-glow: 0 0 1rem #fff, 0 0 1rem #fff, 0 0 1rem #fff;
 }
 
 @layer components {

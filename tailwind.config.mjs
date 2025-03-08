@@ -31,6 +31,7 @@ export default {
             h1: {
               fontWeight: 400,
               fontSize: '26px',
+              marginBottom: '1rem',
             },
             h2: {
               fontSize: '22px',
@@ -55,17 +56,17 @@ export default {
             },
             'ol, ul': {
               paddingInlineStart: '1rem',
-              marginTop: '0.25em',
-              marginBottom: '0.25em',
+              marginTop: '0.25rem',
+              marginBottom: '0.25rem',
             },
             'ol > li, ul > li': {
-              paddingInlineStart: '0.25rem',
-              marginTop: '0.25em',
-              marginBottom: '0.25em',
+              paddingInlineStart: '0',
+              marginTop: '0.25rem',
+              marginBottom: '0.25rem',
             },
             p: {
-              marginTop: '0.75em',
-              marginBottom: '0.75em',
+              marginTop: '0.75rem',
+              marginBottom: '0.75rem',
             },
             a: {
               fontWeight: 'light',

@@ -11,8 +11,8 @@ const { toc } = Astro.props;
 
 {
   toc.length > 0 && (
-    <nav class="sticky top-0">
-      <details id="toc-toggle" class="z-10 flex flex-col">
+    <nav class="sticky top-0 z-10">
+      <details id="toc-toggle" class="flex flex-col">
         <summary class="shadow-glow flex items-center gap-x-3 rounded-b-lg bg-white py-2 hover:cursor-pointer">
           <span class="c-button shadow-glow bg-white px-3">On this page</span>
           <span id="toc-current" class="truncate text-sm text-stone-500" />
