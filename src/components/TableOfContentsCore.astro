@@ -12,7 +12,7 @@ const { toc } = Astro.props;
 <ul
   data-toc={JSON.stringify({ list: toc })}
   id="toc"
-  class="shadow-glow mt-0 mb-0 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm **:flex **:flex-col **:items-start"
+  class="shadow-glow mt-0 mb-0 max-h-96 w-full overflow-scroll rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm **:flex **:flex-col **:items-start"
 >
   {toc.map((h) => <TableOfContentsHeading heading={h} />)}
 </ul>

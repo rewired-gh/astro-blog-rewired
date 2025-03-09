@@ -31,6 +31,13 @@ export function createExcerpt(slug: string, body: string, maxLen = 150) {
       { selector: 'a', options: { ignoreHref: true } },
       { selector: 'img', format: 'skip' },
       { selector: 'figure', format: 'skip' },
+      { selector: 'iframe', format: 'skip' },
+      { selector: 'h1', format: 'skip' },
+      { selector: 'h2', format: 'skip' },
+      { selector: 'h3', format: 'skip' },
+      { selector: 'h4', format: 'skip' },
+      { selector: 'h5', format: 'skip' },
+      { selector: 'h6', format: 'skip' },
     ],
   };
   const text = convert(html, options);
