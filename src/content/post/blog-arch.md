@@ -3,7 +3,10 @@ date: 2025-03-09
 title: "It's Free Real Estate: Design the Perfect Blog"
 tags: [
   'Cloud Native',
-  'Web Dev'
+  'Web Dev',
+  'Full-stack',
+  'UX',
+  'SEO',
 ]
 language: 'en'
 ---
