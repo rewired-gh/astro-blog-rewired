@@ -19,7 +19,7 @@ interface TagEntry {
 const parser = new MarkdownIt();
 const excerptCache = new Map<string, string>();
 
-export function createExcerpt(slug: string, body: string, maxLen = 150) {
+export function createExcerpt(slug: string, body: string, maxLen = 163) {
   const cached = excerptCache.get(slug);
   if (cached) {
     return cached;
@@ -29,9 +29,12 @@ export function createExcerpt(slug: string, body: string, maxLen = 150) {
     wordwrap: null,
     selectors: [
       { selector: 'a', options: { ignoreHref: true } },
+      { selector: 'blockquote', format: 'skip' },
       { selector: 'img', format: 'skip' },
       { selector: 'figure', format: 'skip' },
       { selector: 'iframe', format: 'skip' },
+      { selector: 'pre', format: 'skip' },
+      { selector: 'table', format: 'skip' },
       { selector: 'h1', format: 'skip' },
       { selector: 'h2', format: 'skip' },
       { selector: 'h3', format: 'skip' },
@@ -42,7 +45,7 @@ export function createExcerpt(slug: string, body: string, maxLen = 150) {
   };
   const text = convert(html, options);
   const distilled = convert(text, options);
-  const excerpt = distilled.substring(0, maxLen) + '……';
+  const excerpt = distilled.substring(0, maxLen) + '…';
   excerptCache.set(slug, excerpt);
   return excerpt;
 }
