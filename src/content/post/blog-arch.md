@@ -17,7 +17,7 @@ language: 'en'
 
 ## Introduction
 
-With so much "real estate" to choose from these days, we can literally build a blog website with a blazingly fast worldwide CDN, automated CI/CD, a distributed database, edge computing API endpoints, spam protection, and LLM-based content moderation, all for **free**.
+With so much free "real estate" to choose from these days, we can literally build a blog website with a blazingly fast worldwide CDN, automated CI/CD, a distributed database, edge computing API endpoints, spam protection, and LLM-based content moderation, all for **free**.
 
 As a [wise man](https://youtu.be/cd4-UnU8lWY) (or maybe it was [Cloudflare](https://webmasters.stackexchange.com/a/88685)) once said:
 
