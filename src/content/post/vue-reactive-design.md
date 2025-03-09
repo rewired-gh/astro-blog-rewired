@@ -5,6 +5,7 @@ tags: [
   'Web 兔子洞',
   'Vue'
 ]
+language: 'zh'
 ---
 
 ## 前情提要

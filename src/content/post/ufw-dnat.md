@@ -4,6 +4,7 @@ title: '为 UFW 配置 DNAT 端口双向转发'
 tags: [
   '运维'
 ]
+language: 'zh'
 ---
 
 ## 前情提要

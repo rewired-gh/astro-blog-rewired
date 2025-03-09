@@ -7,6 +7,7 @@ export interface DigestEntry {
   title: string;
   date: Date;
   tags: string[];
+  language?: string;
   excerpt: string;
 }
 
@@ -43,16 +44,18 @@ export async function getAllDigestEntries() {
   const blogEntries = (await getCollection('post')).sort(
     (a, b) => b.data.date.getTime() - a.data.date.getTime()
   );
-  return blogEntries.map(
+  const digests = blogEntries.map(
     (entry) =>
       ({
         path: `/post/${entry.slug}`,
         title: entry.data.title,
         date: entry.data.date,
         tags: entry.data.tags,
+        language: entry.data.language,
         excerpt: createExcerpt(entry.slug, entry.body),
       }) as DigestEntry
   );
+  return digests;
 }
 
 export async function getTagStaticPaths() {

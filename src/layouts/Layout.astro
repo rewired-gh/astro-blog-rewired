@@ -7,13 +7,14 @@ interface Props {
   title: string;
   description: string;
   pageType: 'website' | 'article';
+  language?: string;
 }
 
-const { title, description, pageType } = Astro.props;
+const { title, description, pageType, language } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="zh">
+<html lang={language || 'en'}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -68,7 +69,7 @@ const { title, description, pageType } = Astro.props;
       <p class="flex flex-wrap items-center justify-center gap-x-2">
         <span>Copyright © MMXXV Rewired All Rights Reserved.</span>
         <a tabindex="0" href="https://icp.gov.moe/?keyword=20250143" target="_blank">
-          萌ICP备20250143号
+          萌 ICP 备 20250143 号
         </a>
       </p>
       <p class="mt-4">

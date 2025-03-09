@@ -16,7 +16,7 @@ interface PaginationResult {
 /**
  * Parse and validate page parameter from query string
  */
-export function parsePageParam(pageParam: string | null): number | null {
+export function parsePageParam(pageParam?: string): number | null {
   if (!pageParam) return 1;
 
   const page = parseInt(pageParam, 10);

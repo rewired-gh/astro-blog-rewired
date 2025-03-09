@@ -12,7 +12,7 @@ const { digests } = Astro.props;
 <ul class="flex flex-col gap-y-8">
   {
     digests.map((digest) => (
-      <li>
+      <li lang={digest.language}>
         <ArticleMeta date={digest.date} tags={digest.tags} />
         <a
           tabindex="0"

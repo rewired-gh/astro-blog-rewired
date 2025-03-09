@@ -10,8 +10,8 @@ function escapeMarkdown(text: string): string {
 export async function sendNewCommentNotification(
   comment: CommentSubmission,
   postId: string,
-  botToken: string | null,
-  chatId: string | null
+  botToken?: string,
+  chatId?: string
 ): Promise<void> {
   if (!botToken || !chatId) {
     console.error('Telegram bot token or chat ID not set');

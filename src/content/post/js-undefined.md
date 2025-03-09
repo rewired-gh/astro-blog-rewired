@@ -5,6 +5,7 @@ tags: [
   'Web 兔子洞',
   'JavaScript'
 ]
+language: 'zh'
 ---
 
 ## TL; DR

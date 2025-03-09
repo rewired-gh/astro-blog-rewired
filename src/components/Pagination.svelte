@@ -14,8 +14,8 @@
     totalPages?: number;
     prevUrl?: string;
     nextUrl?: string;
-    onPrevPage?: (() => void) | null;
-    onNextPage?: (() => void) | null;
+    onPrevPage?: () => void;
+    onNextPage?: () => void;
     prevLabel?: string;
     nextLabel?: string;
     customClass?: string;

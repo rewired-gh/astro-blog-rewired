@@ -5,6 +5,7 @@ tags: [
   'Web 兔子洞',
   'UI/UX'
 ]
+language: 'zh'
 ---
 
 ## 效果展示

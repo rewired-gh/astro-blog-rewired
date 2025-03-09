@@ -26,6 +26,7 @@ const toc = buildToc(headings);
   title={config.site.pageTitle(entry.data.title)}
   description={createExcerpt(entry.slug, entry.body)}
   pageType="article"
+  language={entry.data.language}
 >
   <ArticleMeta date={entry.data.date} tags={entry.data.tags} />
   <article class="prose prose-stone pt-1">
