@@ -2,7 +2,8 @@
 date: 2023-12-04
 title: '为 UFW 配置 DNAT 端口双向转发'
 tags: [
-  '运维'
+  'DevOps',
+  'Network'
 ]
 language: 'zh'
 ---

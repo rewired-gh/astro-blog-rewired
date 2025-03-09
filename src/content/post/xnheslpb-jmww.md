@@ -2,7 +2,8 @@
 date: 2023-06-19
 title: '实用小鹤双拼键位记法'
 tags: [
-  '双拼', '短文'
+  'Input Method',
+  'Essay'
 ]
 language: 'zh'
 ---

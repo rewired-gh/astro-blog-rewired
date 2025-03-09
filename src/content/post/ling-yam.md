@@ -2,7 +2,8 @@
 date: 2023-01-16
 title: '铃音'
 tags: [
-  '诗', '短文'
+  'Poetry',
+  'Essay'
 ]
 language: 'zh'
 ---

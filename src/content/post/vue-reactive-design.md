@@ -2,7 +2,7 @@
 date: 2024-03-21
 title: '形象分析 Vue 3 响应式的原理与思路'
 tags: [
-  'Web 兔子洞',
+  'Web Dev',
   'Vue'
 ]
 language: 'zh'

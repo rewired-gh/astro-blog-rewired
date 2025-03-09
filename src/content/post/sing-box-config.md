@@ -2,7 +2,8 @@
 date: 2025-02-26
 title: '强迫症专属 sing-box 配置模板'
 tags: [
-  '运维', '短文'
+  'DevOps',
+  'Essay'
 ]
 language: 'zh'
 ---

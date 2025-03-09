@@ -2,7 +2,7 @@
 date: 2024-02-22
 title: 'JavaScript 中的 undefined、不存在、delete'
 tags: [
-  'Web 兔子洞',
+  'Web Dev',
   'JavaScript'
 ]
 language: 'zh'

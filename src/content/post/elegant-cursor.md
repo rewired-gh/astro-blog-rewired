@@ -2,8 +2,8 @@
 date: 2024-03-01
 title: '利用 animate 特性制作精美的次级指针特效'
 tags: [
-  'Web 兔子洞',
-  'UI/UX'
+  'Web Dev',
+  'UX'
 ]
 language: 'zh'
 ---
