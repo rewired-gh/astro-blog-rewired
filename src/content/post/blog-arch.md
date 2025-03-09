@@ -11,6 +11,9 @@ tags: [
 language: 'en'
 ---
 
+> 注意：为了面向更多的受众，本文不提供中文版本，如有需要请使用浏览器的翻译功能，感谢理解。
+> Please note: To reach a broader audience, a Chinese version of this article is not provided. If needed, please use your browser's translation feature. Thank you for your understanding.
+
 ## Introduction
 
 With so much "real estate" to choose from these days, we can literally build a blog website with a blazingly fast worldwide CDN, automated CI/CD, a distributed database, edge computing API endpoints, spam protection, and LLM-based content moderation, all for **free**.
@@ -21,7 +24,7 @@ As a [wise man](https://youtu.be/cd4-UnU8lWY) (or maybe it was [Cloudflare](http
 
 <iframe width="336" height="189" src="https://www.youtube-nocookie.com/embed/cd4-UnU8lWY?start=34" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-But how? Let's dive into the rabbit hole.
+But how? Let's dive into the rabbit hole. In this article, I'll walk you through the architecture of my blog.
 
 ## Overview
 
@@ -37,8 +40,13 @@ Here's a quick overview of the technologies powering my blog:
   - Core: Cloudflare Pages Functions, TypeScript
   - Database: Cloudflare D1
   - Spam Protection: Cloudflare Turnstile
-  - LLM: OpenAI, ByteDance Volcano Ark
+  - LLM: OpenAI SDK, ByteDance Volcano Ark
   - Notification: Telegram Bot Platform
+
+
+## Content Generation
+
+*(🚧 This article is still under construction.)*
 
 ## User Experience
 
@@ -60,7 +68,7 @@ A basic element of perfection is consistency: maintaining the same padding, marg
 
 First and foremost, a human-friendly design is paramount. For instance, any button intended for user interaction should have a clear and sufficiently large border, ensuring that mobile users can easily identify the tappable area. Visual cues should appear when a cursor hovers over a button to encourage interaction. Conversely, a disabled button should be easily distinguishable from its active state.
 
-Here is the example Tailwind CSS code for a button:
+Here is the Tailwind CSS code for a button:
 
 ```css
 @layer components {
@@ -92,11 +100,13 @@ Speaking of hover effects, here's a handy Tailwind CSS trick. It adds a `hocus` 
 </a>
 ```
 
-### Transitions and Animations
+### Motions
+
+Here are some notable motions used on my blog. Other motions are usually trivial to implement using Tailwind CSS.
 
 #### Navigation Bar Button
 
-The hover effect of navigation bar buttons is implemented using CSS [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter). It's in the Baseline 2024 list so don't worry about the compatibility. ~~You should always blame users for not upgrading their browsers.~~ Here is the example code:
+The hover effect of navigation bar buttons is implemented using CSS [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter). It's in the Baseline 2024 list so don't worry about the compatibility. ~~You should always blame users for not upgrading their browsers.~~ Here is the code:
 
 ```html
 <a
@@ -116,7 +126,7 @@ This transition effect is used on post titles on the home page during hover and 
 - Size change
 - Color fade-in
 
-In the table of contents, it also includes an X-axis translation. Here is the example code:
+In the table of contents, it also includes an X-axis translation. Here is the code:
 
 ```html
 <a
@@ -129,7 +139,7 @@ In the table of contents, it also includes an X-axis translation. Here is the ex
 
 #### "The Wiggle"
 
-If an operation fails, the message text will turn red and display a subtle wiggle animation. This visual cue is inspired by ByteDance Acro Design. Here is the example code:
+If an operation fails, the message text will turn red and display a subtle wiggle animation. This visual cue is inspired by ByteDance Acro Design. Here is the code:
 
 ```css
 @theme {
@@ -162,13 +172,48 @@ If an operation fails, the message text will turn red and display a subtle wiggl
 
 An easy way to improve accessibility is by auditing your website using [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview) and always writing [semantic HTML](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/HTML). However, there are some extra things to consider:
 
-- Add `tabindex="0"` wherever it's needed. Pay special attention to navigating your website using only the keyboard, especially on Safari.
-- Add a ["Skip to Main Content"](https://www.a11y-collective.com/blog/skip-to-main-content) button.
-- Use [ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA) attributes when necessary.
-- Review [this checklist](https://www.a11yproject.com/checklist) and test the website yourself.
+1. Add `tabindex="0"` wherever it's needed. Pay special attention to navigating your website using only the keyboard, especially on Safari.
+2. Add a ["Skip to Main Content"](https://www.a11y-collective.com/blog/skip-to-main-content) button.
+3. Use [ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA) attributes when necessary.
+4. Review [this checklist](https://www.a11yproject.com/checklist) and test the website yourself.
 
 ### Responsive Design
 
 Tailwind CSS has concise and helpful [documentation](https://tailwindcss.com/docs/responsive-design) on this topic. The general approach is to target smaller screens first and then consider larger screens. I prefer to test my responsive design with Chrome DevTools because it can simulate various devices.
 
-*(This article is still under construction.)*
+## SEO
+
+Similar to accessibility, SEO (Search Engine Optimization) can be audited using [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview). However, since SEO is a broad concept that covers many aspects, I will share my approach to achieving a decent level of SEO.
+
+### Basic Metadata
+
+Basic metadata includes the language attribute and standard HTML metadata in the `head` section. Here is a minimal example:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <title>Example</title>
+    <link rel="cononical" href={Astro.url} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <!-- ... -->
+  </body>
+</html>
+```
+
+### For Crawlers
+
+Google's crawler tends to prefer websites with a correct sitemap, a `robots.txt` file, and a well-handled 404 error page. You can configure the generation of sitemap and `robots.txt` file by following the [guide](https://docs.astro.build/en/guides/integrations-guide/sitemap) of `@astrojs/sitemap`. If you're using [Google Search Console](https://search.google.com/search-console), it's recommended to manually submit your sitemap when you add your blog for the first time.
+
+You might also find it helpful to configure your RSS feed generation in a similar way. For example, I use `@astrojs/rss` and followed this [guide](https://docs.astro.build/en/recipes/rss). I also combine it with my own algorithm for generating article previews (descriptions).
+
+### Open Graph
+
+*(🚧 This article is still under construction.)*
