@@ -29,7 +29,7 @@ But how? Let's dive into the rabbit hole. In this article, I'll walk you through
 
 ## Overview
 
-> Tip: Click "On this page" to view the table of contents and jump to any section.
+> Tip: Click "**On this page**" to view the table of contents and jump to any section.
 
 Here's a quick overview of the technologies powering my blog:
 
@@ -44,8 +44,72 @@ Here's a quick overview of the technologies powering my blog:
   - LLM: OpenAI SDK, ByteDance Volcano Ark
   - Notification: Telegram Bot Platform
 
-
 ## Content Generation
+
+Astro can do a lot of heavy lifting right out of the box. It also has a useful [guide](https://docs.astro.build/en/guides/markdown-content) for basic Markdown rendering. For documentation purposes, Astro offers the polished [Starlight](https://starlight.astro.build) framework, which makes getting started easy. However, building a complete blog involves tackling additional tasks.
+
+### Styling
+
+To style my blog posts, I started with [Tailwind Typography](https://github.com/tailwindlabs/tailwindcss-typography). However, I quickly realized its limitations. Fortunately, Tailwind Typography can be customized in the `tailwind.config.mjs` file. Here is an example:
+
+```js
+/** @type {import('tailwindcss').Config} */
+import colors from 'tailwindcss/colors';
+export default {
+  extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: '100%',
+            h2: {
+              fontSize: '22px',
+            },
+            // ...
+          },},
+        stone: {
+          css: {
+            '--tw-prose-body': colors.stone[800],
+            // ...
+          },},},},},};
+```
+
+### Content Excerpt
+
+Excerpts of blog posts are useful for displaying summaries in post listings and as meta descriptions. You can generate excerpts during the build process using a few techniques. I chose [markdown-it](https://github.com/markdown-it/markdown-it) and [html-to-text](https://github.com/html-to-text/node-html-to-text) (though the latter is not actively maintained). Here's the helper function I use to generate excerpts:
+
+```ts
+import MarkdownIt from 'markdown-it';
+import { convert } from 'html-to-text';
+
+const parser = new MarkdownIt();
+const excerptCache = new Map<string, string>();
+export function createExcerpt(slug: string, body: string, maxLen: number) {
+  const cached = excerptCache.get(slug);
+  if (cached) {
+    return cached;
+  }
+  const html = parser.render(body);
+  const options = {
+    wordwrap: null,
+    selectors: [
+      { selector: 'a', options: { ignoreHref: true } },
+      { selector: 'img', format: 'skip' },
+      { selector: 'figure', format: 'skip' },
+      { selector: 'pre', format: 'skip' },
+      { selector: 'table', format: 'skip' },
+      { selector: 'h1', format: 'skip' },
+      // ...
+    ],
+  };
+  const text = convert(html, options);
+  const distilled = convert(text, options);
+  const excerpt = distilled.substring(0, maxLen) + '…';
+  excerptCache.set(slug, excerpt);
+  return excerpt;
+}
+```
+
+The HTML content is converted twice to ensure thorough cleanup.
 
 *(🚧 This article is still under construction.)*
 
@@ -53,7 +117,7 @@ Here's a quick overview of the technologies powering my blog:
 
 ### Design Principles
 
-The aesthetics of my blog are originally inspired by [ribice/kiss](https://github.com/ribice/kiss). Although this theme doesn't quite match my standards, it remains my favorite. If you don't want to invest the time in building a blog from scratch, it's a great starting point.
+The aesthetics of my blog were originally inspired by [ribice/kiss](https://github.com/ribice/kiss). Although this theme doesn't quite match my standards, it remains my favorite. If you don't want to invest the time in building a blog from scratch, it's a great starting point.
 
 I'm a lazy person who likes enjoying life and touching grass instead of staring at a boring computer screen for hours. So, after investigating all the obvious options, I convinced myself that no free blog website templates met these requirements:
 
@@ -180,7 +244,7 @@ An easy way to improve accessibility is by auditing your website using [Lighthou
 
 ### Responsive Design
 
-Tailwind CSS has concise and helpful [documentation](https://tailwindcss.com/docs/responsive-design) on this topic. The general approach is to target smaller screens first and then consider larger screens. I prefer to test my responsive design with Chrome DevTools because it can simulate various devices.
+Tailwind CSS has concise and helpful [documentation](https://tailwindcss.com/docs/responsive-design) on this topic. The general approach is to target smaller screens first and then consider larger screens. I prefer to test the responsive design with Chrome DevTools because it can simulate various devices.
 
 ## SEO
 
@@ -213,7 +277,7 @@ Basic metadata includes the language attribute and standard HTML metadata in the
 
 Google's crawler tends to prefer websites with a correct sitemap, a `robots.txt` file, and a well-handled 404 error page. You can configure the generation of sitemap and `robots.txt` file by following the [guide](https://docs.astro.build/en/guides/integrations-guide/sitemap) of `@astrojs/sitemap`. If you're using [Google Search Console](https://search.google.com/search-console), it's recommended to manually submit your sitemap when you add your blog for the first time.
 
-You might also find it helpful to configure your RSS feed generation in a similar way. For example, I use `@astrojs/rss` and followed this [guide](https://docs.astro.build/en/recipes/rss). I also combine it with my own algorithm for generating article previews (descriptions).
+You might also find it helpful to configure your RSS feed generation in a similar way. For example, I use `@astrojs/rss` and followed this [guide](https://docs.astro.build/en/recipes/rss).
 
 ### Open Graph
 
