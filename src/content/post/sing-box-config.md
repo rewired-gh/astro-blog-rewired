@@ -158,7 +158,7 @@ sing-box 的[配置文档](https://sing-box.sagernet.org/configuration)虽然已
       },
       // 对于地理位置标记的规则
       {
-        "rule_set": ["geosite-cn", "geoip-cn"],
+        "rule_set": ["geosite-cn"],
         "outbound": "direct"
       },
       // 对于非广域网 IP 的规则
@@ -187,13 +187,6 @@ sing-box 的[配置文档](https://sing-box.sagernet.org/configuration)虽然已
         "type": "remote",
         "format": "binary",
         "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-ads-all.srs",
-        "download_detour": "direct"
-      },
-      {
-        "tag": "geoip-cn",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geoip-cn.srs",
         "download_detour": "direct"
       }
     ]
