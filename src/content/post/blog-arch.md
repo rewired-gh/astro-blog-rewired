@@ -281,7 +281,7 @@ You might also find it helpful to configure your RSS feed generation in a simila
 
 ### Open Graph
 
-The [Open Graph protocol](https://ogp.me) is used by many major social media platforms for displaying any web page as a rich object. The rich object can be a card of a link. By adding Open Graph properties to your website, you can increase the exposure of your website. Here are some of the Open Graph properties I used:
+The [Open Graph protocol](https://ogp.me) is used by many major social media platforms for displaying any web page as a rich object. The rich object can be a card of a link. Implementing these properties on your website can potentially increase its exposure. Here are some of the Open Graph properties I used:
 
 ```html
 <head>
