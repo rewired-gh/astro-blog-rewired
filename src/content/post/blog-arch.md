@@ -17,7 +17,7 @@ language: 'en'
 
 ## Introduction
 
-With so much free "real estate" to choose from these days, we can literally build a blog website with a blazingly fast worldwide CDN, automated CI/CD, a distributed database, edge computing API endpoints, spam protection, and LLM-based content moderation, all for **free**.
+Nowadays, With so much free "real estate" to choose from, we can literally build a complete blog with blazingly fast worldwide CDN, automated CI/CD, distributed database, edge computing API endpoints, spam protection, and LLM-based content moderation, all for **free**.
 
 As a [wise man](https://youtu.be/cd4-UnU8lWY) (or maybe it was [Cloudflare](https://webmasters.stackexchange.com/a/88685)) once said:
 
@@ -29,9 +29,9 @@ But how? Let's dive into the rabbit hole. In this article, I'll walk you through
 
 ## Overview
 
-> Tip: Click "**On this page**" to view the table of contents and jump to any section.
+> Tip: Click "**On this page**" to view the table of contents and jump to any section you want.
 
-Here's a quick overview of the technologies powering my blog:
+Here's a brief overview of the technology stack:
 
 - Frontend:
   - Core: Astro.js, Svelte, Tailwind CSS, TypeScript
@@ -46,11 +46,11 @@ Here's a quick overview of the technologies powering my blog:
 
 ## Content Generation
 
-Astro can do a lot of heavy lifting right out of the box. It also has a useful [guide](https://docs.astro.build/en/guides/markdown-content) for basic Markdown rendering. For documentation purposes, Astro offers the polished [Starlight](https://starlight.astro.build) framework, which makes getting started easy. However, building a complete blog involves tackling additional tasks.
+Astro can do a lot of heavy lifting right out of the box. It also has a useful [guide](https://docs.astro.build/en/guides/markdown-content) for basic Markdown rendering. If you want to build a documentation website, Astro offers the polished and easy-to-use [Starlight](https://starlight.astro.build) framework. However, building a complete blog requires tackling some problems.
 
 ### Styling
 
-To style my blog posts, I started with [Tailwind Typography](https://github.com/tailwindlabs/tailwindcss-typography). However, I quickly realized its limitations. Fortunately, Tailwind Typography can be customized in the `tailwind.config.mjs` file. Here is an example:
+To style the articles, I started with [Tailwind Typography](https://github.com/tailwindlabs/tailwindcss-typography). After some further developement, I quickly realized its limitations. Fortunately, Tailwind Typography can be customized with the `tailwind.config.mjs` file. Here is an example:
 
 ```js
 /** @type {import('tailwindcss').Config} */
@@ -75,7 +75,7 @@ export default {
 
 ### Content Excerpt
 
-Excerpts of blog posts are useful for displaying summaries in post listings and as meta descriptions. You can generate excerpts during the build process using a few techniques. I chose [markdown-it](https://github.com/markdown-it/markdown-it) and [html-to-text](https://github.com/html-to-text/node-html-to-text) (though the latter is not actively maintained). Here's the helper function I use to generate excerpts:
+Excerpts of blog posts are useful for displaying summaries in listings and as meta descriptions. You can generate excerpts during the build process using a few techniques. I chose [markdown-it](https://github.com/markdown-it/markdown-it) and [html-to-text](https://github.com/html-to-text/node-html-to-text) (though the latter is not actively maintained). Here's the helper function I use to generate excerpts:
 
 ```ts
 import MarkdownIt from 'markdown-it';
@@ -109,7 +109,7 @@ export function createExcerpt(slug: string, body: string, maxLen: number) {
 }
 ```
 
-The HTML content is converted twice to ensure thorough cleanup.
+Please note that the HTML content is converted twice to ensure thorough cleanup.
 
 *(🚧 This article is still under construction.)*
 
@@ -117,7 +117,7 @@ The HTML content is converted twice to ensure thorough cleanup.
 
 ### Design Principles
 
-The aesthetics of my blog were originally inspired by [ribice/kiss](https://github.com/ribice/kiss). Although this theme doesn't quite match my standards, it remains my favorite. If you don't want to invest the time in building a blog from scratch, it's a great starting point.
+The aesthetics of my blog were inspired by [ribice/kiss](https://github.com/ribice/kiss). Although this theme doesn't quite match my standards, it remains my favorite. If you don't want to invest the time in building a blog from scratch, it's a great starting point.
 
 I'm a lazy person who likes enjoying life and touching grass instead of staring at a boring computer screen for hours. So, after investigating all the obvious options, I convinced myself that no free blog website templates met these requirements:
 
@@ -127,11 +127,11 @@ I'm a lazy person who likes enjoying life and touching grass instead of staring 
 4. Elegant details and cutting-edge web technologies
 5. Extensible to whatever I like
 
-A basic element of perfection is consistency: maintaining the same padding, margin, gap, color, size, and so on throughout the design.
+Speaking of perfection, a basic element of perfection is consistency: maintaining the same padding, margin, gap, color, size, and so on throughout the design.
 
 ### Components
 
-First and foremost, a human-friendly design is paramount. For instance, any button intended for user interaction should have a clear and sufficiently large border, ensuring that mobile users can easily identify the tappable area. Visual cues should appear when a cursor hovers over a button to encourage interaction. Conversely, a disabled button should be easily distinguishable from its active state.
+Every good design is a human-centred design. For example, any button intended for user interaction should have a clear and sufficiently large border, ensuring that mobile users can easily identify the tappable area. Visual cues should appear when a cursor hovers over a button to encourage interaction. On the contrary, a disabled button should be easily distinguishable from its active state.
 
 Here is the Tailwind CSS code for a button:
 
@@ -153,7 +153,7 @@ Here is the Tailwind CSS code for a button:
 }
 ```
 
-Speaking of hover effects, here's a handy Tailwind CSS trick. It adds a `hocus` variant and allows you to target both hover and focus states simultaneously, reducing code duplication.
+Speaking of hover effects, here's a handy Tailwind CSS trick. It adds a `hocus` variant and allows you to target both hover and focus states simultaneously, therefore reducing code duplication.
 
 ```css
 @custom-variant hocus (&:hover, &:focus);
@@ -167,7 +167,7 @@ Speaking of hover effects, here's a handy Tailwind CSS trick. It adds a `hocus` 
 
 ### Motions
 
-Here are some notable motions used on my blog. Other motions are usually trivial to implement using Tailwind CSS.
+Here are some notable motions used in my blog. Other motions are mostly trivial to implement using Tailwind CSS.
 
 #### Navigation Bar Button
 
@@ -185,7 +185,7 @@ The hover effect of navigation bar buttons is implemented using CSS [`backdrop-f
 
 #### Dynamic Item
 
-This transition effect is used on post titles on the home page during hover and on the items in the table of contents. To make the transition buttery smooth, it consists of these ingredients:
+This transition effect is used on post titles on the home page during hover and on the items in the table of contents. To make the transition buttery smooth, I added the following ingredients:
 
 - Blur filter
 - Size change
@@ -204,7 +204,7 @@ In the table of contents, it also includes an X-axis translation. Here is the co
 
 #### "The Wiggle"
 
-If an operation fails, the message text will turn red and display a subtle wiggle animation. This visual cue is inspired by ByteDance Acro Design. Here is the code:
+When an operation fails, the message text will turn red and display a subtle wiggle animation. This visual cue is inspired by ByteDance Acro Design. Here is the code:
 
 ```css
 @theme {
@@ -237,18 +237,18 @@ If an operation fails, the message text will turn red and display a subtle wiggl
 
 An easy way to improve accessibility is by auditing your website using [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview) and always writing [semantic HTML](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/HTML). However, there are some extra things to consider:
 
-1. Add `tabindex="0"` wherever it's needed. Pay special attention to navigating your website using only the keyboard, especially on Safari.
+1. Add `tabindex="0"` wherever it's needed. Try navigating your website using only the keyboard, especially on Safari.
 2. Add a ["Skip to Main Content"](https://www.a11y-collective.com/blog/skip-to-main-content) button.
 3. Use [ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA) attributes when necessary.
 4. Review [this checklist](https://www.a11yproject.com/checklist) and test the website yourself.
 
 ### Responsive Design
 
-Tailwind CSS has concise and helpful [documentation](https://tailwindcss.com/docs/responsive-design) on this topic. The general approach is to target smaller screens first and then consider larger screens. I prefer to test the responsive design with Chrome DevTools because it can simulate various devices.
+Tailwind CSS has concise and helpful [documentation](https://tailwindcss.com/docs/responsive-design) on this topic. The general idea is to target smaller screens first and then consider larger screens. I prefer to test the responsive design with Chrome DevTools because it can simulate various screen dimensions.
 
 ## SEO
 
-Similar to accessibility, SEO (Search Engine Optimization) can be audited using [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview). However, since SEO is a broad concept that covers many aspects, I will share my approach to achieving a decent level of SEO.
+Similar to accessibility, SEO (Search Engine Optimization) can be audited using [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview). However, since SEO is a rather broad concept that covers many aspects, I will share my approach to achieving a decent level of SEO.
 
 ### Basic Metadata
 
@@ -280,5 +280,17 @@ Google's crawler tends to prefer websites with a correct sitemap, a `robots.txt`
 You might also find it helpful to configure your RSS feed generation in a similar way. For example, I use `@astrojs/rss` and followed this [guide](https://docs.astro.build/en/recipes/rss).
 
 ### Open Graph
+
+The [Open Graph protocol](https://ogp.me) is used by many major social media platforms for displaying any web page as a rich object. The rich object can be a card of a link. By adding Open Graph properties to your website, you can increase the exposure of your website. Here are some of the Open Graph properties I used:
+
+```html
+<head>
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={Astro.url} />
+  <meta property="og:site_name" content={config.site.name} />
+  <meta property="og:type" content={pageType} />
+</head>
+```
 
 *(🚧 This article is still under construction.)*
