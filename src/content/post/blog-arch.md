@@ -293,4 +293,64 @@ The [Open Graph protocol](https://ogp.me) is used by many major social media pla
 </head>
 ```
 
+## Table of Contents
+
+### Content Generation
+
+Headings of an article can be retrieved from `(await entry.render()).headings`. The heading depth starts from 2, which corresponds to `h2`. After retrieving the headings, they need to be converted into a nested structure. Below is the algorithm I designed for this transformation:
+
+```ts
+export interface ExtendedHeading extends MarkdownHeading {
+  children: ExtendedHeading[];
+}
+
+export function buildToc(headings: MarkdownHeading[]): ExtendedHeading[] {
+  const lastHeading: { [key: number]: ExtendedHeading } = {};
+  const toc = headings.reduce((acc, h) => {
+    if (h.depth >= 6) {
+      return acc;
+    }
+    const heading: ExtendedHeading = { ...h, children: [] };
+    if (h.depth <= 2) {
+      acc.push(heading);
+    } else {
+      const parent = lastHeading[h.depth - 1];
+      parent?.children?.push(heading);
+    }
+    lastHeading[h.depth] = heading;
+    return acc;
+  }, [] as ExtendedHeading[]);
+  return toc;
+}
+```
+
+I know it's not written in a purely functional style, but it's more readable.
+
+To render the table of contents, I created an Astro wrapper component, `TableOfContents`, which contains the dynamic component `TableOfContentsCore`. The heading items are built recursively using the `TableOfContentsHeading` component. Here is how `TableOfContentsHeading` looks like:
+
+```astro
+---
+interface Props {
+  heading: ExtendedHeading;
+}
+
+const { heading } = Astro.props;
+---
+
+<li class="mt-0 mb-0">
+  <a href={'#' + heading.slug}>
+    <span class="truncate py-1">{heading.text}</span>
+  </a>
+  {
+    heading.children.length > 0 && (
+      <ul>
+        {heading.children.map((h) => (
+          <Astro.self heading={h} />
+        ))}
+      </ul>
+    )
+  }
+</li>
+```
+
 *(🚧 This article is still under construction.)*

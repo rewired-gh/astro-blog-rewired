@@ -1,11 +1,11 @@
 import type { ExtendedHeading } from '../lib/tableOfContent';
+import { TotalOrderedSet } from '../lib/orderedSet';
 
 const tocUlElem: HTMLUListElement | null = document.querySelector('ul#toc');
 const detailsElem: HTMLDetailsElement | null = document.querySelector('details#toc-toggle');
 const currentSpanElem: HTMLSpanElement | null = document.querySelector('span#toc-current');
 const tocString: string = tocUlElem?.dataset?.toc || '[]';
 const toc: ExtendedHeading[] = (JSON.parse(tocString) as { list: ExtendedHeading[] }).list;
-import { TotalOrderedSet } from '../lib/orderedSet';
 
 const headingDequeue: TotalOrderedSet<{
   slug: string;
