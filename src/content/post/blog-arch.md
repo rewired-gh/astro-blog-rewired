@@ -31,7 +31,7 @@ But how? Let's dive into the rabbit hole. In this article, I'll walk you through
 
 > Tip: Click "**On this page**" to view the table of contents and jump to any section you want.
 
-Here's a brief overview of the technology stack:
+Here is a brief overview of the technology stack:
 
 - Frontend:
   - Core: Astro.js, Svelte, Tailwind CSS, TypeScript
@@ -75,7 +75,7 @@ export default {
 
 ### Content Excerpt
 
-Excerpts of blog posts are useful for displaying summaries in listings and as meta descriptions. You can generate excerpts during the build process using a few techniques. I chose [markdown-it](https://github.com/markdown-it/markdown-it) and [html-to-text](https://github.com/html-to-text/node-html-to-text) (though the latter is not actively maintained). Here's the helper function I use to generate excerpts:
+Excerpts of blog posts are useful for displaying summaries in listings and as meta descriptions. You can generate excerpts during the build process using a few techniques. I chose [markdown-it](https://github.com/markdown-it/markdown-it) and [html-to-text](https://github.com/html-to-text/node-html-to-text) (though the latter is not actively maintained). Here is the helper function I use to generate excerpts:
 
 ```ts
 import MarkdownIt from 'markdown-it';
@@ -110,8 +110,6 @@ export function createExcerpt(slug: string, body: string, maxLen: number) {
 ```
 
 Please note that the HTML content is converted twice to ensure thorough cleanup.
-
-*(🚧 This article is still under construction.)*
 
 ## User Experience
 
@@ -153,7 +151,7 @@ Here is the Tailwind CSS code for a button:
 }
 ```
 
-Speaking of hover effects, here's a handy Tailwind CSS trick. It adds a `hocus` variant and allows you to target both hover and focus states simultaneously, therefore reducing code duplication.
+Here is a handy Tailwind CSS trick. It adds a `hocus` variant and allows you to target both hover and focus states simultaneously, therefore reducing code duplication.
 
 ```css
 @custom-variant hocus (&:hover, &:focus);
@@ -297,6 +295,8 @@ The [Open Graph protocol](https://ogp.me) is used by many major social media pla
 
 ### Content Generation
 
+#### Components
+
 Headings of an article can be retrieved from `(await entry.render()).headings`. The heading depth starts from 2, which corresponds to `h2`. After retrieving the headings, they need to be converted into a nested structure. Below is the algorithm I designed for this transformation:
 
 ```ts
@@ -337,9 +337,9 @@ interface Props {
 const { heading } = Astro.props;
 ---
 
-<li class="mt-0 mb-0">
+<li>
   <a href={'#' + heading.slug}>
-    <span class="truncate py-1">{heading.text}</span>
+    <span>{heading.text}</span>
   </a>
   {
     heading.children.length > 0 && (
@@ -352,5 +352,100 @@ const { heading } = Astro.props;
   }
 </li>
 ```
+
+#### Markdown Parsing
+
+I also wrote a Rehype plugin to wrap each heading and its directly associated content in a section. This step is necessary for implementing "On this page" detection, which will be explained later. Here is the implementation:
+
+```ts
+import { visit } from 'unist-util-visit';
+import { h } from 'hastscript';
+
+export default function rehypeSectionHeadings() {
+  return (tree: any) => {
+    visit(tree, 'root', (rootNode) => {
+      const sectionedChildren = [];
+      let currentSection = null;
+      for (const child of rootNode.children) {
+        if (child.type === 'element' && ['h2', 'h3', 'h4', 'h5'].includes(child.tagName)) {
+          if (currentSection) {
+            sectionedChildren.push(currentSection);
+          }
+          currentSection = h('section', [child]);
+        } else {
+          if (currentSection) {
+            currentSection.children.push(child);
+          } else {
+            sectionedChildren.push(child);
+          }
+        }
+      }
+      if (currentSection) {
+        sectionedChildren.push(currentSection);
+      }
+      rootNode.children = sectionedChildren;
+    });
+  };
+}
+```
+
+### Scripting
+
+To automatically highlight the sections on the viewport, I attached `IntersectionObserver` to each section. The highlighted items are marked with `active` class. At first, I wrote everything in the dynamic component using Svelte, but later quickly found that writing vanilla code is much more easy and maintainable. Here is the code for attaching `IntersectionObserver`s to all sections:
+
+```ts
+function addIntersectionObserver() {
+  const observer = new IntersectionObserver((sections) => {
+    sections.forEach((section) => {
+      const heading = section.target.querySelector('h2, h3, h4, h5');
+      if (!heading) {
+        return;
+      }
+      const id = heading.getAttribute('id');
+      if (!id) {
+        return;
+      }
+      const link = document.querySelector(`ul#toc li a[href="#${id}"]`);
+      if (!link) {
+        return;
+      }
+      if (section.intersectionRatio > 0) {
+        const i = headingDequeue.insert(
+          { slug: id, text: heading.textContent || '' },
+          headingOrderMap[id]
+        );
+        if (i === 0 && currentSpanElem) {
+          currentSpanElem.textContent = heading.textContent;
+        }
+        link.classList.add('active');
+      } else {
+        const i = headingDequeue.remove(
+          { slug: id, text: heading.textContent || '' },
+          headingOrderMap[id]
+        );
+        if (i === 0 && currentSpanElem) {
+          currentSpanElem.textContent = headingDequeue.get(0)?.text || '';
+        }
+        link.classList.remove('active');
+      }
+    });
+  });
+  document.querySelectorAll('article section').forEach((section) => {
+    observer.observe(section);
+  });
+}
+```
+
+The code above also handles the "On this page" text, which is actually not so trivial to implement in an efficient manner.
+
+*(🚧 This article is still under construction.)*
+
+## Comments Section
+
+### API and Persistence
+
+### Security
+
+### Notification
 
 *(🚧 This article is still under construction.)*
