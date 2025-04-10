@@ -15,9 +15,10 @@ export default defineConfig({
     sitemap(),
     svelte(),
     expressiveCode({
-      themes: ['github-light'],
+      themes: ['one-light'],
       styleOverrides: {
-        borderRadius: '0.5rem',
+        borderWidth: '1px',
+        borderColor: colors.stone[300],
         frames: {
           frameBoxShadowCssValue: 'none',
           inlineButtonBackground: colors.white,

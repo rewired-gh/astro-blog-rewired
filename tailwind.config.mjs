@@ -42,9 +42,9 @@ export default {
             'h2, h3, h4': {
               fontWeight: 400,
             },
-            pre: {
-              backgroundColor: 'var(--tw-prose-pre-bg) !important',
-            },
+            // pre: {
+            //   backgroundColor: 'var(--tw-prose-pre-bg) !important',
+            // },
             code: {
               fontWeight: 400,
             },
