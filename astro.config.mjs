@@ -5,21 +5,35 @@ import sitemap from '@astrojs/sitemap';
 import svelte from '@astrojs/svelte';
 import rehypeExternalLinks from 'rehype-external-links';
 import rehypeSectionHeadings from './src/lib/rehypeHeadingSection';
+import expressiveCode from 'astro-expressive-code';
+import colors from 'tailwindcss/colors';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://blog.rewired.moe',
-  integrations: [sitemap(), svelte()],
+  integrations: [
+    sitemap(),
+    svelte(),
+    expressiveCode({
+      themes: ['github-light'],
+      styleOverrides: {
+        borderRadius: '0.5rem',
+        frames: {
+          frameBoxShadowCssValue: 'none',
+          inlineButtonBackground: colors.white,
+          inlineButtonBorder: colors.stone[300],
+          inlineButtonBorderOpacity: 1,
+          inlineButtonForeground: colors.cyan[700],
+          tooltipSuccessBackground: colors.white,
+          tooltipSuccessForeground: colors.stone[500],
+        },
+      },
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
   },
   markdown: {
-    shikiConfig: {
-      themes: {
-        light: 'github-light',
-        dark: 'github-dark',
-      },
-    },
     remarkPlugins: [remarkMath],
     rehypePlugins: [
       [
