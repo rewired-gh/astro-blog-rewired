@@ -25,7 +25,7 @@ language: 'en'
 
 ## Plugins
 
-AceJump, IdeaVim, IdeaVim-EasyMotion, Which-Key, Maven Helper, VSCode Keymap, Google Search, Kursor, JPA Buddy.
+AceJump, IdeaVim, IdeaVim-EasyMotion, Which-Key, Maven Helper, VSCode Keymap, Google Search, Kursor, JPA Buddy, Multi-Project Workspace.
 
 ## .ideavimrc
 
