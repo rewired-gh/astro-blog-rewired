@@ -436,13 +436,108 @@ function addIntersectionObserver() {
 }
 ```
 
-The code above also handles the "On this page" text, which is actually not so trivial to implement in an efficient manner.
+The above code also handles the "On this page" text. To determine which section title is displayed, I designed an algorithm based on a total ordered set data structure. This structure combines a hash set with a sorted list, and on insertion it uses binary search to find the correct index. Here is the implementation:
 
-*(🚧 This article is still under construction.)*
+```ts
+export class TotalOrderedSet<T> {
+  private _existedWeights: Set<number>;
+  private _orderedElements: {
+    value: T;
+    weight: number;
+  }[];
+
+  constructor() {
+    this._existedWeights = new Set();
+    this._orderedElements = [];
+  }
+
+  private _findIndexForInsert(weight: number): number {
+    let low = 0;
+    let high = this._orderedElements.length;
+
+    while (low < high) {
+      const mid = Math.floor((low + high) / 2);
+      if (this._orderedElements[mid].weight < weight) {
+        low = mid + 1;
+      } else {
+        high = mid;
+      }
+    }
+    return low;
+  }
+
+  private _findIndexForRemove(weight: number): number {
+    let low = 0;
+    let high = this._orderedElements.length - 1;
+
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2);
+      if (this._orderedElements[mid].weight === weight) {
+        return mid;
+      } else if (this._orderedElements[mid].weight < weight) {
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+    return -1;
+  }
+
+  insert(value: T, weight: number) {
+    if (this._existedWeights.has(weight)) {
+      return -1;
+    }
+    const index = this._findIndexForInsert(weight);
+    this._orderedElements.splice(index, 0, { value, weight });
+    this._existedWeights.add(weight);
+    return index;
+  }
+
+  remove(value: T, weight: number) {
+    if (!this._existedWeights.has(weight)) {
+      return -1;
+    }
+    const index = this._findIndexForRemove(weight);
+    this._orderedElements.splice(index, 1);
+    this._existedWeights.delete(weight);
+    return index;
+  }
+
+  get(index: number) {
+    return this._orderedElements[index]?.value;
+  }
+}
+```
 
 ## Comments Section
 
+The comments section of my blog is pretty simple, but the implementation behind the scene is a little bit complicated. It is deployed mostly on Cloudflare and uses [Cloudflare Pages Functions](https://developers.cloudflare.com/pages/functions). For each comment submission, the backend service validates all fields, verifies the [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile) token, uses an LLM to determine whether the comment meets the guidelines, saves the comment to a [Cloudflare D1](https://developers.cloudflare.com/d1) database, notifies me via a Telegram bot (this process should use a message queue when traffic is high), and finally returns a success response.
+
 ### API and Persistence
+
+The Cloudflare Pages Functions backend codebase can be embedded within the main website repository. This allows Cloudflare Pages to automatically build and deploy both the frontend and the backend functions together. To test the integration between the API endpoints and the frontend during development, the `wrangler` and `astro` commands need to be run concurrently, for example, using the `concurrently` package:
+
+```bash
+concurrently "pnpm astro dev" "pnpm wrangler pages dev"
+```
+
+Database resources and environment variables should be declared in the `wrangler.toml` file. I use different databases for development and production. The database resource is provided as a parameter to each cloud function, and the query language for Cloudflare D1 is nearly identical to SQLite. To execute multiple statements in a single request, it requires batch execution instead of SQL transaction statements. Here is an example:
+
+```ts
+const batchResult = await db.batch([
+  // Delete the oldest comment if we've reached the limit
+  db.prepare(
+      'DELETE FROM comments WHERE id = (SELECT id FROM comments WHERE post_id = ? ORDER BY created_at ASC LIMIT 1)'
+    )
+    .bind(postId),
+
+  // Insert the new comment
+  db.prepare(
+      'INSERT INTO comments (post_id, sender_name, sender_email, content, ip) VALUES (?, ?, ?, ?, ?) RETURNING id, sender_name, sender_email, content, created_at'
+    )
+    .bind(postId, data.senderName, data.senderEmail || null, data.content, clientIp),
+]);
+```
 
 ### Security
 
