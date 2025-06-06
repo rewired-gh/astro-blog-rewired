@@ -90,7 +90,7 @@ CSRF（跨站请求伪造）是一种常见的 Web 安全攻击 ~~（也是找�
 - `Origin`：包含了发起请求的页面的源（协议、域名和端口）。浏览器会在所有跨域请求中自动添加此 header，且**无法被 JavaScript 修改**。
 - `Referer`：包含了发起请求的完整 URL（不仅仅是源）。豆知识：`Referer` 虽然是 Web 标准中的写法，但其实是拼写错误，正确拼写是 `Referrer`。
 
-此外，还有一些专用的 headers 可用于校验，具体可参考：<https://developer.mozilla.org/zh-CN/docs/Glossary/Fetch_metadata_request_header>
+此外，还有一些专用的 headers 可用于校验，具体可参考：[Fetch Metadata Request Header](https://developer.mozilla.org/zh-CN/docs/Glossary/Fetch_metadata_request_header)
 
 但是，这些 headers 在某些情况下可能为空或不存在，例如使用浏览器的隐私模式、某些代理服务器等。此外，一些不符合现代 Web 规范的浏览器不能保证这些 headers 的可信，所以此措施并不能保证阻止 CSRF 攻击。
 
@@ -100,8 +100,8 @@ API 端点校验内容类型，对于大多数接受 JSON 的 API 端点应该�
 
 ## 参考资料
 
-- <https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#token-based-mitigation>
-- <https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/CSRF>
-- <https://owasp.org/www-chapter-london/assets/slides/David_Johansson-Double_Defeat_of_Double-Submit_Cookie.pdf>
-- <https://labs.detectify.com/writeups/account-hijacking-using-dirty-dancing-in-sign-in-oauth-flows/>
-- <https://tech.meituan.com/2018/10/11/fe-security-csrf.html>
+- [OWASP CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#token-based-mitigation)
+- [MDN Web Docs: CSRF](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/CSRF)
+- [Double Defeat of Double-Submit Cookie](https://owasp.org/www-chapter-london/assets/slides/David_Johansson-Double_Defeat_of_Double-Submit_Cookie.pdf)
+- [Account Hijacking Using Dirty Dancing](https://labs.detectify.com/writeups/account-hijacking-using-dirty-dancing-in-sign-in-oauth-flows/)
+- [美团技术团队：Web 安全之 CSRF 攻击](https://tech.meituan.com/2018/10/11/fe-security-csrf.html)

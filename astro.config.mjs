@@ -36,7 +36,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   markdown: {
-    remarkPlugins: [remarkMath, remarkGfm],
+    remarkPlugins: [remarkMath],
     rehypePlugins: [
       [
         rehypeExternalLinks,
