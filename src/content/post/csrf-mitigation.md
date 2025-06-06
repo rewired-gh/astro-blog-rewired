@@ -98,8 +98,6 @@ CSRF（跨站请求伪造）是一种常见的 Web 安全攻击 ~~（也是找�
 
 API 端点校验内容类型，对于大多数接受 JSON 的 API 端点应该禁止 `application/x-www-form-urlencoded`、`multipart/form-data`、`text/plain` 这些内容类型。
 
-### 
-
 ## 参考资料
 
 - <https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#token-based-mitigation>
