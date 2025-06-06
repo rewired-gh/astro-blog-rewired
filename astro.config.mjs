@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import remarkMath from 'remark-math';
+import remarkGfm from 'remark-gfm';
 import sitemap from '@astrojs/sitemap';
 import svelte from '@astrojs/svelte';
 import rehypeExternalLinks from 'rehype-external-links';
@@ -35,7 +36,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   markdown: {
-    remarkPlugins: [remarkMath],
+    remarkPlugins: [remarkMath, remarkGfm],
     rehypePlugins: [
       [
         rehypeExternalLinks,
