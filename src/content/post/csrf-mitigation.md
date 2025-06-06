@@ -1,6 +1,6 @@
 ---
 date: 2025-06-07
-title: "如何正确地防御CSRF攻击"
+title: "如何正确地防御 CSRF 攻击"
 tags: [
   'Web Dev',
   'Security',
