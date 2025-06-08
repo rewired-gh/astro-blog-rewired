@@ -3,8 +3,8 @@
  */
 
 // Determine the current environment
-export const isDev = false;
-export const isLocalhost = false;
+export const isDev = true;
+export const isLocalhost = true;
 
 declare global {
   interface Window {

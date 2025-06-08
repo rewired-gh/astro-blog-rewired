@@ -29,7 +29,7 @@ AceJump, IdeaVim, IdeaVim-EasyMotion, Which-Key, Maven Helper, VSCode Keymap, Go
 
 ## .ideavimrc
 
-```VimScript
+```txt
 " .ideavimrc is a configuration file for IdeaVim plugin. It uses
 "   the same commands as the original .vimrc configuration.
 " You can find a list of commands here: https://jb.gg/h38q75

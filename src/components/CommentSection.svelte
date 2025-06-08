@@ -10,6 +10,8 @@
       commentListRef.refreshComments();
     }
   }
+
+  export const prerender = false;
 </script>
 
 <section class="flex flex-col gap-y-8">
