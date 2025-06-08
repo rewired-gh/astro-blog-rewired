@@ -5,10 +5,7 @@ import type { Env } from './types/env';
 
 const app = new Hono<{ Bindings: Env }>();
 
-// Apply CORS middleware globally
 app.use('*', corsMiddleware);
-
-// Mount the comments API routes
 app.route('/api', comments);
 
 export default app;

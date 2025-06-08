@@ -38,12 +38,9 @@ export function calculatePagination(params: PaginationParams): PaginationResult 
 	const limit = perPage;
 	const offset = (currentPage - 1) * perPage;
 
-	// Generate next/prev page URLs
 	const nextPage = currentPage < totalPages ? `${baseUrl}?page=${currentPage + 1}` : null;
-
 	const prevPage = currentPage > 1 ? `${baseUrl}?page=${currentPage - 1}` : null;
 
-	// Create pagination metadata using camelCase
 	const meta: PaginationMeta = {
 		currentPage,
 		totalItems,

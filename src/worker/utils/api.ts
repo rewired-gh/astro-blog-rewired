@@ -72,7 +72,6 @@ export const api = {
 		});
 	},
 
-	// Add a dedicated CORS preflight handler
 	handleCors: () => {
 		return new Response(null, {
 			status: 204,

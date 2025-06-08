@@ -3,7 +3,6 @@
  * Global configuration settings for the application
  */
 
-// Determine the current environment
 export const isDev = false;
 export const isLocalhost = false;
 
@@ -23,12 +22,10 @@ const turnstileTestAlwaysBlock = '2x00000000000000000000AB';
 export const turnstileTestAlwaysPassSecret = '1x0000000000000000000000000000000AA';
 export const turnstileTestAlwaysFailSecret = '2x0000000000000000000000000000000AA';
 
-// Token configuration
 export const tokenConfig = {
 	turnstileSiteKey: isDev ? turnstileTestAlwaysPass : '0x4AAAAAAA-1N2bI9ZrMgGGX',
 };
 
-// API configuration
 export const apiConfig = {
 	baseUrl: isLocalhost ? 'http://localhost:8787/api' : '/api',
 	endpoints: {
@@ -39,7 +36,6 @@ export const apiConfig = {
 	},
 };
 
-// Site configuration
 export const siteConfig = {
 	name: 'Blog Rewired 🍀',
 	description: 'Blog rewired.',
@@ -47,7 +43,6 @@ export const siteConfig = {
 	url: isLocalhost ? 'http://localhost:4321' : 'https://blog.rewired.moe',
 };
 
-// Default configuration export
 export default {
 	api: apiConfig,
 	site: siteConfig,

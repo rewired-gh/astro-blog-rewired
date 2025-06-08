@@ -18,7 +18,6 @@ interface TurnstileVerifyResponse {
 export async function verifyCaptcha(token: string, ip: string, secret: string): Promise<boolean> {
 	const url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 
-	// Use FormData instead of JSON
 	const formData = new FormData();
 	formData.append('secret', secret);
 	formData.append('response', token);
