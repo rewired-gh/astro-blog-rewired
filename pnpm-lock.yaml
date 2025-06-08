@@ -35,6 +35,9 @@ dependencies:
   camelcase-keys:
     specifier: ^9.1.3
     version: 9.1.3
+  hono:
+    specifier: ^4.7.11
+    version: 4.7.11
   moment:
     specifier: ^2.30.1
     version: 2.30.1
@@ -3798,6 +3801,11 @@ packages:
       hast-util-parse-selector: 4.0.0
       property-information: 7.0.0
       space-separated-tokens: 2.0.2
+
+  /hono@4.7.11:
+    resolution: {integrity: sha512-rv0JMwC0KALbbmwJDEnxvQCeJh+xbS3KEWW5PC9cMJ08Ur9xgatI0HmtgYZfOdOSOeYsp5LO2cOhdI8cLEbDEQ==}
+    engines: {node: '>=16.9.0'}
+    dev: false
 
   /html-escaper@3.0.3:
     resolution: {integrity: sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ==}
