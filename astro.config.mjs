@@ -9,9 +9,12 @@ import rehypeSectionHeadings from './src/lib/rehypeHeadingSection';
 import expressiveCode from 'astro-expressive-code';
 import colors from 'tailwindcss/colors';
 
+import cloudflare from '@astrojs/cloudflare';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://blog.rewired.moe',
+
   integrations: [
     sitemap(),
     svelte(),
@@ -32,9 +35,11 @@ export default defineConfig({
       },
     }),
   ],
+
   vite: {
     plugins: [tailwindcss()],
   },
+
   markdown: {
     remarkPlugins: [remarkMath],
     rehypePlugins: [
@@ -48,4 +53,6 @@ export default defineConfig({
       rehypeSectionHeadings,
     ],
   },
+
+  adapter: cloudflare(),
 });
