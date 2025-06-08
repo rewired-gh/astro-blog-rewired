@@ -1,18 +1,18 @@
 ---
 interface Props {
-  name: string;
-  link: string;
+	name: string;
+	link: string;
 }
 
 const { name, link } = Astro.props;
 ---
 
 <li>
-  <a
-    tabindex="0"
-    href={link}
-    class="hocus:after:h-[calc(100%+0.4rem)] relative after:pointer-events-none after:absolute after:-top-[0.2rem] after:-left-[0.3rem] after:z-10 after:h-0 after:w-[calc(100%+0.6rem)] after:backdrop-invert after:transition-all after:duration-300 focus:outline-0"
-  >
-    {name}
-  </a>
+	<a
+		tabindex="0"
+		href={link}
+		class="hocus:after:h-[calc(100%+0.4rem)] relative after:pointer-events-none after:absolute after:-top-[0.2rem] after:-left-[0.3rem] after:z-10 after:h-0 after:w-[calc(100%+0.6rem)] after:backdrop-invert after:transition-all after:duration-300 focus:outline-0"
+	>
+		{name}
+	</a>
 </li>

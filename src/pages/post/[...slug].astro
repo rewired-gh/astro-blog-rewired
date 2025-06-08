@@ -9,11 +9,11 @@ import { buildToc } from '../../lib/tableOfContent';
 import TableOfContents from '../../components/TableOfContents.astro';
 
 export async function getStaticPaths() {
-  const blogEntries = await getCollection('post');
-  return blogEntries.map((entry) => ({
-    params: { slug: entry.slug },
-    props: { entry },
-  }));
+	const blogEntries = await getCollection('post');
+	return blogEntries.map((entry) => ({
+		params: { slug: entry.slug },
+		props: { entry },
+	}));
 }
 
 const { entry } = Astro.props;
@@ -23,18 +23,18 @@ const toc = buildToc(headings);
 ---
 
 <Layout
-  title={config.site.pageTitle(entry.data.title)}
-  description={createExcerpt(entry.slug, entry.body)}
-  pageType="article"
-  language={entry.data.language}
+	title={config.site.pageTitle(entry.data.title)}
+	description={createExcerpt(entry.slug, entry.body)}
+	pageType="article"
+	language={entry.data.language}
 >
-  <ArticleMeta date={entry.data.date} tags={entry.data.tags} />
-  <article class="prose prose-stone pt-1">
-    <h1>{entry.data.title}</h1>
-    <TableOfContents toc={toc} />
-    <Content />
-  </article>
-  <div class="mt-8 border-t border-stone-300 pt-8">
-    <CommentSection client:load postId={entry.slug} />
-  </div>
+	<ArticleMeta date={entry.data.date} tags={entry.data.tags} />
+	<article class="prose prose-stone pt-1">
+		<h1>{entry.data.title}</h1>
+		<TableOfContents toc={toc} />
+		<Content />
+	</article>
+	<div class="mt-8 border-t border-stone-300 pt-8">
+		<CommentSection client:load postId={entry.slug} />
+	</div>
 </Layout>

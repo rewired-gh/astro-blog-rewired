@@ -3809,7 +3809,7 @@ type AIGatewayHeaders = {
     [key: string]: string | number | boolean | object;
 };
 type AIGatewayUniversalRequest = {
-    provider: AIGatewayProviders | string; // eslint-disable-line
+    provider: AIGatewayProviders | string;  
     endpoint: string;
     headers: Partial<AIGatewayHeaders>;
     query: unknown;
@@ -3825,7 +3825,7 @@ declare abstract class AiGateway {
         gateway?: GatewayOptions;
         extraHeaders?: object;
     }): Promise<Response>;
-    getUrl(provider?: AIGatewayProviders | string): Promise<string>; // eslint-disable-line
+    getUrl(provider?: AIGatewayProviders | string): Promise<string>;  
 }
 interface AutoRAGInternalError extends Error {
 }

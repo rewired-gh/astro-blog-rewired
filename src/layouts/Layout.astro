@@ -4,10 +4,10 @@ import config from '../lib/config';
 import '../styles/global.css';
 
 interface Props {
-  title: string;
-  description: string;
-  pageType: 'website' | 'article';
-  language?: string;
+	title: string;
+	description: string;
+	pageType: 'website' | 'article';
+	language?: string;
 }
 
 const { title, description, pageType, language } = Astro.props;
@@ -15,68 +15,68 @@ const { title, description, pageType, language } = Astro.props;
 
 <!doctype html>
 <html lang={language || 'en'}>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="description" content={description} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={Astro.url} />
-    <meta property="og:site_name" content={config.site.name} />
-    <meta property="og:type" content={pageType} />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="@" />
-    <meta name="twitter:creator" content="@" />
-    <title>{title}</title>
-    <link rel="cononical" href={Astro.url} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="generator" content={Astro.generator} />
-  </head>
-  <body
-    class="m-auto flex min-h-screen max-w-[54rem] flex-col items-stretch px-8 font-sans text-stone-800 underline-offset-4"
-  >
-    <a
-      tabindex="0"
-      href="#main-content"
-      class="absolute top-0 left-0 z-50 -translate-x-full -translate-y-full transform rounded-br-lg bg-white px-4 py-2 text-cyan-700 focus:translate-x-0 focus:translate-y-0 focus:transition focus:duration-300"
-    >
-      Skip to main content
-    </a>
-    <header
-      class="flex w-full flex-col items-start gap-y-4 pt-12 pb-14 font-light text-ellipsis whitespace-nowrap text-stone-900"
-    >
-      <a href="/">
-        <h1 class="text-2xl">
-          {config.site.name}
-        </h1>
-      </a>
-      <nav>
-        <ul class="flex gap-x-4 text-lg">
-          <NavButton name="Home" link="/" />
-          <NavButton name="About" link="/about" />
-          <NavButton name="RSS" link="/rss.xml" />
-          <NavButton name="Landing Page" link="https://rewired.moe" />
-        </ul>
-      </nav>
-    </header>
-    <main id="main-content" class="w-full">
-      <slot />
-    </main>
-    <div class="shrink grow"></div>
-    <footer class="my-8 py-8 text-center text-xs leading-6 font-light text-stone-400">
-      <p>This website is built from scratch without templates.</p>
-      <p class="flex flex-wrap items-center justify-center gap-x-2">
-        <span>Copyright © MMXXV Rewired All Rights Reserved.</span>
-        <a tabindex="0" href="https://icp.gov.moe/?keyword=20250143" target="_blank">
-          萌 ICP 备 20250143 号
-        </a>
-      </p>
-      <p class="mt-4">
-        By browsing, you consent to third-party data collection for functionality, security, and
-        analytics, including but not limited to Cloudflare Pages, Cloudflare D1, Cloudflare
-        Turnstile, and ByteDance Volcano Ark.
-      </p>
-    </footer>
-  </body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="description" content={description} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={Astro.url} />
+		<meta property="og:site_name" content={config.site.name} />
+		<meta property="og:type" content={pageType} />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@" />
+		<meta name="twitter:creator" content="@" />
+		<title>{title}</title>
+		<link rel="cononical" href={Astro.url} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="sitemap" href="/sitemap-index.xml" />
+		<meta name="generator" content={Astro.generator} />
+	</head>
+	<body
+		class="m-auto flex min-h-screen max-w-[54rem] flex-col items-stretch px-8 font-sans text-stone-800 underline-offset-4"
+	>
+		<a
+			tabindex="0"
+			href="#main-content"
+			class="absolute top-0 left-0 z-50 -translate-x-full -translate-y-full transform rounded-br-lg bg-white px-4 py-2 text-cyan-700 focus:translate-x-0 focus:translate-y-0 focus:transition focus:duration-300"
+		>
+			Skip to main content
+		</a>
+		<header
+			class="flex w-full flex-col items-start gap-y-4 pt-12 pb-14 font-light text-ellipsis whitespace-nowrap text-stone-900"
+		>
+			<a href="/">
+				<h1 class="text-2xl">
+					{config.site.name}
+				</h1>
+			</a>
+			<nav>
+				<ul class="flex gap-x-4 text-lg">
+					<NavButton name="Home" link="/" />
+					<NavButton name="About" link="/about" />
+					<NavButton name="RSS" link="/rss.xml" />
+					<NavButton name="Landing Page" link="https://rewired.moe" />
+				</ul>
+			</nav>
+		</header>
+		<main id="main-content" class="w-full">
+			<slot />
+		</main>
+		<div class="shrink grow"></div>
+		<footer class="my-8 py-8 text-center text-xs leading-6 font-light text-stone-400">
+			<p>This website is built from scratch without templates.</p>
+			<p class="flex flex-wrap items-center justify-center gap-x-2">
+				<span>Copyright © MMXXV Rewired All Rights Reserved.</span>
+				<a tabindex="0" href="https://icp.gov.moe/?keyword=20250143" target="_blank">
+					萌 ICP 备 20250143 号
+				</a>
+			</p>
+			<p class="mt-4">
+				By browsing, you consent to third-party data collection for functionality, security, and
+				analytics, including but not limited to Cloudflare Pages, Cloudflare D1, Cloudflare
+				Turnstile, and ByteDance Volcano Ark.
+			</p>
+		</footer>
+	</body>
 </html>

@@ -4,48 +4,48 @@
 
 // Database comment model (snake_case)
 export interface CommentModel {
-  id: string;
-  post_id: string;
-  sender_name: string;
-  sender_email: string | null;
-  ip: string | null;
-  content: string;
-  created_at: string;
+	id: string;
+	post_id: string;
+	sender_name: string;
+	sender_email: string | null;
+	ip: string | null;
+	content: string;
+	created_at: string;
 }
 
 // API response comment (excludes post_id)
 export interface CommentResponse {
-  id: string;
-  senderName: string;
-  senderEmail: string | null;
-  content: string;
-  createdAt: string; // UTC
+	id: string;
+	senderName: string;
+	senderEmail: string | null;
+	content: string;
+	createdAt: string; // UTC
 }
 
 // Pagination metadata
 export interface PaginationMeta {
-  currentPage: number;
-  totalItems: number;
-  totalPages: number;
-  nextPage: string | null;
-  prevPage: string | null;
+	currentPage: number;
+	totalItems: number;
+	totalPages: number;
+	nextPage: string | null;
+	prevPage: string | null;
 }
 
 // Comment list response
 export interface CommentListResponse {
-  comments: CommentResponse[];
-  pagination: PaginationMeta;
+	comments: CommentResponse[];
+	pagination: PaginationMeta;
 }
 
 // Comment submission data
 export interface CommentSubmission {
-  senderName: string;
-  senderEmail?: string | null;
-  content: string;
-  captchaToken: string;
+	senderName: string;
+	senderEmail?: string | null;
+	content: string;
+	captchaToken: string;
 }
 
 // Comment submission success response
 export interface CommentSubmissionResponse {
-  commentId: string;
+	commentId: string;
 }

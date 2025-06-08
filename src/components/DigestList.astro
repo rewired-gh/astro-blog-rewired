@@ -3,28 +3,28 @@ import ArticleMeta from './ArticleMeta.astro';
 import { type DigestEntry } from '../lib/digest';
 
 interface Props {
-  digests: DigestEntry[];
+	digests: DigestEntry[];
 }
 
 const { digests } = Astro.props;
 ---
 
 <ul class="flex flex-col gap-y-8">
-  {
-    digests.map((digest) => (
-      <li lang={digest.language}>
-        <ArticleMeta date={digest.date} tags={digest.tags} />
-        <a
-          tabindex="0"
-          class="hocus:[&_h2]:before:blur-none hocus:[&_h2]:before:w-1 hocus:[&_h2]:before:h-full hocus:[&_h2]:before:bg-cyan-500 block focus:outline-0"
-          href={digest.path}
-        >
-          <h2 class="relative mb-2 text-[21px] text-stone-900 before:absolute before:top-0 before:-left-4 before:inline-block before:h-0 before:w-0 before:bg-cyan-50 before:blur-xs before:transition-all before:duration-300">
-            {digest.title}
-          </h2>
-          <p class="text-sm leading-6 md:text-base">{digest.excerpt}</p>
-        </a>
-      </li>
-    ))
-  }
+	{
+		digests.map((digest) => (
+			<li lang={digest.language}>
+				<ArticleMeta date={digest.date} tags={digest.tags} />
+				<a
+					tabindex="0"
+					class="hocus:[&_h2]:before:blur-none hocus:[&_h2]:before:w-1 hocus:[&_h2]:before:h-full hocus:[&_h2]:before:bg-cyan-500 block focus:outline-0"
+					href={digest.path}
+				>
+					<h2 class="relative mb-2 text-[21px] text-stone-900 before:absolute before:top-0 before:-left-4 before:inline-block before:h-0 before:w-0 before:bg-cyan-50 before:blur-xs before:transition-all before:duration-300">
+						{digest.title}
+					</h2>
+					<p class="text-sm leading-6 md:text-base">{digest.excerpt}</p>
+				</a>
+			</li>
+		))
+	}
 </ul>

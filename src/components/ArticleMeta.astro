@@ -1,29 +1,29 @@
 ---
 interface Props {
-  date: Date;
-  tags: string[];
+	date: Date;
+	tags: string[];
 }
 
 const { date, tags } = Astro.props;
 ---
 
 <div class="flex w-full justify-between gap-x-3 text-sm text-stone-500">
-  <span class="whitespace-nowrap">
-    {date.toDateString()}
-  </span>
-  <ul class="inline space-x-1 truncate">
-    {
-      tags.map((tag) => (
-        <li class="inline">
-          <a
-            tabindex="0"
-            href={'/tag/' + tag}
-            class="hocus:text-cyan-700 decoration-2 transition-colors duration-300 focus:underline focus:outline-0"
-          >
-            #{tag}
-          </a>
-        </li>
-      ))
-    }
-  </ul>
+	<span class="whitespace-nowrap">
+		{date.toDateString()}
+	</span>
+	<ul class="inline space-x-1 truncate">
+		{
+			tags.map((tag) => (
+				<li class="inline">
+					<a
+						tabindex="0"
+						href={'/tag/' + tag}
+						class="hocus:text-cyan-700 decoration-2 transition-colors duration-300 focus:underline focus:outline-0"
+					>
+						#{tag}
+					</a>
+				</li>
+			))
+		}
+	</ul>
 </div>

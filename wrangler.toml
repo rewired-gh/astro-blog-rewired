@@ -1,0 +1,32 @@
+name = "blog-rewired-worker"
+main = "src/worker/index.ts"
+compatibility_date = "2025-03-25"
+upload_source_maps = true
+routes = [{ pattern = "blog.rewired.moe", custom_domain = true }]
+
+[build]
+command = "pnpm build"
+
+[assets]
+directory = "./dist"
+
+[observability]
+enabled = true
+
+[placement]
+mode = "smart"
+
+[vars]
+LLM_API_ENDPOINT = "https://ark.cn-beijing.volces.com/api/v3"
+LLM_MODEL = "ep-20250227192233-fzpgq"
+NODE_VERSION = "v22.14.0"
+
+[[d1_databases]]
+database_id = "9787c959-b9c1-48fa-b5bf-d504b14efb19"
+binding = "devDB"
+database_name = "devDB"
+
+[[d1_databases]]
+database_id = "80c2b52c-a48b-4fdf-bd46-16f1156ac94f"
+binding = "prodDB"
+database_name = "prodDB"

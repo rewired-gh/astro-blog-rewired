@@ -10,12 +10,12 @@ const { digests, tag } = Astro.props;
 ---
 
 <Layout
-  title={config.site.pageTitle(`Tag: ${tag}`)}
-  description={`Explore articles related to ${tag}.`}
-  pageType="website"
+	title={config.site.pageTitle(`Tag: ${tag}`)}
+	description={`Explore articles related to ${tag}.`}
+	pageType="website"
 >
-  <p class="pb-6 text-xl">
-    Articles tagged with <span class="text-cyan-700">#{tag}</span>:
-  </p>
-  <DigestList digests={digests} />
+	<p class="pb-6 text-xl">
+		Articles tagged with <span class="text-cyan-700">#{tag}</span>:
+	</p>
+	<DigestList digests={digests} />
 </Layout>
