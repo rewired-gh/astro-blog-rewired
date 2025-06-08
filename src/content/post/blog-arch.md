@@ -15,6 +15,8 @@ language: 'en'
 
 > Please note: To reach a broader audience, a Chinese version of this article is not provided. If needed, please use your browser's translation feature. Thank you for your understanding.
 
+> Cloudflare Pages might be gradually phasing out, please consider using Cloudflare Worker for future projects.
+
 ## Introduction
 
 Nowadays, With so much free "real estate" to choose from, we can literally build a complete blog with blazingly fast worldwide CDN, automated CI/CD, distributed database, edge computing API endpoints, spam protection, and LLM-based content moderation, all for **free**.
@@ -540,6 +542,10 @@ const batchResult = await db.batch([
 ```
 
 ### Security
+
+#### Human Challenge
+
+#### Content Moderation
 
 ### Notification
 
