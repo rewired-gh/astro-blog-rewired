@@ -23,7 +23,7 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# Cloudflare Pages
+# Cloudflare Workers
 .wrangler/
 tmp/
 wrangler.toml

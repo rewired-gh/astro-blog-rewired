@@ -1,36 +1,50 @@
-import config from '../../src/lib/config';
+import config from '../../lib/config';
+import type { ExecutionContext } from '@cloudflare/workers-types';
 
 interface ErrorResponse {
   error: string;
 }
 
+interface ApiResponseOptions extends ResponseInit {
+  headers?: HeadersInit;
+}
+
 /**
  * Get appropriate headers based on environment
  */
-function getHeaders(additionalHeaders = {}) {
-  return {
+function getHeaders(additionalHeaders: HeadersInit = {}) {
+  const baseHeaders = {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': config.isLocalhost ? '*' : 'https://*.blog-rewired.pages.dev',
+    'Access-Control-Allow-Origin': config.isLocalhost
+      ? '*'
+      : 'https://*blog-rewired-worker.neut.workers.dev',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Max-Age': '86400', // 24 hours cache for preflight requests
-    ...additionalHeaders,
   };
+
+  return new Headers({
+    ...baseHeaders,
+    ...additionalHeaders,
+  });
 }
 
 export const api = {
-  success: <T>(data: T, options: ResponseInit = {}) => {
+  success: <T>(data: T, options: ApiResponseOptions = {}) => {
     return new Response(JSON.stringify(data), {
       status: 200,
-      headers: getHeaders(options.headers || {}),
+      headers: getHeaders(options.headers),
       ...options,
     });
   },
 
-  successCached: <T>(data: T, options: ResponseInit = {}) => {
+  successCached: <T>(data: T, options: ApiResponseOptions = {}) => {
     return new Response(JSON.stringify(data), {
       status: 200,
-      headers: getHeaders({ 'Cache-Control': 'max-age=60', ...(options.headers || {}) }),
+      headers: getHeaders({
+        'Cache-Control': 'max-age=60',
+        ...(options.headers || {}),
+      }),
       ...options,
     });
   },

@@ -1,5 +1,5 @@
-import config from '../../src/lib/config';
-import { CommentSubmission } from '../../src/types/comments';
+import config from '../../lib/config';
+import type { CommentSubmission } from '../../types/comments';
 
 // Helper function to escape special characters for Telegram MarkdownV2
 function escapeMarkdown(text: string): string {

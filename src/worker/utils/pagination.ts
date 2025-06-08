@@ -1,4 +1,4 @@
-import type { PaginationMeta } from '../../src/types/comments';
+import type { PaginationMeta } from '../../types/comments';
 
 export interface PaginationParams {
   page: number;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Global configuration settings for the application
  */
@@ -29,7 +30,7 @@ export const tokenConfig = {
 
 // API configuration
 export const apiConfig = {
-  baseUrl: isLocalhost ? 'http://localhost:8788/api' : '/api',
+  baseUrl: isLocalhost ? 'http://localhost:8787/api' : '/api',
   endpoints: {
     comments: (postId: string) => `posts/${postId}/comments`,
   },

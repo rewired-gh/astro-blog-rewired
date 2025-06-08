@@ -36,7 +36,7 @@ export default [
     },
   },
   {
-    files: ['functions/**/*.ts'],
+    files: ['src/worker/**/*.ts'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       'no-console': 'off',

@@ -9,8 +9,8 @@
     "cf-typegen": "wrangler types",
     "check": "astro build && tsc && wrangler deploy --dry-run",
     "deploy": "wrangler deploy",
-    "preview": "astro build && wrangler dev",
-    "all:dev": "concurrently \"pnpm dev\" \"pnpm wrangler:dev\""
+    "worker:dev": "wrangler dev",
+    "all:dev": "concurrently \"pnpm dev\" \"pnpm worker:dev\""
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

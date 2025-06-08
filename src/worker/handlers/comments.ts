@@ -1,30 +1,18 @@
-import { serverConfig } from '../../../../util/config';
-import { api } from '../../../../util/api';
-import { calculatePagination, parsePageParam } from '../../../../util/pagination';
-import {
+import { api } from '../utils/api';
+import { calculatePagination, parsePageParam } from '../utils/pagination';
+import type {
   CommentListResponse,
   CommentModel,
   CommentResponse,
   CommentSubmission,
-} from '../../../../../src/types/comments';
-import { verifyCaptcha } from '../../../../util/captcha';
-import { moderateContent } from '../../../../util/moderation';
+} from '../../types/comments';
+import { verifyCaptcha } from '../utils/captcha';
+import { moderateContent } from '../utils/moderation';
 import camelcaseKeys from 'camelcase-keys';
-import snakecaseKeys from 'snakecase-keys';
-import config, { turnstileTestAlwaysPassSecret } from '../../../../../src/lib/config';
-import { sendNewCommentNotification } from '../../../../util/notification';
-
-interface Env {
-  devDB: D1Database;
-  prodDB: D1Database;
-  TURNSTILE_SECRET?: string;
-  LLM_API_KEY: string;
-  LLM_API_ENDPOINT: string;
-  LLM_MODEL: string;
-  LLM_DATA_TAG: string;
-  NOTIFICATION_TELEGRAM_BOT_TOKEN: string;
-  NOTIFICATION_TELEGRAM_CHAT_ID: string;
-}
+import config, { turnstileTestAlwaysPassSecret } from '../../lib/config';
+import { sendNewCommentNotification } from '../utils/notification';
+import type { Env } from '../types/env';
+import type { Context } from 'hono';
 
 /**
  * Transform database comments into API response format
@@ -39,14 +27,14 @@ function transformComments(comments: CommentModel[]): CommentResponse[] {
 /**
  * Handle GET requests to retrieve comments for a post
  */
-async function handleGetComments(
-  db: D1Database,
-  postId: string,
-  requestUrl: URL
-): Promise<Response> {
+export async function getComments(c: Context<{ Bindings: Env }>): Promise<Response> {
   try {
+    const postId = c.req.param('post');
+    const db = c.env.prodDB || c.env.devDB;
+    const requestUrl = new URL(c.req.url);
+
     // Parse and validate page parameter
-    const page = parsePageParam(requestUrl.searchParams.get('page'));
+    const page = parsePageParam(requestUrl.searchParams.get('page') || undefined);
     if (page === null) {
       return api.error('Invalid page parameter');
     }
@@ -62,7 +50,7 @@ async function handleGetComments(
     // Calculate pagination values
     const pagination = calculatePagination({
       page,
-      perPage: serverConfig.commentsPerPage,
+      perPage: 15,
       totalItems,
       baseUrl: `${requestUrl.origin}/api/${config.api.endpoints.comments(postId)}`,
     });
@@ -97,17 +85,15 @@ async function handleGetComments(
 /**
  * Handle POST requests to add a new comment
  */
-async function handlePostComment(
-  db: D1Database,
-  postId: string,
-  request: Request,
-  env: Env
-): Promise<Response> {
+export async function createComment(c: Context<{ Bindings: Env }>): Promise<Response> {
   try {
+    const postId = c.req.param('post');
+    const db = c.env.prodDB || c.env.devDB;
+
     // Parse request body as FormData instead of JSON
     let formData;
     try {
-      formData = await request.formData();
+      formData = await c.req.formData();
     } catch (parseError) {
       console.error('Error parsing form data:', parseError);
       return api.error('Invalid form data in request');
@@ -129,19 +115,19 @@ async function handlePostComment(
 
     // Get client IP address
     const clientIp =
-      request.headers.get('CF-Connecting-IP') ||
-      request.headers.get('X-Forwarded-For') ||
-      request.headers.get('X-Real-IP') ||
+      c.req.header('CF-Connecting-IP') ||
+      c.req.header('X-Forwarded-For') ||
+      c.req.header('X-Real-IP') ||
       'unknown';
     console.info('Client IP:', clientIp);
-    console.info('Captch token:', data.captchaToken);
+    console.info('Captcha token:', data.captchaToken);
     console.info('Form data:', formData);
 
     // Verify captcha token
     const captchaPass = await verifyCaptcha(
       data.captchaToken,
       clientIp,
-      (config.isDev ? turnstileTestAlwaysPassSecret : env.TURNSTILE_SECRET) || ''
+      (config.isDev ? turnstileTestAlwaysPassSecret : c.env.TURNSTILE_SECRET) || ''
     );
     if (!captchaPass) {
       return api.error('Security verification failed');
@@ -150,12 +136,12 @@ async function handlePostComment(
     // Moderate content with OpenAI
     const moderationPass = await moderateContent(
       data.senderName,
-      data.senderEmail,
+      data.senderEmail || '',
       data.content,
-      env.LLM_API_ENDPOINT,
-      env.LLM_API_KEY,
-      env.LLM_MODEL,
-      env.LLM_DATA_TAG
+      c.env.LLM_API_ENDPOINT,
+      c.env.LLM_API_KEY,
+      c.env.LLM_MODEL,
+      c.env.LLM_DATA_TAG
     );
 
     if (!moderationPass) {
@@ -211,14 +197,14 @@ async function handlePostComment(
       }
 
       // Transform to camelCase response
-      const transformedComment = camelcaseKeys(result);
+      const transformedComment = camelcaseKeys(result as unknown as Record<string, unknown>);
 
       // Send a notification to the admin
       await sendNewCommentNotification(
         data,
         postId,
-        env.NOTIFICATION_TELEGRAM_BOT_TOKEN,
-        env.NOTIFICATION_TELEGRAM_CHAT_ID
+        c.env.NOTIFICATION_TELEGRAM_BOT_TOKEN,
+        c.env.NOTIFICATION_TELEGRAM_CHAT_ID
       );
 
       // Return success with the newly created comment
@@ -294,29 +280,3 @@ function validateComment(data: CommentSubmission): { valid: boolean; error?: str
   // All validations passed
   return { valid: true };
 }
-
-/**
- * Main request handler that routes to the appropriate method handler
- */
-export const onRequest: PagesFunction<Env> = async (context) => {
-  const method = context.request.method;
-  const postId = context.params.post as string;
-  const db = config.isDev ? context.env.devDB : context.env.prodDB;
-  const url = new URL(context.request.url);
-
-  // Handle CORS preflight requests
-  if (method === 'OPTIONS') {
-    return api.handleCors();
-  }
-
-  switch (method) {
-    case 'GET':
-      return handleGetComments(db, postId, url);
-
-    case 'POST':
-      return handlePostComment(db, postId, context.request as unknown as Request, context.env);
-
-    default:
-      return api.methodNotAllowed();
-  }
-};
