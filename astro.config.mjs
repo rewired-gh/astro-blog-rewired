@@ -1,9 +1,9 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
-import remarkMath from 'remark-math';
-import remarkGfm from 'remark-gfm';
 import sitemap from '@astrojs/sitemap';
 import svelte from '@astrojs/svelte';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import rehypeExternalLinks from 'rehype-external-links';
 import rehypeSectionHeadings from './src/lib/rehypeHeadingSection';
 import expressiveCode from 'astro-expressive-code';
@@ -51,6 +51,12 @@ export default defineConfig({
 				},
 			],
 			rehypeSectionHeadings,
+			[
+				rehypeKatex,
+				{
+					output: 'mathml',
+				},
+			],
 		],
 	},
 
