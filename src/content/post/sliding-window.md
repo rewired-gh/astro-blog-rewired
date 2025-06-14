@@ -38,7 +38,7 @@ language: 'zh'
 1. 利用 `HVALS` 获得所有桶的计数。
 2. 对所有桶的计数进行求和，得到 `total`。
 3. 若 `total` 大于 `limit` 则返回拒绝。
-4. 计算桶编号，利用 `HINCRBY`（对应项不存在时自动创建并假设为 0）增加桶的计数，利用 `PEXPIRE` 在新桶创建时设置 TTL。
+4. 计算桶编号，利用 `HINCRBY`（对应项不存在时自动创建并假设为 0）增加桶的计数，利用 `HEXPIRE` 在新桶创建时设置 TTL。
 5. 返回允许。
 
 对应的 Lua 脚本如下：
@@ -63,9 +63,9 @@ for _, v in ipairs(vals) do
 end
 
 if total < limit then
-    local cur = math.floor(now_secs / sub_secs)
-    redis.call("HINCRBY", key, tostring(cur), 1)
-    redis.call("PEXPIRE", key, window_secs, "NX")
+    local cur = tostring(math.floor(now_secs / sub_secs))
+    redis.call("HINCRBY", key, cur, 1)
+    redis.call("HEXPIRE", key, window_secs, "NX", "FIELDS", 1, cur)
     return { 1, total }
 else
     return { 0, total }
