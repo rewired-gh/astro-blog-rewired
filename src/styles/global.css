@@ -5,6 +5,14 @@
 @custom-variant hocus (&:hover, &:focus);
 @custom-variant in-hocus (:where(*:hover) &, :where(*:focus) &);
 
+@font-face {
+  font-family: 'STIX Two Math';
+  src: url('/font/STIXTwoMath-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --animate-wiggle: wiggle 150ms ease-out 2;
   @keyframes wiggle {
@@ -58,5 +66,9 @@
 
   div.expressive-code:not(:last-child) {
     margin-bottom: 1rem;
+  }
+
+  math {
+    font-family: 'STIX Two Math', 'Latin Modern Math', sans-serif;
   }
 }
