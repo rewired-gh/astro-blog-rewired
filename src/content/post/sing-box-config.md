@@ -75,7 +75,8 @@ sing-box 的[配置文档](https://sing-box.sagernet.org/configuration)虽然已
     ],
     // 若远端不支持 IPV6 则需要修改
     // 可取值：prefer_ipv4、prefer_ipv6、ipv4_only、ipv6_only
-    "strategy": "prefer_ipv6"
+    // 如遇到问题，建议改为 ipv4_only
+    "strategy": "prefer_ipv4"
   },
   "experimental": {
     // 缓存 Fake IP 映射
