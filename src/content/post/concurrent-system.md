@@ -20,7 +20,7 @@ Keep the meaning consistent.
 Don't change other text.
 -->
 
-> This article is not meant to be a guide. It merely serves as a personal note and may not have a clear structure or polished content. This note should never be considered finished.
+> This article is not meant to be a guide. It merely serves as a personal note and may not have a clear structure, a specific topic, or polished content. This note should never be considered finished.
 
 ## Essential Principles
 
@@ -28,7 +28,7 @@ Don't change other text.
 
 - Scaling: Increase computing power.
 - Caching: Add layers to the storage hierarchy.
-- Asynchronous Patterns: Don't wait; just subscribe and publish.
+- Asynchronous patterns: Don't wait; just subscribe and publish.
 
 ## Dimensions of Scaling
 
@@ -50,3 +50,25 @@ Don't change other text.
   - Following cloud-native best practices is essential for the nature of the business.
 
 <!-- Separator 1 -->
+
+## Ubiquitous Levels of Abstraction
+
+### MVC Architecture
+
+- Model: State and static data.
+- View: Presented form of the state and static data.
+- Controller: Manager for state transitions and their triggers.
+
+### Three-Tier Architecture
+
+- Presentation tier: User interface and communication layer, such as a REST API controller.
+- Application tier: Where information is processed using business logic, also known as the logic tier.
+- Data tier: Where information, particularly states, is stored and managed, such as a MongoDB instance.
+
+### Benefits of Abstraction
+
+- Horizontal scaling decisions and architectural design are only required to be considered on a certain layer.
+- Makes it easier to partition a system among teams and members.
+- Improves the reusability of layers.
+
+<!-- Separator 2 -->
