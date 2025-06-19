@@ -22,7 +22,7 @@ Don't change other text.
 
 > This article is not meant to be a guide. It merely serves as a personal note and may not have a clear structure, a specific topic, or polished content. This note should never be considered finished.
 
-## Essential Principles
+## Essential principles
 
 ![Scaling, Caching, Asynchronous Patterns](../../assets/hc_principles.svg)
 
@@ -30,7 +30,7 @@ Don't change other text.
 - Caching: Add layers to the storage hierarchy.
 - Asynchronous patterns: Don't wait; just subscribe and publish.
 
-## Dimensions of Scaling
+## Dimensions of scaling
 
 ### Terminology
 
@@ -49,26 +49,34 @@ Don't change other text.
   - The service is mostly stateless or purely functional.
   - Following cloud-native best practices is essential for the nature of the business.
 
+### Elastic scaling
+
 <!-- Separator 1 -->
 
-## Ubiquitous Levels of Abstraction
+## Ubiquitous levels of abstraction
 
-### MVC Architecture
+### MVC architecture
 
 - Model: State and static data.
 - View: Presented form of the state and static data.
 - Controller: Manager for state transitions and their triggers.
 
-### Three-Tier Architecture
+### Three-tier architecture
 
 - Presentation tier: User interface and communication layer, such as a REST API controller.
 - Application tier: Where information is processed using business logic, also known as the logic tier.
 - Data tier: Where information, particularly states, is stored and managed, such as a MongoDB instance.
 
-### Benefits of Abstraction
+### Benefits of abstraction
 
 - Horizontal scaling decisions and architectural design are only required to be considered on a certain layer.
 - Makes it easier to partition a system among teams and members.
 - Improves the reusability of layers.
 
 <!-- Separator 2 -->
+
+## High availability
+
+## Performance profiling
+
+### Metrics of performance
