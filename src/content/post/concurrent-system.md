@@ -75,8 +75,50 @@ Don't change other text.
 
 <!-- Separator 2 -->
 
-## High availability
-
 ## Performance profiling
 
 ### Metrics of performance
+
+## High availability
+
+### Metrics of availability
+
+- Percentage of uptime: The total percentage of time a system operates healthily during a given time period.
+- SLA (Service Level Agreement): Formalizes the expected availability and penalties for breaches.
+- MTBF (Mean Time Between Failures) and MTTR (Mean Time To Repair): Quantify how often failures occur and how fast systems recover.
+
+### Redundancy
+
+- Common configuration: N is the number of enough components.
+  - N: No backups.
+  - N+1: Only one extra component to tolerate a single failure.
+  - 2N: Full duplication of a system.
+  - 2N+1: Two active systems and one spare.
+  - AN/B: Additional capacity is based on the load of the system.
+- Synchronous replication: Zero data loss but higher latency.
+- Asynchronous replication: Lower latency with potential for small data-loss window.
+
+### Failover strategies
+
+- Active–Passive: Standby doesn't serve live traffic under normal condition.
+  - Cold: Standby is powered off until a failure occurs 
+  - Warm: Standby runs but doesn’t handle live traffic until needed.
+  - Hot: Standby handles traffic and can be promoted instantly on failure.
+- Active—Active: All nodes serve live traffic. Load balancers distribute work and detect failures.
+- RTO (Recovery Time Objective): The time within which a business process must be restored after a disruption
+- RPO (Recovery Point Objective): The maximum acceptable age of data that must be recovered from backup for normal operations to resume after a disruption.
+- Failure detection: Periodic probes verify liveness and readiness.
+
+### Load balancing
+
+### Partitioning
+
+### Monitoring
+
+### Graceful degradation
+
+### Disaster recovery
+
+### Validation
+
+### CAP Theorem
