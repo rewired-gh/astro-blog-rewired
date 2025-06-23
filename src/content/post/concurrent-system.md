@@ -111,7 +111,23 @@ Don't change other text.
 
 ### Load balancing
 
+- Transport layer (L4): The load balancer routes traffic based on the IP address and TCP/UDP port.
+- Application layer (L7): The load balancer routes traffic based on application-level data. For instance, traffic could be routed to different servers based on the URL or the content type.
+- Round robin: Distributes requests sequentially to each server in a cyclic manner.
+- Least connections: Sends requests to the server with the least number of active connections. It is useful when requests have varying loads.
+- IP hashing: Uses a hash of the client’s IP address to determine which server will handle the request. This ensures that a user consistently connects to the same server.
+- Weighted load balancing: Servers are assigned a weight based on their capacity.
+- SSL termination: In secure applications, load balancers often handle SSL termination, where they decrypt the encrypted traffic.
+
 ### Partitioning
+
+- Sharding (horizontal partitioning): A dataset is divided into shards, with each shard being stored on a separate server or node.
+  - Challenges: Some queries may require data from multiple partitions, which can introduce latency or complexity.
+- Vertical partitioning: Splitting a dataset or application functionality based on columns or service boundaries.
+  - Challenges: Increased latency and dependency management.
+- Logical partitioning:  A system is divided into logical units that may or may not be backed by distinct physical resources. For instance, Kubernetes follows this pattern.
+  - Challenges: A failure in shared physical resources could still lead to a larger failure.
+- Split-brain scenario: Two or more partitions believe they are the primary active nodes, leading to data inconsistency or conflicts. This is often handled using consensus algorithms like [Paxos](https://youtu.be/s8JqcZtvnsM) (the notorious consensus algorithm) or [Raft](https://raft.github.io/raft.pdf).
 
 ### Monitoring
 
