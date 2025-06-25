@@ -30,7 +30,7 @@ Don't change other text.
 - Caching: Add layers to the storage hierarchy.
 - Asynchronous patterns: Don't wait; just subscribe and publish.
 
-## Dimensions of scaling
+## Scaling dimensions
 
 ### Terminology
 
@@ -48,8 +48,18 @@ Don't change other text.
   - High traffic is anticipated and long-term cost-effectiveness at scale is a major concern.
   - The service is mostly stateless or purely functional.
   - Following cloud-native best practices is essential for the nature of the business.
+- Choose direct scaling if: The service is stateless.
+- Choose sharding if: The service is stateful.
 
 ### Elastic scaling
+
+- Threshold-based policy: Define static upper and lower bounds on metrics of resources.
+- Control theory approaches: Use PID controllers or similar feedback loops to adjust resource levels smoothly.
+- Machine learning methods: Employ machine learning models to forecast demand and proactively provision resources before load increases, improving responsiveness but requiring historical data and model maintenance.
+- StatuScale: <https://arxiv.org/pdf/2407.10173>.
+- Reactive Scaling: Responds after metrics cross thresholds.
+- Proactive Scaling: Uses predictions or scheduled events to adjust capacity in advance.
+- Common policy engines: Kubernetes Horizontal Pod Autoscaler (HPA) and AWS Auto Scaling Groups (ASG).
 
 <!-- Separator 1 -->
 
@@ -131,6 +141,19 @@ Don't change other text.
 
 ### Monitoring
 
+- SLI (Service Level Indicators): Quantify aspects like request latency or error rate.
+- Infrastructure health: Includes CPU, memory, disk I/O, network latency, Queue depths, and connection counts.
+- Application performance: Includes request throughput, error rates, database replication lag, and cache hit ratios.
+- Heartbeat mechanism: Services report health information in each interval.
+- Monitoring architecture
+  - Data collection layer: Agents, exporters, or sidecars gather metrics and logs from servers, containers, and network devices. Popular solutions include Prometheus exporters, StatsD agents, and Fluentd/Logstash for logs.
+  - Storage and query layer: Time-series databases (Prometheus TSDB, InfluxDB) and log stores (Elasticsearch, Splunk) hold and index data for fast retrieval and correlation.
+  - Visualization and alerting layer: Dashboards (Grafana, Kibana) and alert managers (Alertmanager, PagerDuty integrations) provide real-time views and notifications. Advanced setups support dynamic thresholds and anomaly detection.
+  - Common combination: Prometheus, Loki, Grafana, and HAProxy exporter.
+- Alerting channels: web page, email, IM bot, phone call, and silent log.
+- Alert fatigue: Fine-tune thresholds and employ grouping or suppression to prevent noise and ensure critical alerts aren’t ignored.
+- Cost consideration: Aggregate and downsample metric data over time. Use log sampling and retention policies to control storage costs while preserving fidelity for incident investigation.
+
 ### Graceful degradation
 
 ### Disaster recovery
@@ -138,3 +161,7 @@ Don't change other text.
 ### Validation
 
 ### CAP Theorem
+
+## Redis implementation
+
+## Kafka implementation
