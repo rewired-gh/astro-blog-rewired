@@ -151,12 +151,19 @@ Don't change other text.
   - Visualization and alerting layer: Dashboards (Grafana, Kibana) and alert managers (Alertmanager, PagerDuty integrations) provide real-time views and notifications. Advanced setups support dynamic thresholds and anomaly detection.
   - Common combination: Prometheus, Loki, Grafana, and HAProxy exporter.
 - Alerting channels: web page, email, IM bot, phone call, and silent log.
-- Alert fatigue: Fine-tune thresholds and employ grouping or suppression to prevent noise and ensure critical alerts aren’t ignored.
+- Alert fatigue: Fine-tune thresholds and employ grouping or suppression to prevent noise and ensure critical alerts are not ignored.
 - Cost consideration: Aggregate and downsample metric data over time. Use log sampling and retention policies to control storage costs while preserving fidelity for incident investigation.
 
 ### Graceful degradation
 
-### Disaster recovery
+- Design principles
+  - Identify core functionality and dependencies: Determine which services are essential to core business workflows and which can be degraded under failure conditions.
+  - Business-driven degradation priorities: Engage stakeholders in deciding which features to preserve during partial outages.
+  - Simplified failure pathways: Ensure that fallback and degradation code paths are significantly simpler than normal operation flows, making them easier to test and less prone to introducing new failures.
+- Load shedding and rate limiting: Under high load, drop or throttle low-priority requests to free up resources for critical operations.
+- Circuit breaker pattern: Monitor calls to downstream services and, upon detecting excessive failures or timeouts, open the circuit to prevent further calls.
+- Bulkhead pattern: Partition system resources into isolated compartments so that failures or resource exhaustion in one area do not impact others.
+- Feature toggles and fallback strategies: Use runtime feature flags to disable non-critical features during incidents. Implement fallback logic to maintain core operations if a dependency is unreachable.
 
 ### Validation
 
