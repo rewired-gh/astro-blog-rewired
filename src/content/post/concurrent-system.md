@@ -89,6 +89,18 @@ Don't change other text.
 
 ### Metrics of performance
 
+- Latency: The time to process a request and return a response, crucial for user satisfaction.
+- Throughput: Requests handled per second, indicating capacity.
+- Response time: Total time from request to response, including network delays, impacting user experience.
+- Error rate: Percentage of failed requests, indicating reliability. Targets include <5% network errors and <1% application errors, tracked via logging tools like Sentry.
+- CPU usage: Percentage of CPU capacity used, preventing overload. High usage leading to throttling.
+- Memory usage: Amount of RAM consumed, ensuring no slowdowns. Measured in bytes, with metrics like virtual and resident memory.
+- Uptime (availability): Percentage of operational time, critical for SLAs.
+- Concurrency level: Number of simultaneous requests, directly measuring system load.
+- Garbage collection metrics: For languages like Java, measures GC frequency and duration, impacting performance under load.
+- Network traffic: Data flow in and out, identifying bottlenecks in distributed systems.
+- Disk I/O: Rate of storage operations, preventing delays.
+
 ## High availability
 
 ### Metrics of availability
@@ -168,6 +180,13 @@ Don't change other text.
 ### Validation
 
 ### CAP Theorem
+
+- Definition: Distributed systems can only guarantee two of three properties: Consistency (all nodes see the same data), Availability (system always responds), and Partition Tolerance (works despite network failures).
+- Prioritized property: Financial systems might prioritize consistency for accuracy. E-commerce platforms might prioritize availability to ensure users can always access services. 
+- CA: Not practical for distributed systems, as it cannot handle network partitions.
+- CP: Ensures data consistency but may not respond to all requests during partitions.
+- AP: Remains available during partitions but may return inconsistent data.
+- CockroachDB: Provide strong consistency while maintaining high availability through careful partition handling.
 
 ## Redis implementation
 
