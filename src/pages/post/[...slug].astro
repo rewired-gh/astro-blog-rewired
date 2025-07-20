@@ -9,7 +9,7 @@ import { buildToc } from '../../lib/tableOfContent';
 import TableOfContents from '../../components/TableOfContents.astro';
 
 export async function getStaticPaths() {
-	const blogEntries = await getCollection('post');
+	const blogEntries = await getCollection('post', (entry) => !entry.data.draft);
 	return blogEntries.map((entry) => ({
 		params: { slug: entry.slug },
 		props: { entry },

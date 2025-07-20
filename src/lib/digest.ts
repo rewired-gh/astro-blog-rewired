@@ -51,9 +51,9 @@ export function createExcerpt(slug: string, body: string, maxLen = 163) {
 }
 
 export async function getAllDigestEntries() {
-	const blogEntries = (await getCollection('post')).sort(
-		(a, b) => b.data.date.getTime() - a.data.date.getTime()
-	);
+	const blogEntries = (await getCollection('post'))
+		.filter((entry) => !entry.data.draft)
+		.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 	const digests = blogEntries.map(
 		(entry) =>
 			({

@@ -4,6 +4,7 @@ title: 'Bloom 过滤器学习笔记'
 tags: [
   'Algorithm',
   'Data Structure',
+  'Redis',
 ]
 language: 'zh'
 ---
