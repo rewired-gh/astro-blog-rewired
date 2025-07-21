@@ -3,7 +3,7 @@ date: 2025-07-20
 title: "深入探讨 Asynq"
 tags: [
   'Distributed Systems',
-  'Cloud Infrastructure',
+  'Cloud Native',
   'Redis',
 ]
 language: 'zh'
@@ -60,6 +60,19 @@ draft: true
     2. 设置任务信息，包括消息、状态、就绪开始时间（Redis `HSET`）。
     3. 添加到指定队列的计划处理集合（Redis `ZADD`）。
 
+#### Redis 例子
+
+```plaintext frame="terminal"
+127.0.0.1:6379> sadd asynq:queues welcome_email 
+(integer) 1
+127.0.0.1:6379> exists asynq:welcome_email:t:1
+(integer) 0
+127.0.0.1:6379> hset asynq:welcome_email:t:1 msg ChFhZG1pbkByZXdpcmVkLm1vZQ== state scheduled
+(integer) 2
+127.0.0.1:6379> zadd asynq:welcome_email:scheduled 1753075918 1
+(integer) 1
+```
+
 ### forward
 
 - 作用：将到时的任务从已计划、重试状态转换到就绪状态。
@@ -70,6 +83,23 @@ draft: true
         2. 对于分组任务：TODO。
         3. 对于普通任务：添加到指定队列的就绪列表（Redis `LPUSH`）；从原队列的集合中删除（Redis `ZREM`）；设置任务信息，包括状态、就绪开始时间（Redis `HSET`）。
 
+#### Redis 例子
+
+```plaintext frame="terminal"
+127.0.0.1:6379> zrangebyscore asynq:welcome_email:scheduled -inf 1753075918 limit 0 100
+1) "1"
+127.0.0.1:6379> lpush asynq:welcome_email:pending 1
+(integer) 1
+127.0.0.1:6379> zrem asynq:welcome_email:scheduled 1
+(integer) 1
+127.0.0.1:6379> hset asynq:welcome_email:t:1 state pending pending_since 1753075918
+(integer) 1
+```
+
+### ForwardIfReady
+
+- 作用：对于每个队列，先轮询已计划集合进行 forward，再轮询重试集合进行 forward。
+
 ### Enqueue
 
 - 作用：直接添加新任务到某一个队列的就绪列表中。
@@ -78,3 +108,57 @@ draft: true
     1. 若任务信息存在，则不继续操作（Redis `EXISTS`）。
     2. 设置任务信息，包括消息、状态、就绪开始时间（Redis `HSET`）。
     3. 添加到指定队列的就绪列表（Redis `LPUSH`）。
+
+### Dequeue
+
+- 作用：按优先级从各个非暂停队列的就绪列表中取出第一个任务，然后执行这个任务并返回结果。
+- Redis 脚本过程：
+    1. 若队列暂停，则不继续操作（Redis `EXISTS`）。
+    2. 将任务从就绪列表移到活跃列表（Redis `RPOPLPUSH`）。
+    3. 设置任务信息，包括状态，并移除就绪相关信息（Redis `HSET`、`HDEL`）。
+    4. 将任务记录在租约有序列表中，按过期时间作为权重（Redis `ZADD`）。
+    5. 获取并返回任务消息（Redis `HGET`）。
+
+#### Redis 例子
+
+```plaintext frame="terminal"
+127.0.0.1:6379> exists asynq:welcome_email:paused 
+(integer) 0
+127.0.0.1:6379> rpoplpush asynq:welcome_email:pending asynq:welcome_email:active
+"1"
+127.0.0.1:6379> hdel asynq:welcome_email:t:1 pending_since 
+(integer) 1
+127.0.0.1:6379> zadd asynq:welcome_email:lease 1753375918 1 
+(integer) 1
+127.0.0.1:6379> hget asynq:welcome_email:t:1 msg
+"ChFhZG1pbkByZXdpcmVkLm1vZQ=="
+```
+
+### Done
+
+- 作用：清除指定的成功执行的任务，并更新统计数据。
+- Redis 脚本过程：
+    1. 将任务从活跃列表中移除（Redis `LREM`），若不存在则不继续操作。
+    2. 将任务从租约有序列表中移除（Redis `ZREM`），若不存在则不继续操作。
+    3. 移除任务信息（Redis `DEL`），若不存在则不继续操作。
+    4. 增加每日处理计数，若为当日第一个任务，则设置此项过期时间（Redis `INCR`、`EXPIREAT`）。
+    5. 更新总共处理计数，注意考虑溢出情况（Redis `GET`、`SET`、`INCR`）。
+
+#### Redis 例子
+
+```plaintext frame="terminal"
+127.0.0.1:6379> lrem asynq:welcome_email:active 0 1 
+(integer) 1
+127.0.0.1:6379> zrem asynq:welcome_email:lease 1
+(integer) 1
+127.0.0.1:6379> del asynq:welcome_email:t:1
+(integer) 1
+127.0.0.1:6379> incr asynq:welcome_email:processed:2025-07-21 
+(integer) 1
+127.0.0.1:6379> expireat asynq:welcome_email:processed:2025-07-21 1753400000
+(integer) 1
+127.0.0.1:6379> get asynq:welcome_email:processed 
+(nil)
+127.0.0.1:6379> incr asynq:welcome_email:processed
+(integer) 1
+```
