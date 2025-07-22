@@ -12,14 +12,14 @@ draft: true
 
 ## 是什么
 
-- 异步任务调度体系，包括 worker、client。
+- 使用 Go 的异步任务调度体系，包括 worker、client。
 - 用 Redis 管理所有状态，用 Protobuf 编码消息。
 - worker 能横向 scale，适应高并发需求。
 
 ## 用 Redis 的好处
 
 - 除了 Redis，其他部分都是无状态，无需操心分布式系统的一致性问题。
-- Redis 指令执行单线程，保证状态转换的顺序性，无需操心 workers 争抢。
+- Redis 指令执行单线程，保证状态转换的顺序性，无需操心 worker 争抢。
 - Redis 可配置成高可用集群，能自动 sharding、failover 切换，无需操心分布式系统的共识问题。
 - Redis 可配置持久化，通过 AOF、RDB。
 
@@ -162,3 +162,86 @@ draft: true
 127.0.0.1:6379> incr asynq:welcome_email:processed
 (integer) 1
 ```
+
+### MarkAsComplete
+
+- 作用：将成功执行的任务从活跃列表移到完成列表，并更新统计数据。
+- Redis 脚本过程：
+    1. 将任务从活跃列表中移除（Redis `LREM`），若不存在则不继续操作。
+    2. 将任务从租约有序列表中移除（Redis `ZREM`），若不存在则不继续操作。
+    3. 将任务添加到完成列表（Redis `ZADD`），若失败则不继续操作。
+    4. 设置任务信息，包括消息、状态（Redis `HSET`）。
+    5. 增加每日处理计数，若为当日第一个任务，则设置此项过期时间（Redis `INCR`、`EXPIREAT`）。
+    6. 更新总共处理计数，注意考虑溢出情况（Redis `GET`、`SET`、`INCR`）。
+
+### DeleteExpiredCompletedTasks
+
+### Ping
+
+- 作用：通过 ping 测试 Redis 的健康状态。
+
+## Worker 服务器角色线程
+
+在本章中，worker 指的是 worker 服务器中所有处理任务的协程。
+
+Worker 服务器中的角色线程具有以下结构：
+
+- logger：处理日志，使用了内部实现，主要利用了互斥锁。
+- broker：状态管理中介，使用了 RDB 实现。
+- done：接受完成信号（即停止协程信号）的 channel。
+- interval（或者之类的）：轮询周期。
+- 额外信息。
+
+角色线程分为以下类别，这些线程会周期地进行一些操作：
+
+- aggregator：负责检查组，若满足条件则聚合成一个任务。
+    - 额外信息：TODO
+    - 使用信号量管理协程间同步。
+    - TODO
+- forwarder：负责将到时的任务从已计划状态转到就绪状态。
+    - 额外信息：
+        - queues：当前角色线程管理的所有队列名称。
+    - 按平均时间附近的值轮询（但是在实现中直接使用了平均时间）。
+    - 对应的 RDB 操作：ForwardIfReady。
+- healthchecker：负责检查 Redis 的健康状态。
+    - 额外信息：
+        - healthcheckFunc：健康状态检查的函数，若为 nil 则不检查。
+    - 对应的 RDB 操作：Ping。
+- heartbeater：负责向 Redis 维持健康状态，并续租任务。
+    - 额外信息：
+        - clock：用于共识的时钟，在实现中采用墙上时钟，在测试过程中可以换成其他实现。
+        - host、pid、serverID、concurrency、queues、strictPriority：自动初始化的服务器信息。
+        - started：heartbeater 启动的时间。
+        - workers：从任务 ID 到 worker 的映射。
+        - state：服务器状态，利用了互斥锁。
+        - starting：接收 worker 启动消息的 channel。
+        - finished：接收 worker 完成消息的 channel。
+    - 对于每个周期的心跳操作：
+        1. 收集服务器信息的快照。
+        2. 收集所有租约未过期的 worker 信息，并处理租约过期的 worker。
+        3. 向 Redis 更新自己的服务器和 worker 信息（对应的 RDB 操作：WriteServerState）。
+        4. 向 Redis 续租任务（对应的 RDB 操作：ExtendLease）。
+- janitor：负责删除已完成且过期的任务。
+- processor：负责执行就绪的任务。
+- recoverer：负责重试或归档执行失败的任务（即租约过期的任务）。
+- subscriber：负责监听取消命令并取消任务。
+- syncer：负责重试 Redis 操作，保证状态的一致性。
+
+## 租约
+
+租约的结构：
+
+- once：确认 channel 只被关闭一次。
+- ch：用于传递过期消息的 channel。
+- Clock：用于共识的时钟，在实现中采用墙上时钟，在测试过程中可以换成其他实现。
+- mu：保护过期时间的互斥锁，读和写时都需要获取锁。
+- expireAt：租约的过期时间。
+
+租约的操作：
+
+- 创建租约。
+- 验证租约：验证时使用互斥锁保护。
+- 重置租约：更新未过期的租约的过期时间，使用互斥锁保护。
+- 通知过期：若租约未过期则不通知，否则关闭 ch 从而通知租约过期，用 once 确保只会关闭一次。
+- 完成：向承租方提供 ch，用于获悉租约过期。
+- 期限：获得租约的过期时间，使用互斥锁保护。
