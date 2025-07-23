@@ -1,6 +1,6 @@
 ---
 date: 2025-07-20
-title: "深入探讨 Asynq"
+title: "探讨 Asynq 底层原理"
 tags: [
   'Distributed Systems',
   'Cloud Native',
@@ -25,14 +25,14 @@ draft: true
 
 ## 总体架构
 
-![Asynq 总体架构](../../assets/asynq-simple-arch.svg)
+![Asynq 总体架构](../../assets/asynq_simple_arch.svg)
 
 - Web 应用利用 Asynq 库的 client API 注册任务。
 - Worker 基于 Asynq 库的 server 完成定制。
 
 ## 任务状态
 
-![Asynq 任务状态转换图](../../assets/asynq-state.svg)
+![Asynq 任务状态转换图](../../assets/asynq_state.svg)
 
 - 已计划：还没到时间，会在之后处理任务。
 - 就绪：任务可开始处理，等待被空闲的 worker 拾取。
@@ -63,7 +63,7 @@ draft: true
 #### Redis 例子
 
 ```plaintext frame="terminal"
-127.0.0.1:6379> sadd asynq:queues welcome_email 
+127.0.0.1:6379> sadd asynq:queues welcome_email
 (integer) 1
 127.0.0.1:6379> exists asynq:welcome_email:t:1
 (integer) 0
@@ -109,9 +109,22 @@ draft: true
     2. 设置任务信息，包括消息、状态、就绪开始时间（Redis `HSET`）。
     3. 添加到指定队列的就绪列表（Redis `LPUSH`）。
 
+#### Redis 例子
+
+```plaintext frame="terminal"
+127.0.0.1:6379> sadd asynq:queues welcome_email
+(integer) 1
+127.0.0.1:6379> exists asynq:welcome_email:t:1
+(integer) 0
+127.0.0.1:6379> hset asynq:welcome_email:t:1 msg ChFhZG1pbkByZXdpcmVkLm1vZQ== state pending pending_since 1753259218
+(integer) 3
+127.0.0.1:6379> lpush asynq:welcome_email:pending 1
+(integer) 1
+```
+
 ### Dequeue
 
-- 作用：按优先级从各个非暂停队列的就绪列表中取出第一个任务，然后执行这个任务并返回结果。
+- 作用：按优先级从各个非暂停队列的就绪列表中取出第一个任务，然后执行这个任务。
 - Redis 脚本过程：
     1. 若队列暂停，则不继续操作（Redis `EXISTS`）。
     2. 将任务从就绪列表移到活跃列表（Redis `RPOPLPUSH`）。
@@ -122,13 +135,13 @@ draft: true
 #### Redis 例子
 
 ```plaintext frame="terminal"
-127.0.0.1:6379> exists asynq:welcome_email:paused 
+127.0.0.1:6379> exists asynq:welcome_email:paused
 (integer) 0
 127.0.0.1:6379> rpoplpush asynq:welcome_email:pending asynq:welcome_email:active
 "1"
-127.0.0.1:6379> hdel asynq:welcome_email:t:1 pending_since 
+127.0.0.1:6379> hdel asynq:welcome_email:t:1 pending_since
 (integer) 1
-127.0.0.1:6379> zadd asynq:welcome_email:lease 1753375918 1 
+127.0.0.1:6379> zadd asynq:welcome_email:lease 1753375918 1
 (integer) 1
 127.0.0.1:6379> hget asynq:welcome_email:t:1 msg
 "ChFhZG1pbkByZXdpcmVkLm1vZQ=="
@@ -147,17 +160,17 @@ draft: true
 #### Redis 例子
 
 ```plaintext frame="terminal"
-127.0.0.1:6379> lrem asynq:welcome_email:active 0 1 
+127.0.0.1:6379> lrem asynq:welcome_email:active 0 1
 (integer) 1
 127.0.0.1:6379> zrem asynq:welcome_email:lease 1
 (integer) 1
 127.0.0.1:6379> del asynq:welcome_email:t:1
 (integer) 1
-127.0.0.1:6379> incr asynq:welcome_email:processed:2025-07-21 
+127.0.0.1:6379> incr asynq:welcome_email:processed:2025-07-21
 (integer) 1
 127.0.0.1:6379> expireat asynq:welcome_email:processed:2025-07-21 1753400000
 (integer) 1
-127.0.0.1:6379> get asynq:welcome_email:processed 
+127.0.0.1:6379> get asynq:welcome_email:processed
 (nil)
 127.0.0.1:6379> incr asynq:welcome_email:processed
 (integer) 1
@@ -174,7 +187,52 @@ draft: true
     5. 增加每日处理计数，若为当日第一个任务，则设置此项过期时间（Redis `INCR`、`EXPIREAT`）。
     6. 更新总共处理计数，注意考虑溢出情况（Redis `GET`、`SET`、`INCR`）。
 
+#### Redis 例子
+
+```plaintext frame="terminal"
+127.0.0.1:6379> lrem asynq:welcome_email:active 0 1
+(integer) 1
+127.0.0.1:6379> zrem asynq:welcome_email:lease 1
+(integer) 1
+127.0.0.1:6379> zadd asynq:welcome_email:completed 1753459218 1
+(integer) 1
+127.0.0.1:6379> hset asynq:welcome_email:t:1 msg ChFhZG1pbkByZXdpcmVkLm1vZQ== state completed
+(integer) 0
+127.0.0.1:6379> incr asynq:welcome_email:processed:2025-07-23
+(integer) 1
+127.0.0.1:6379> expireat asynq:welcome_email:processed:2025-07-23 1753559218
+(integer) 1
+127.0.0.1:6379> get asynq:welcome_email:processed
+(nil)
+127.0.0.1:6379> incr asynq:welcome_email:processed
+(integer) 1
+```
+
 ### DeleteExpiredCompletedTasks
+
+- 作用：删除完成列表中过期的任务。
+- Redis 脚本过程：
+    1. 找到所有过期的任务，有最大数量限制（Redis `ZRANGEBYSCORE`）。
+    2. 对于每个任务：
+       1. 删除任务信息（Redis `DEL`）。
+       2. 在完成列表中移除任务（Redis `ZREM`）。
+
+#### Redis 例子
+
+```plaintext frame="terminal"
+127.0.0.1:6379> zrangebyscore asynq:welcome_email:completed -inf 1763259218 limit 0 100
+1) "1"
+127.0.0.1:6379> del asynq:welcome_email:t:1
+(integer) 1
+127.0.0.1:6379> zrem asynq:welcome_email:completed 1
+(integer) 1
+```
+
+### Retry
+
+### Archive
+
+### Requeue
 
 ### Ping
 
@@ -201,7 +259,6 @@ Worker 服务器中的角色线程具有以下结构：
 - forwarder：负责将到时的任务从已计划状态转到就绪状态。
     - 额外信息：
         - queues：当前角色线程管理的所有队列名称。
-    - 按平均时间附近的值轮询（但是在实现中直接使用了平均时间）。
     - 对应的 RDB 操作：ForwardIfReady。
 - healthchecker：负责检查 Redis 的健康状态。
     - 额外信息：
@@ -221,8 +278,58 @@ Worker 服务器中的角色线程具有以下结构：
         2. 收集所有租约未过期的 worker 信息，并处理租约过期的 worker。
         3. 向 Redis 更新自己的服务器和 worker 信息（对应的 RDB 操作：WriteServerState）。
         4. 向 Redis 续租任务（对应的 RDB 操作：ExtendLease）。
-- janitor：负责删除已完成且过期的任务。
+- janitor：负责清理已完成且过期的任务。
+    - 额外信息：
+        - queues：当前角色线程管理的所有队列名称。
+        - batchSize：单次清理的最大任务数。
+    - 对应的 RDB 操作：DeleteExpiredCompletedTasks。
 - processor：负责执行就绪的任务。
+    - 额外信息：
+        - handler：处理任务的函数。
+        - baseCtxFn：创建基础上下文的函数。
+        - queueConfig：队列优先级配置。
+        - orderedQueues：严格优先级模式下的有序队列列表。
+        - taskCheckInterval：轮询任务的时间间隔。
+        - retryDelayFunc：计算重试延迟的函数。
+        - isFailureFunc：判断错误是否为失败的函数。
+        - errHandler：错误处理器。
+        - shutdownTimeout：关闭超时时间。
+        - sema：信号量，限制并发 worker 数量。
+        - quit、abort：用于协程间通信的 channel。
+        - cancelations：活跃任务的取消函数集合。
+        - starting、finished：与 heartbeater 通信的 channel。
+    - 工作流程：
+        1. 从信号量获取令牌，限制并发数。
+        2. 确定队列查询顺序：
+            - 单队列：直接返回该队列名。
+            - 严格优先级模式：按优先级降序排列队列。
+            - 非严格优先级模式：按优先级权重复制队列名，然后随机打散（Fisher-Yates shuffle）以避免低优先级队列饥饿。
+        3. 从就绪列表中按顺序取出任务（RDB 操作：Dequeue）。
+        4. 处理出队结果：
+            - 无可处理任务：使用 jitter 机制等待（taskCheckInterval/2 + 随机抖动），避免同时轮询造成 Redis 压力。
+            - 其他错误：使用速率限制器记录日志（每 3 秒最多 1 条），避免日志洪水。
+        5. 创建租约和任务截止时间：
+            - timeout 和 deadline 都设置：取较小值。
+            - 只有 timeout：当前时间 + timeout。
+            - 只有 deadline：使用 deadline。
+            - 都未设置：使用默认超时时间。
+        6. 向 heartbeater 发送 worker 启动信息，启动 worker 协程处理任务。
+        7. 在 worker 协程中：
+            1. 创建带截止时间的上下文，注册取消函数到 cancelations 集合。
+            2. 检查上下文是否已取消（如截止时间已过）。
+            3. 启动任务执行协程，使用 defer-recover 机制捕获 panic。
+            4. 监听多个 channel：服务器关闭、租约过期、上下文取消、任务完成。
+        8. 根据执行结果进行相应处理：
+            - 成功且无保留期：直接删除任务（RDB 操作：Done）。
+            - 成功且有保留期：移到完成列表（RDB 操作：MarkAsComplete）。
+            - 失败且为 RevokeTask 错误：直接删除任务。
+            - 失败且重试次数未达上限且非 SkipRetry：计算重试延迟后移到重试列表（RDB 操作：Retry）。
+            - 失败且达重试上限或 SkipRetry：移到归档列表（RDB 操作：Archive）。
+            - 关闭时清理或租约过期：重新放回就绪列表（RDB 操作：Requeue）。
+        9. 向 heartbeater 发送 worker 完成信息，释放信号量令牌。
+
+![processor 工作流程](../../assets/asynq_processor.svg)
+
 - recoverer：负责重试或归档执行失败的任务（即租约过期的任务）。
 - subscriber：负责监听取消命令并取消任务。
 - syncer：负责重试 Redis 操作，保证状态的一致性。
