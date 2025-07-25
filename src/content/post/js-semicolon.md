@@ -20,7 +20,7 @@ console.log("hello")
 
 在 REPL 环境中执行这段代码，由于严格按行执行，所以不会报错，能正常运行。但是，如果作为一个文件执行，则会报错：
 
-```plaintext
+```plaintext frame="terminal"
 TypeError: console.log("hello") is not a function. (In 'console.log("hello")(world + 1)', 'console.log("hello")' is undefined)
 ```
 
