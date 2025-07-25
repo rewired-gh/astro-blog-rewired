@@ -178,7 +178,7 @@ draft: true
 
 ### MarkAsComplete
 
-- 作用：将成功执行的任务从活跃列表移到完成列表，并更新统计数据。
+- 作用：将成功执行的任务从活跃列表移到完成列表，在消息中附带完成时间，并更新统计数据。
 - Redis 脚本过程：
     1. 将任务从活跃列表中移除（Redis `LREM`），若不存在则不继续操作。
     2. 将任务从租约有序列表中移除（Redis `ZREM`），若不存在则不继续操作。
@@ -230,9 +230,42 @@ draft: true
 
 ### Retry
 
+- 作用：将任务（一般是失败的任务）从活跃列表移到重试列表，在消息中附带错误信息，并更新统计数据。
+- Redis 脚本过程：
+    1. 将任务从活跃列表中移除（Redis `LREM`），若不存在则不继续操作。
+    2. 将任务从租约有序列表中移除（Redis `ZREM`），若不存在则不继续操作。
+    3. 将任务添加到重试列表（Redis `ZADD`）。
+    4. 设置任务信息，包括消息、状态（Redis `HSET`）。
+    5. 若为失败的任务：
+        1. 增加每日处理计数，若为当日第一个任务，则设置此项过期时间（Redis `INCR`、`EXPIREAT`）。
+        2. 增加每日失败计数，若为当日第一个任务，则设置此项过期时间（Redis `INCR`、`EXPIREAT`）。
+        3. 更新总共处理计数，注意考虑溢出情况（Redis `GET`、`SET`、`INCR`）。
+        4. 更新总共失败计数，注意考虑溢出情况（Redis `GET`、`SET`、`INCR`）。
+
 ### Archive
 
+- 作用：将任务从活跃列表移到归档列表，在消息中附带错误信息，清除过期和超出容量的归档任务，并更新统计数据。
+- Redis 脚本过程：
+    1. 将任务从活跃列表中移除（Redis `LREM`），若不存在则不继续操作。
+    2. 将任务从租约有序列表中移除（Redis `ZREM`），若不存在则不继续操作。
+    3. 将任务添加到归档列表（Redis `ZADD`）。
+    4. 清理过期的归档任务：
+        1. 获取所有过期的任务（Redis `ZRANGE`）。
+        2. 删除这些过期任务的信息（Redis `DEL`）。
+        3. 从归档列表中移除这些过期任务（Redis `ZREM`）。
+    5. 清理超出容量的归档任务：
+        1. 获取超出最大容量的任务（Redis `ZRANGE`）。
+        2. 删除这些任务的信息（Redis `DEL`）。
+        3. 从归档列表中移除这些任务（Redis `ZREM`）。
+    6. 设置任务信息，包括消息、状态（Redis `HSET`）。
+    7. 增加每日处理计数，若为当日第一个任务，则设置此项过期时间（Redis `INCR`、`EXPIREAT`）。
+    8. 增加每日失败计数，若为当日第一个任务，则设置此项过期时间（Redis `INCR`、`EXPIREAT`）。
+    9. 更新总共处理计数，注意考虑溢出情况（Redis `GET`、`SET`、`INCR`）。
+    10. 更新总共失败计数，注意考虑溢出情况（Redis `GET`、`SET`、`INCR`）。
+
 ### Requeue
+
+### CancelationPubSub
 
 ### Ping
 
@@ -273,7 +306,7 @@ Worker 服务器中的角色线程具有以下结构：
         - state：服务器状态，利用了互斥锁。
         - starting：接收 worker 启动消息的 channel。
         - finished：接收 worker 完成消息的 channel。
-    - 对于每个周期的心跳操作：
+    - 工作流程：
         1. 收集服务器信息的快照。
         2. 收集所有租约未过期的 worker 信息，并处理租约过期的 worker。
         3. 向 Redis 更新自己的服务器和 worker 信息（对应的 RDB 操作：WriteServerState）。
@@ -330,8 +363,16 @@ Worker 服务器中的角色线程具有以下结构：
 
 ![processor 工作流程](../../assets/asynq_processor.svg)
 
-- recoverer：负责重试或归档执行失败的任务（即租约过期的任务）。
+- recoverer：负责重试或归档租约过期的任务（例如：若其他 worker 服务器宕机，则会有被抛弃的任务）。
+    - 额外信息：
+        - retryDelayFunc：计算任务重试延迟时间的函数。
+        - isFailureFunc：判断给定错误是否算作失败的函数。
+        - queues：需要检查租约过期任务的队列名称列表。
+    - 工作流程：
+        1. 找到所有租约过期的任务（RDB 操作：ListLeaseExpired）。
+        2. 对于每个任务，进行归档或者延迟后重试（RDB 操作：Archive、Retry）。
 - subscriber：负责监听取消命令并取消任务。
+    - 
 - syncer：负责重试 Redis 操作，保证状态的一致性。
 
 ## 租约

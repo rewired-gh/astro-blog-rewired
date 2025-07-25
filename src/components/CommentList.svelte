@@ -29,21 +29,16 @@
 			const url = `${apiConfig.baseUrl}/${commentsEndpoint}?page=${page}`;
 
 			const response = await fetch(url);
-
 			if (!response.ok) {
 				throw new Error(`Failed to fetch comments: ${response.status} ${response.statusText}`);
 			}
 
-			const rawData = await response.json();
-
-			if (rawData && typeof rawData === 'object') {
-				if (Array.isArray(rawData.comments)) {
-					comments = rawData.comments;
-					pagination = rawData.pagination || null;
-					currentPage = pagination?.currentPage || 1;
-				} else {
-					throw new Error('Unexpected API response format: missing comments array');
-				}
+			const rawData: { comments: CommentResponse[]; pagination?: PaginationMeta } =
+				await response.json();
+			if (rawData) {
+				comments = rawData.comments;
+				pagination = rawData.pagination || null;
+				currentPage = pagination?.currentPage || 1;
 			} else {
 				throw new Error('Unexpected API response format: not an object');
 			}
