@@ -15,7 +15,7 @@ language: 'en'
 
 > Please note: To reach a broader audience, a Chinese version of this article is not provided. If needed, please use your browser's translation feature. Thank you for your understanding.
 
-> Cloudflare Pages might be gradually phasing out, please consider using Cloudflare Worker for future projects.
+> Cloudflare Pages might be gradually phasing out, please consider using Cloudflare Worker for future projects. This article does not necessarily reflect the latest architecture of this blog.
 
 ## Introduction
 
@@ -541,12 +541,24 @@ const batchResult = await db.batch([
 ]);
 ```
 
-### Security
+### Comment Creation
 
-#### Human Challenge
+The process for posting a comment is as follows:
 
-#### Content Moderation
+1. Parse the request, including contents from URL parameters, body form, and headers.
+2. Validate whether the basic fields comply with the contraints.
+3. Check whether Cloudflare Turnstile verification is passed.
+4. Use LLM to check whether the comment is appropriate. If the LLM has a high latency, this process should be asynchronous by using a message queue.
+5. If a post has too many comments, delete some and insert the new comment in an atomic batch to the Cloudflare D1 database. Otherwise, simply insert the comment.
+6. Notify admins a new comment was posted via a Telegram bot.
+7. Respond.
 
-### Notification
+### Comments Fetching
 
-*(🚧 This article is still under construction.)*
+The process for fetching comments from a post is as follows:
+
+1. Parse the request, including post ID and page number.
+2. Calculate the pagination related variables.
+3. If the pagination is invalid, the page number must be invalid.
+4. Select the comments from Cloudflare D1 database.
+5. Respond.

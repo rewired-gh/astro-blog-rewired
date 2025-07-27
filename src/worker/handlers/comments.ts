@@ -130,7 +130,6 @@ export async function createComment(c: Context<{ Bindings: Env }>): Promise<Resp
 			c.env.LLM_MODEL,
 			c.env.LLM_DATA_TAG
 		);
-
 		if (!moderationPass) {
 			return api.error('Your comment was rejected.');
 		}
