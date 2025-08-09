@@ -39,3 +39,25 @@ fn(world + 1).toString()
 ```
 
 为了解决这个问题，只需要在 `console.log("hello")` 后加上分号即可。这个例子说明了：在项目中最好统一使用带分号的代码风格，写的时候不一定要写分号（除非像这种特殊情况），可以由 formatter 自动整理代码。这也是为什么 prettier 默认风格带有分号。
+
+下面是另一种有趣而常见的情况：
+
+```js
+let tim = 0, apple = 1
+[tim, apple] = [apple, tim]
+```
+
+报错信息如下：
+
+```plaintext frame="terminal"
+ReferenceError: Cannot access uninitialized variable.
+```
+
+这里 `1[ ... ] = ...` 先被视作一次赋值表达式的左值，`[tim, apple]` 里的 `apple` 在同一条 `let` 声明内还没初始化。
+
+常见需要显式分号（或行首补一个分号）避免黏连的行开头：
+
+- `(` 可能被当成函数调用继续上一行
+- `[` 可能被当成下标 / 继续上一行
+- `+` `-` 可能与上一行合成一条表达式
+- `/` 可能被当成除法（影响正则字面量）
