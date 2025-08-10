@@ -55,7 +55,7 @@ sing-box 的[配置文档](https://sing-box.sagernet.org/configuration)虽然已
     // DNS 服务器配置，包含远端解析、本地解析、拦截
     "servers": [
       {
-        "type": "h3",
+        "type": "https",
         "server": "1.1.1.1",
         "detour": "Available",
         "tag": "remote"
