@@ -1,6 +1,6 @@
 ---
-date: 2025-02-26
-title: '强迫症专属 sing-box 配置模板'
+date: 2025-08-10
+title: '强迫症专属 sing-box 配置模板（更新至 1.12 版本）'
 tags: [
   'Network',
   'Essay'
@@ -10,7 +10,7 @@ language: 'zh'
 
 > 这是一篇短文，不会有过多的细节描述，可能会比较精简。
 
-> **注意**：由于 sing-box 配置格式的更新较为频繁，且淘汰速率较快，因此本文可能会不定期更新，尽量兼容最新的 sing-box 核心。目前，本文兼容的 sing-box 核心版本为 1.11.13（截止至 2025 年 6 月 17 日，sing-box 最新稳定版的核心版本为 1.11.13）。
+> **注意**：由于 sing-box 配置格式的更新较为频繁，且淘汰速率较快，因此本文可能会不定期更新，尽量兼容最新的 sing-box 核心。目前，本文兼容的 sing-box 核心版本为 1.12.0（截止至 2025 年 8 月 10 日，sing-box 最新稳定版的核心版本为 1.12.0）。
 
 sing-box 是一个强大的网络工具，既可以用于网络实验和调试，也可以用于保护安全网络环境的访问，例如从外部通过 WireGuard 安全地连接到公司的内部网。
 
@@ -35,10 +35,6 @@ sing-box 的[配置文档](https://sing-box.sagernet.org/configuration)虽然已
   "dns": {
     "rules": [
       {
-        "outbound": ["any"],
-        "server": "local"
-      },
-      {
         "clash_mode": "Proxy",
         "server": "remote"
       },
@@ -59,18 +55,24 @@ sing-box 的[配置文档](https://sing-box.sagernet.org/configuration)虽然已
     // DNS 服务器配置，包含远端解析、本地解析、拦截
     "servers": [
       {
-        "address": "https://1.1.1.1/dns-query",
+        "type": "h3",
+        "server": "1.1.1.1",
         "detour": "Available",
         "tag": "remote"
       },
       {
-        "address": "https://223.5.5.5/dns-query",
-        "detour": "direct",
+        "type": "https",
+        "server": "223.5.5.5",
         "tag": "local"
       },
       {
-        "address": "rcode://success",
+        "type": "hosts",
+        "path": [],
+        "predefined": {},
         "tag": "block"
+      },
+      {
+        "type": "local"
       }
     ],
     // 若远端不支持 IPV6 则需要修改
@@ -121,11 +123,13 @@ sing-box 的[配置文档](https://sing-box.sagernet.org/configuration)虽然已
     {
       "type": "wireguard",
       "name": "NetLab",
+      "domain_resolver": "local",
       // ...
     },
     {
       "type": "wireguard",
       "name": "Corporate",
+      "domain_resolver": "local",
       // ...
     },
     // 以下配置通常可以照抄
@@ -138,6 +142,7 @@ sing-box 的[配置文档](https://sing-box.sagernet.org/configuration)虽然已
   // 分流规则，通常可以照抄
   "route": {
     "auto_detect_interface": true,
+    "default_domain_resolver": "local",
     "rules": [
       // DNS 分流策略
       {
