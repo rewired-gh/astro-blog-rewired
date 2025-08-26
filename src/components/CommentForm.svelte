@@ -70,7 +70,7 @@
 			const data = await response.json();
 
 			if (response.ok) {
-				message = 'Last comment submitted successfully!';
+				message = 'Last comment was posted.';
 				isErrorMessage = false;
 				senderName = '';
 				senderEmail = '';
