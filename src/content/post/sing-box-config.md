@@ -122,13 +122,13 @@ sing-box 的[配置文档](https://sing-box.sagernet.org/configuration)虽然已
     // 请参考：https://sing-box.sagernet.org/configuration/outbound
     {
       "type": "wireguard",
-      "name": "NetLab",
+      "tag": "NetLab",
       "domain_resolver": "local",
       // ...
     },
     {
       "type": "wireguard",
-      "name": "Corporate",
+      "tag": "Corporate",
       "domain_resolver": "local",
       // ...
     },
