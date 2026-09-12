@@ -6,16 +6,16 @@ export async function moderateContent(
 	content: string,
 	baseUrl: string,
 	apiKey: string,
-	model: string,
-	dataTagSecret: string = 'user-data'
+	model: string
 ): Promise<boolean> {
-	const client = new OpenAI({
-		apiKey: apiKey,
-		baseURL: baseUrl,
-	});
-
 	try {
-		const chatCompletion = await client.chat.completions.create({
+		const client = new OpenAI({
+			apiKey,
+			baseURL: baseUrl,
+		});
+		const request: OpenAI.Chat.ChatCompletionCreateParamsNonStreaming & {
+			thinking: { type: 'disabled' };
+		} = {
 			messages: [
 				{
 					role: 'system',
@@ -40,10 +40,13 @@ ${content}
 </评论>`,
 				},
 			],
-			model: model,
+			model,
+			// Ark-specific option: moderation needs a verdict, not a reasoning trace.
+			thinking: { type: 'disabled' },
 			max_tokens: 8,
 			temperature: 0,
-		});
+		};
+		const chatCompletion = await client.chat.completions.create(request);
 		const result = chatCompletion?.choices[0]?.message?.content?.trim();
 		if (!result) {
 			throw new Error('No response from the LLM');

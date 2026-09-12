@@ -108,9 +108,6 @@ export async function createComment(c: Context<{ Bindings: Env }>): Promise<Resp
 			c.req.header('X-Forwarded-For') ||
 			c.req.header('X-Real-IP') ||
 			'unknown';
-		console.info('Client IP:', clientIp);
-		console.info('Captcha token:', data.captchaToken);
-		console.info('Form data:', formData);
 
 		const captchaPass = await verifyCaptcha(
 			data.captchaToken,
@@ -127,8 +124,7 @@ export async function createComment(c: Context<{ Bindings: Env }>): Promise<Resp
 			data.content,
 			c.env.LLM_API_ENDPOINT,
 			c.env.LLM_API_KEY,
-			c.env.LLM_MODEL,
-			c.env.LLM_DATA_TAG
+			c.env.LLM_MODEL
 		);
 		if (!moderationPass) {
 			return api.error('Your comment was rejected.');

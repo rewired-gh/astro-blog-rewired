@@ -18,7 +18,7 @@ mode = "smart"
 
 [vars]
 LLM_API_ENDPOINT = "https://ark.cn-beijing.volces.com/api/v3"
-LLM_MODEL = "ep-20250826143110-n98kh"
+LLM_MODEL = "ep-20260912164111-hp42g"
 NODE_VERSION = "v22.14.0"
 
 [[d1_databases]]
